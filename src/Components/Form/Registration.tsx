@@ -6,7 +6,7 @@ import { Spinner } from '@radix-ui/themes';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import documentIcon from '/xampp/htdocs/ATU Library Offense Managment System/library-management-system/src/assets/document.png';
+import fileIcon from './assets/document.png';
 
 const schema = z.object({
   name: z
@@ -99,7 +99,7 @@ const Registration = () => {
           <h2 className="text-2xl font-semibold text-start">
             Registration Form
           </h2>
-          <img src={documentIcon} className="w-8 h-8" alt="A Form Icon" />
+          <img src={fileIcon} className="w-8 h-8" alt="A Form Icon" />
         </div>
         <div className="flex max-sm:flex-col max-sm:gap-3 gap-10 justify-between">
           <div className="w-full flex flex-col gap-3">
