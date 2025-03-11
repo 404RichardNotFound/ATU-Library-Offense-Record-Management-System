@@ -6,7 +6,7 @@ import { Spinner } from '@radix-ui/themes';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import fileIcon from './assets/document.png';
+import fileIcon from '../../assets/document.png';
 
 const schema = z.object({
   name: z
