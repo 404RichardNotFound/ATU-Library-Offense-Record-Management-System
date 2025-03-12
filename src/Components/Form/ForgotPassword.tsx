@@ -1,5 +1,5 @@
-import authenticationIcon from '../../assets/authentication.png';
-import { Link } from 'react-router-dom';
+import forgotPasswordIcon from '../../assets/forgot-password.png';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { z } from 'zod';
 import { useState } from 'react';
@@ -11,60 +11,67 @@ import axios from 'axios';
 import { Spinner } from '@radix-ui/themes';
 import { useMutation } from '@tanstack/react-query';
 
-const schema = z.object({
-  studentID: z.string().min(9, 'Must be 9 characters!'),
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters long!') // Minimum length of 8
-    .regex(/[A-Z]/, 'At least one uppercase letter!')
-    .regex(/[a-z]/, 'At least one lowercase letter!')
-    .regex(/\d/, 'At least one number!')
-    .regex(/[@$!%*?&]/, 'At least one special character (@$!%*?&)!'),
-});
+const schema = z
+  .object({
+    ID: z.string().min(9, 'Must be 9 characters!'),
+    password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters long!') // Minimum length of 8
+      .regex(/[A-Z]/, 'At least one uppercase letter!')
+      .regex(/[a-z]/, 'At least one lowercase letter!')
+      .regex(/\d/, 'At least one number!')
+      .regex(/[@$!%*?&]/, 'At least one special character (@$!%*?&)!'),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match!',
+    path: ['confirmPassword'],
+  });
 
-type StudentLoginSchema = z.infer<typeof schema>;
+type ResetPasswordSchema = z.infer<typeof schema>;
 
-const StudentLoginSchemaResolver = zodResolver(schema);
+const ResetPasswordSchemaResolver = zodResolver(schema);
 
-function StudentLogin() {
+function ForgotPassword() {
   const [errorMessage, setErrorMessage] = useState<String | null>('');
   const [successMessage, setSuccessMessage] = useState<String | null>('');
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<StudentLoginSchema>({
-    resolver: StudentLoginSchemaResolver,
+  } = useForm<ResetPasswordSchema>({
+    resolver: ResetPasswordSchemaResolver,
     mode: 'onChange', // Enable real-time validation feedback
   });
 
   // ✅ Mutation for Posting Sign-Up Data
-  const loginMutation = useMutation({
-    mutationFn: async (studentLoginData: StudentLoginSchema) => {
+  const resetMutation = useMutation({
+    mutationFn: async (userData: ResetPasswordSchema) => {
       const response = await axios.post(
         'http://localhost/Backend/registration.php',
-        studentLoginData
+        userData
       );
       return response.data;
     },
     onError: () => {
-      setErrorMessage('Login Error, Try again.');
+      setErrorMessage('Reset Error, Try again.');
       setSuccessMessage(null);
     },
     onSuccess: () => {
       reset(); // Reset form after successful registration
-      setSuccessMessage('Login Successful!');
+      setSuccessMessage('Reset Successful!');
       setErrorMessage(null);
     },
   });
 
-  const onSubmit = async (data: StudentLoginSchema) => {
+  const onSubmit = async (userData: ResetPasswordSchema) => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     // Submit form data to the server
-    loginMutation.mutate(data);
-    console.log(data);
+    resetMutation.mutate(userData);
+    console.log(userData);
     reset();
   };
 
@@ -101,29 +108,25 @@ function StudentLogin() {
         className="bg-white border-2 gap-7 max-2xl:w-7/12E  max-xl:w-8/12 max-lg:w-10/12 w-2/5 shadow-sm border-neutral-200 rounded-lg p-8 h-auto flex flex-col justify-center"
       >
         <div className="flex gap-3">
-          <h2 className="text-2xl font-semibold text-start">
-            Students Login Form
-          </h2>
+          <h2 className="text-2xl font-semibold text-start">Reset Password</h2>
           <img
-            src={authenticationIcon}
+            src={forgotPasswordIcon}
             className="w-8 h-8"
-            alt="User Authentication Icon"
+            alt="Forgot Password Icon"
           />
         </div>
         <div className="w-full flex flex-col gap-3">
           <div className="flex w-full flex-col gap-2">
-            <label htmlFor="studentID">Student ID :</label>
+            <label htmlFor="ID">Enter ID :</label>
             <input
-              {...register('studentID')}
-              id="studentID"
-              name="studentID"
+              {...register('ID')}
+              id="adminID"
+              name="adminID"
               className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
               type="text"
               placeholder="ID"
             />
-            {errors.studentID && (
-              <p className="text-red-500">{errors.studentID.message}</p>
-            )}
+            {errors.ID && <p className="text-red-500">{errors.ID.message}</p>}
           </div>
         </div>
         <div className="w-full flex flex-col gap-3">
@@ -142,22 +145,27 @@ function StudentLogin() {
             )}
           </div>
         </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="password">Password :</label>
+          <input
+            {...register('confirmPassword')}
+            id="confirmPassword"
+            className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
+            type="password"
+            placeholder="Confirm Password"
+          />
+          {errors.confirmPassword && (
+            <p className="text-red-500">{errors.confirmPassword.message}</p>
+          )}
+        </div>
         <div className="flex gap-2 justify-start">
           <button
             type="submit"
             className="border-2 items-center flex gap-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
           >
             {isSubmitting && <Spinner />}
-            {isSubmitting ? 'Please wait..' : 'Login'}
+            {isSubmitting ? 'Please wait..' : 'Reset Password'}
           </button>
-        </div>
-
-        <div className="flex gap-2 cursor-pointer justify-start">
-          <Link to={'/ForgotPassword'}>
-            <p className="text-blue-500 hover:text-blue-700">
-              forgot password ?
-            </p>
-          </Link>
         </div>
         {/* Show Success Message */}
         {successMessage && (
@@ -186,26 +194,13 @@ function StudentLogin() {
         )}
       </form>
 
-      <div className="flex max-sm:flex-col max-sm:items-center max-xl:px-10 max-md:8/12 max-xl:w-10/12 w-2/5 justify-around ">
+      <div className="flex max-sm:items-center max-xl:px-10 max-md:8/12 max-xl:w-10/12 w-2/5 justify-around ">
         <div className="mb-3">
-          <p>
-            Have not registered ?
-            <Link to={'/Registration'}>
-              <span className="text-blue-500 ml-2 hover:text-blue-700 cursor-pointer">
-                Register here
-              </span>
-            </Link>
-          </p>
-        </div>
-        <p className="">or</p>
-        <div className="mb-4 max-sm:mt-2">
-          <p>
-            An admin ?
-            <Link to={'/AdminLogin'}>
-              <span className="text-blue-500 ml-2 hover:text-blue-700 cursor-pointer">
-                Login here
-              </span>
-            </Link>
+          <p
+            onClick={() => navigate(-1)}
+            className="text-blue-500 ml-2 hover:text-blue-700 cursor-pointer"
+          >
+            Go Back
           </p>
         </div>
       </div>
@@ -213,4 +208,4 @@ function StudentLogin() {
   );
 }
 
-export default StudentLogin;
+export default ForgotPassword;

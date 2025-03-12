@@ -12,7 +12,7 @@ import { Spinner } from '@radix-ui/themes';
 import { useMutation } from '@tanstack/react-query';
 
 const schema = z.object({
-  studentID: z.string().min(9, 'Must be 9 characters!'),
+  adminID: z.string().min(9, 'Must be 9 characters!'),
   password: z
     .string()
     .min(8, 'Password must be at least 8 characters long!') // Minimum length of 8
@@ -22,11 +22,11 @@ const schema = z.object({
     .regex(/[@$!%*?&]/, 'At least one special character (@$!%*?&)!'),
 });
 
-type StudentLoginSchema = z.infer<typeof schema>;
+type AdminLoginSchema = z.infer<typeof schema>;
 
-const StudentLoginSchemaResolver = zodResolver(schema);
+const AdminLoginSchemaResolver = zodResolver(schema);
 
-function StudentLogin() {
+function AdminLogin() {
   const [errorMessage, setErrorMessage] = useState<String | null>('');
   const [successMessage, setSuccessMessage] = useState<String | null>('');
 
@@ -35,17 +35,17 @@ function StudentLogin() {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<StudentLoginSchema>({
-    resolver: StudentLoginSchemaResolver,
+  } = useForm<AdminLoginSchema>({
+    resolver: AdminLoginSchemaResolver,
     mode: 'onChange', // Enable real-time validation feedback
   });
 
   // ✅ Mutation for Posting Sign-Up Data
   const loginMutation = useMutation({
-    mutationFn: async (studentLoginData: StudentLoginSchema) => {
+    mutationFn: async (adminLoginData: AdminLoginSchema) => {
       const response = await axios.post(
         'http://localhost/Backend/registration.php',
-        studentLoginData
+        adminLoginData
       );
       return response.data;
     },
@@ -60,11 +60,11 @@ function StudentLogin() {
     },
   });
 
-  const onSubmit = async (data: StudentLoginSchema) => {
+  const onSubmit = async (adminData: AdminLoginSchema) => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     // Submit form data to the server
-    loginMutation.mutate(data);
-    console.log(data);
+    loginMutation.mutate(adminData);
+    console.log(adminData);
     reset();
   };
 
@@ -102,7 +102,7 @@ function StudentLogin() {
       >
         <div className="flex gap-3">
           <h2 className="text-2xl font-semibold text-start">
-            Students Login Form
+            Admin Login Form
           </h2>
           <img
             src={authenticationIcon}
@@ -112,17 +112,17 @@ function StudentLogin() {
         </div>
         <div className="w-full flex flex-col gap-3">
           <div className="flex w-full flex-col gap-2">
-            <label htmlFor="studentID">Student ID :</label>
+            <label htmlFor="adminID">Admin ID :</label>
             <input
-              {...register('studentID')}
-              id="studentID"
-              name="studentID"
+              {...register('adminID')}
+              id="adminID"
+              name="adminID"
               className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
               type="text"
               placeholder="ID"
             />
-            {errors.studentID && (
-              <p className="text-red-500">{errors.studentID.message}</p>
+            {errors.adminID && (
+              <p className="text-red-500">{errors.adminID.message}</p>
             )}
           </div>
         </div>
@@ -186,24 +186,13 @@ function StudentLogin() {
         )}
       </form>
 
-      <div className="flex max-sm:flex-col max-sm:items-center max-xl:px-10 max-md:8/12 max-xl:w-10/12 w-2/5 justify-around ">
+      <div className="flex max-sm:items-center max-xl:px-10 max-md:8/12 max-xl:w-10/12 w-2/5 justify-around ">
         <div className="mb-3">
           <p>
-            Have not registered ?
-            <Link to={'/Registration'}>
+            Not an admin ?
+            <Link to={'/StudentLogin'}>
               <span className="text-blue-500 ml-2 hover:text-blue-700 cursor-pointer">
-                Register here
-              </span>
-            </Link>
-          </p>
-        </div>
-        <p className="">or</p>
-        <div className="mb-4 max-sm:mt-2">
-          <p>
-            An admin ?
-            <Link to={'/AdminLogin'}>
-              <span className="text-blue-500 ml-2 hover:text-blue-700 cursor-pointer">
-                Login here
+                Click here
               </span>
             </Link>
           </p>
@@ -213,4 +202,4 @@ function StudentLogin() {
   );
 }
 
-export default StudentLogin;
+export default AdminLogin;
