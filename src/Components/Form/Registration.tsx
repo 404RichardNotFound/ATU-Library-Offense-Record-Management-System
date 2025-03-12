@@ -28,7 +28,7 @@ const schema = z.object({
     .min(10, 'Invalid phone number!')
     .max(10, 'Invalid phone number!'),
   gender: z.enum(['Male', 'Female']),
-  programme: z.enum(['Computer Science']),
+  programme: z.string().min(2, 'invalid programme'),
 });
 
 type RegistrationFormData = z.infer<typeof schema>;
@@ -36,9 +36,9 @@ type RegistrationFormData = z.infer<typeof schema>;
 const RegistrationSchemaResolver = zodResolver(schema);
 
 const Registration = () => {
-  const [programme, setProgramme] = useState('');
-  const [gender, setGender] = useState<String>('Male');
+  const [gender, setGender] = useState<String>('');
   const [errorMessage, setErrorMessage] = useState<String | null>(null);
+  const [successMessage, setSuccessMessage] = useState<String | null>(null);
 
   const {
     register,
@@ -47,8 +47,7 @@ const Registration = () => {
     formState: { errors, isSubmitting },
   } = useForm<RegistrationFormData>({
     defaultValues: {
-      gender: 'Female',
-      programme: 'Computer Science',
+      gender: 'Male',
     }, // Default value
     resolver: RegistrationSchemaResolver,
     mode: 'onChange', // Enable real-time validation feedback
@@ -58,17 +57,18 @@ const Registration = () => {
   const registrationMutation = useMutation({
     mutationFn: async (studentData: RegistrationFormData) => {
       const response = await axios.post(
-        'http://localhost/backend/registration.php',
-        studentData,
-        { withCredentials: true }
+        'http://localhost/Backend/registration.php',
+        studentData
       );
       return response.data;
     },
     onError: () => {
       setErrorMessage('Error Registering, Try again.');
+      setSuccessMessage(null);
     },
     onSuccess: () => {
       reset(); // Reset form after successful registration
+      setSuccessMessage('Registration Successful! Proceed to login.');
       setErrorMessage(null);
     },
   });
@@ -86,8 +86,11 @@ const Registration = () => {
     if (errorMessage) {
       const timer = setTimeout(() => setErrorMessage(null), 5000);
       return () => clearTimeout(timer);
+    } else if (successMessage) {
+      const timer = setTimeout(() => setSuccessMessage(null), 5000);
+      return () => clearTimeout(timer);
     }
-  }, [errorMessage]);
+  }, [errorMessage, successMessage]);
 
   return (
     <>
@@ -104,11 +107,14 @@ const Registration = () => {
         <div className="flex max-sm:flex-col max-sm:gap-3 gap-10 justify-between">
           <div className="w-full flex flex-col gap-3">
             <div className="flex flex-col gap-2">
-              <label>Name :</label>
+              <label htmlFor="name">Name :</label>
               <input
                 {...register('name')}
+                id="name"
                 className="border-2 bg-slate-50 hover:border-dotted p-2 border-gray-300 rounded-md"
                 type="text"
+                name="name"
+                autoComplete="name auto"
                 placeholder="Name"
               />
               {errors.name && (
@@ -116,20 +122,25 @@ const Registration = () => {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              <label>Student ID :</label>
+              <label htmlFor="studentID">Student ID :</label>
               <input
                 {...register('studentID')}
+                id="studentID"
+                name="studentID"
                 className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
                 type="text"
                 placeholder="ID"
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label>Email :</label>
+              <label htmlFor="email">Email :</label>
               <input
                 {...register('email')}
+                id="email"
                 className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
                 type="email"
+                autoComplete="email auto"
+                name="email"
                 placeholder="Email"
               />
               {errors.email && (
@@ -139,11 +150,13 @@ const Registration = () => {
           </div>
           <div className="w-full flex flex-col gap-3">
             <div className="flex flex-col gap-2">
-              <label>Password :</label>
+              <label htmlFor="password">Password :</label>
               <input
                 {...register('password')}
+                id="password"
                 className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
                 type="password"
+                name="password"
                 placeholder="Password"
               />
               {errors.password && (
@@ -151,12 +164,13 @@ const Registration = () => {
               )}
             </div>
             <div className="flex flex-col gap-4 ">
-              <label>Gender :</label>
+              <span>Gender :</span>
               <div className="flex gap-10">
                 <div className="inline-flex items-center">
                   <input
                     {...register('gender')}
                     required
+                    id="Male"
                     type="radio"
                     name="gender"
                     value="Male"
@@ -164,29 +178,36 @@ const Registration = () => {
                     onChange={(e) => setGender(e.target.value)}
                     className="form-radio text-blue-500"
                   />
-                  <span className="ml-2">Male</span>
+                  <label htmlFor="Male" className="ml-2">
+                    Male
+                  </label>
                 </div>
                 <div className="inline-flex items-center">
                   <input
                     {...register('gender')}
                     required
+                    id="Female"
                     type="radio"
                     name="gender"
                     value="Female"
-                    checked={gender === 'Male'}
+                    checked={gender === 'Female'}
                     onChange={(e) => setGender(e.target.value)}
                     className="form-radio text-pink-500"
                   />
-                  <span className="ml-2">Female</span>
+                  <label htmlFor="Female" className="ml-2">
+                    Female
+                  </label>
                 </div>
               </div>
             </div>
             <div className="flex flex-col gap-2 mt-3">
-              <label>Phone Number :</label>
+              <label htmlFor="phoneNumber">Phone Number :</label>
               <input
                 {...register('phoneNumber')}
+                id="phoneNumber"
                 className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
                 type="tel"
+                name="phoneNumber"
                 placeholder="Phone"
               />
               {errors.phoneNumber && (
@@ -196,20 +217,15 @@ const Registration = () => {
           </div>
         </div>
         <div className="w-full flex flex-col gap-2">
-          <label htmlFor="course">Programme</label>
-          <select
+          <label htmlFor="programme">Programme</label>
+          <input
             {...register('programme')}
-            id="course"
-            name="course"
-            className="border-2 cursor-pointer w-full bg-slate-50 hover:border-dotted p-2 rounded-md"
-            value={programme}
-            onChange={(e) => setProgramme(e.target.value)}
-          >
-            <option value="Computer Science">Computer Science</option>
-            <option value="Mathematics">Accounting</option>
-            <option value="Physics">Fashion</option>
-            <option value="Chemistry">Electrical Engineering</option>
-          </select>
+            type="text"
+            className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
+            id="programme"
+            name="programme"
+            placeholder="Programme"
+          />
         </div>
         <div className="flex gap-2 justify-start">
           <button
@@ -224,15 +240,15 @@ const Registration = () => {
           <p className="text-blue-500 hover:text-blue-700">forgot password ?</p>
         </div>
         {/* Show Success Message */}
-        {registrationMutation.isSuccess && (
+        {successMessage && (
           <p
             className={`text-green-500 bg-green-100 p-2 rounded mt-2 transition-all duration-300 ${
-              registrationMutation.isSuccess
+              successMessage
                 ? 'opacity-100 h-auto'
                 : 'opacity-0 h-0 overflow-hidden'
             }`}
           >
-            Registration successful!
+            {successMessage}
           </p>
         )}
 
