@@ -11,25 +11,30 @@ import axios from 'axios';
 import { Spinner } from '@radix-ui/themes';
 import { useMutation } from '@tanstack/react-query';
 
+// Define the schema for form validation using Zod
 const schema = z.object({
   adminID: z.string().min(9, 'Must be 9 characters!'),
   password: z
     .string()
-    .min(8, 'Password must be at least 8 characters long!') // Minimum length of 8
+    .min(8, 'Password must be at least 8 characters long!')
     .regex(/[A-Z]/, 'At least one uppercase letter!')
     .regex(/[a-z]/, 'At least one lowercase letter!')
     .regex(/\d/, 'At least one number!')
     .regex(/[@$!%*?&]/, 'At least one special character (@$!%*?&)!'),
 });
 
+// Infer the type of the schema
 type AdminLoginSchema = z.infer<typeof schema>;
 
+// Create a resolver for the schema
 const AdminLoginSchemaResolver = zodResolver(schema);
 
 function AdminLogin() {
+  // State for error and success messages
   const [errorMessage, setErrorMessage] = useState<String | null>('');
   const [successMessage, setSuccessMessage] = useState<String | null>('');
 
+  // Destructure the useForm hook
   const {
     register,
     handleSubmit,
@@ -40,7 +45,7 @@ function AdminLogin() {
     mode: 'onChange', // Enable real-time validation feedback
   });
 
-  // ✅ Mutation for Posting Sign-Up Data
+  // Mutation for Posting Sign-Up Data
   const loginMutation = useMutation({
     mutationFn: async (adminLoginData: AdminLoginSchema) => {
       const response = await axios.post(
@@ -68,7 +73,7 @@ function AdminLogin() {
     reset();
   };
 
-  // ✅ Automatically clear error after 5 seconds
+  // Automatically clear error after 5 seconds
   useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => setErrorMessage(null), 5000);
@@ -87,7 +92,7 @@ function AdminLogin() {
       className="w-vh pb-10 md:lg:justify-center lg:h-vh max-2xl:pt-16 2xl:pt-16 flex flex-col gap-8 justify-center items-center"
     >
       <div className="flex max-sm:7/12 max-md:w-11/12 max-xl:w-8/12 max-2xl:w-5/7 max-lg:w-10/12 max-md:pl-3 justify-evenly gap-3 items-start ">
-        <img src={atuLogo} alt="ATU's Logo" className="max-w-20 max-h-20" />
+        <img src={atuLogo} alt="ATU's Logo" className="max-w-24 max-h-24" />
         <div className="flex flex-col">
           <h1 className="text-2xl text-wrap font-bold">
             ATU Library Offense Record Management System (LORMS)
@@ -101,9 +106,7 @@ function AdminLogin() {
         className="bg-white border-2 gap-7 max-2xl:w-7/12E  max-xl:w-8/12 max-lg:w-10/12 w-2/5 shadow-sm border-neutral-200 rounded-lg p-8 h-auto flex flex-col justify-center"
       >
         <div className="flex gap-3">
-          <h2 className="text-2xl font-semibold text-start">
-            Admin Login Form
-          </h2>
+          <h2 className="text-2xl font-semibold text-start">Admin Login</h2>
           <img
             src={authenticationIcon}
             className="w-8 h-8"

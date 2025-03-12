@@ -11,25 +11,30 @@ import axios from 'axios';
 import { Spinner } from '@radix-ui/themes';
 import { useMutation } from '@tanstack/react-query';
 
+// Define the schema for form validation using Zod
 const schema = z.object({
   studentID: z.string().min(9, 'Must be 9 characters!'),
   password: z
     .string()
-    .min(8, 'Password must be at least 8 characters long!') // Minimum length of 8
+    .min(8, 'Password must be at least 8 characters long!')
     .regex(/[A-Z]/, 'At least one uppercase letter!')
     .regex(/[a-z]/, 'At least one lowercase letter!')
     .regex(/\d/, 'At least one number!')
     .regex(/[@$!%*?&]/, 'At least one special character (@$!%*?&)!'),
 });
 
+// Infer the type of the schema
 type StudentLoginSchema = z.infer<typeof schema>;
 
+// Create a resolver for the schema
 const StudentLoginSchemaResolver = zodResolver(schema);
 
 function StudentLogin() {
+  // State for error and success messages
   const [errorMessage, setErrorMessage] = useState<String | null>('');
   const [successMessage, setSuccessMessage] = useState<String | null>('');
 
+  // Destructure the useForm hook
   const {
     register,
     handleSubmit,
@@ -40,7 +45,7 @@ function StudentLogin() {
     mode: 'onChange', // Enable real-time validation feedback
   });
 
-  // ✅ Mutation for Posting Sign-Up Data
+  // Mutation for Posting Sign-Up Data
   const loginMutation = useMutation({
     mutationFn: async (studentLoginData: StudentLoginSchema) => {
       const response = await axios.post(
@@ -68,7 +73,7 @@ function StudentLogin() {
     reset();
   };
 
-  // ✅ Automatically clear error after 5 seconds
+  // Automatically clear error after 5 seconds
   useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => setErrorMessage(null), 5000);
@@ -101,9 +106,7 @@ function StudentLogin() {
         className="bg-white border-2 gap-7 max-2xl:w-7/12E  max-xl:w-8/12 max-lg:w-10/12 w-2/5 shadow-sm border-neutral-200 rounded-lg p-8 h-auto flex flex-col justify-center"
       >
         <div className="flex gap-3">
-          <h2 className="text-2xl font-semibold text-start">
-            Students Login Form
-          </h2>
+          <h2 className="text-2xl font-semibold text-start">Students Login</h2>
           <img
             src={authenticationIcon}
             className="w-8 h-8"

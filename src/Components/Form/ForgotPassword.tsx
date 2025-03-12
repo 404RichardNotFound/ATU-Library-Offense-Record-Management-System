@@ -11,12 +11,13 @@ import axios from 'axios';
 import { Spinner } from '@radix-ui/themes';
 import { useMutation } from '@tanstack/react-query';
 
+// Define the schema for form validation using Zod
 const schema = z
   .object({
     ID: z.string().min(9, 'Must be 9 characters!'),
     password: z
       .string()
-      .min(8, 'Password must be at least 8 characters long!') // Minimum length of 8
+      .min(8, 'Password must be at least 8 characters long!')
       .regex(/[A-Z]/, 'At least one uppercase letter!')
       .regex(/[a-z]/, 'At least one lowercase letter!')
       .regex(/\d/, 'At least one number!')
@@ -28,15 +29,19 @@ const schema = z
     path: ['confirmPassword'],
   });
 
+// Infer the type of the schema
 type ResetPasswordSchema = z.infer<typeof schema>;
 
+// Create a resolver for the schema
 const ResetPasswordSchemaResolver = zodResolver(schema);
 
 function ForgotPassword() {
+  // State for error and success messages
   const [errorMessage, setErrorMessage] = useState<String | null>('');
   const [successMessage, setSuccessMessage] = useState<String | null>('');
   const navigate = useNavigate();
 
+  // Destructure the useForm hook
   const {
     register,
     handleSubmit,
@@ -47,7 +52,7 @@ function ForgotPassword() {
     mode: 'onChange', // Enable real-time validation feedback
   });
 
-  // ✅ Mutation for Posting Sign-Up Data
+  // Mutation for Posting Sign-Up Data
   const resetMutation = useMutation({
     mutationFn: async (userData: ResetPasswordSchema) => {
       const response = await axios.post(
@@ -108,7 +113,7 @@ function ForgotPassword() {
         className="bg-white border-2 gap-7 max-2xl:w-7/12E  max-xl:w-8/12 max-lg:w-10/12 w-2/5 shadow-sm border-neutral-200 rounded-lg p-8 h-auto flex flex-col justify-center"
       >
         <div className="flex gap-3">
-          <h2 className="text-2xl font-semibold text-start">Reset Password</h2>
+          <h2 className="text-2xl font-semibold text-start">Forgot Password</h2>
           <img
             src={forgotPasswordIcon}
             className="w-8 h-8"

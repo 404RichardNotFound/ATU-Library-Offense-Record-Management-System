@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import fileIcon from '../../assets/document.png';
 
+// Define the schema for form validation using Zod
 const schema = z.object({
   name: z
     .string()
@@ -34,15 +35,19 @@ const schema = z.object({
   programme: z.string().min(2, 'invalid programme'),
 });
 
+// Infer the type of the schema
 type RegistrationFormData = z.infer<typeof schema>;
 
+// Create a resolver for the schema
 const RegistrationSchemaResolver = zodResolver(schema);
 
 const Registration = () => {
+  // State for error and success messages
   const [gender, setGender] = useState<String>('');
   const [errorMessage, setErrorMessage] = useState<String | null>(null);
   const [successMessage, setSuccessMessage] = useState<String | null>(null);
 
+  // Destructure the useForm hook
   const {
     register,
     handleSubmit,
@@ -56,7 +61,7 @@ const Registration = () => {
     mode: 'onChange', // Enable real-time validation feedback
   });
 
-  // ✅ Mutation for Posting Sign-Up Data
+  // Mutation for Posting Sign-Up Data
   const registrationMutation = useMutation({
     mutationFn: async (studentData: RegistrationFormData) => {
       const response = await axios.post(
@@ -84,7 +89,7 @@ const Registration = () => {
     reset();
   };
 
-  // ✅ Automatically clear error after 5 seconds
+  // Automatically clear error after 5 seconds
   useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => setErrorMessage(null), 5000);
@@ -104,7 +109,7 @@ const Registration = () => {
         className="w-vh pb-10 md:lg:justify-center lg:h-vh max-2xl:pt-16 2xl:pt-16 flex flex-col gap-8 justify-center items-center"
       >
         <div className="flex max-sm:7/12 max-md:w-11/12 max-xl:w-8/12 max-2xl:w-5/7 max-lg:w-10/12 max-md:pl-3 justify-evenly gap-3 items-start ">
-          <img src={atuLogo} alt="ATU's Logo" className="max-w-20 max-h-20" />
+          <img src={atuLogo} alt="ATU's Logo" className="max-w-24 max-h-24" />
           <div className="flex flex-col">
             <h1 className="text-2xl text-wrap font-bold">
               ATU Library Offense Record Management System (LORMS)
@@ -118,7 +123,7 @@ const Registration = () => {
         >
           <div className="flex items-center gap-3">
             <h2 className="text-2xl font-semibold text-start">
-              Registration Form
+              Student Registration
             </h2>
             <img src={fileIcon} className="w-8 h-8" alt="A Form Icon" />
           </div>
@@ -291,7 +296,7 @@ const Registration = () => {
         <div className="flex max-sm:flex-col max-sm:items-center max-md:8/12 max-lg:w-10/12 w-2/5 justify-around ">
           <div className="mb-3">
             <p>
-              A member ?
+              Already Registered ?
               <Link to={'/StudentLogin'}>
                 <span className="text-blue-500 ml-2 hover:text-blue-700 cursor-pointer">
                   Login here
