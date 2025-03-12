@@ -249,8 +249,8 @@ const Registration = () => {
           </p>
         )}
       </form>
-      <div className="flex max-sm:flex-col max-sm:items-center max-lg:w-10/12 w-2/5 justify-around">
-        <div className="mb-4">
+      <div className="flex max-sm:flex-col max-sm:items-center max-md:8/12 max-lg:w-10/12 w-2/5 justify-around ">
+        <div className="mb-3">
           <p>
             A member ?
             <span className="text-blue-500 ml-2 hover:text-blue-700 cursor-pointer">
@@ -259,7 +259,7 @@ const Registration = () => {
           </p>
         </div>
         <p className="">or</p>
-        <div className="mb-4">
+        <div className="mb-4 max-sm:mt-2">
           <p>
             An admin ?
             <span className="text-blue-500 ml-2 hover:text-blue-700 cursor-pointer">

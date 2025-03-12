@@ -9,7 +9,7 @@ function App() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="w-vh pb-10 md:lg:h-auto lg:h-screen max-2xl:pt-16 2xl:pt-16 flex flex-col gap-8 justify-center items-center"
+        className="w-vh pb-10 md:lg:justify-center lg:h-vh max-2xl:pt-16 2xl:pt-16 flex flex-col gap-8 justify-center items-center"
       >
         <div className="flex max-sm:7/12 max-md:w-11/12 max-xl:w-8/12 max-2xl:w-5/7 max-lg:w-10/12 max-md:pl-3 justify-evenly gap-3 items-start ">
           <img src={atuLogo} alt="ATU's Logo" className="max-w-20 max-h-20" />
