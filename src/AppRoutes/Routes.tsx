@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Registration from '../Components/Form/Registration';
 import StudentLogin from '../Components/Form/StudentLogin';
 import ForgotPassword from '../Components/Form/ForgotPassword';
@@ -8,6 +8,7 @@ import AdminLogin from '../Components/Form/AdminLogin';
 export default function AppRoute() {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/StudentLogin" />} />
       <Route path="/Registration" element={<Registration />} />
       <Route path="/StudentLogin" element={<StudentLogin />} />
       <Route path="/AdminLogin" element={<AdminLogin />} />
