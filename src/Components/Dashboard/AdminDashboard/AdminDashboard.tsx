@@ -1,9 +1,14 @@
 import { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import {
   MenuFoldOutlined,
+  UnorderedListOutlined,
+  QuestionCircleOutlined,
+  EditOutlined,
   MenuUnfoldOutlined,
+  PlusSquareOutlined,
   TeamOutlined,
+  WarningOutlined,
   HomeOutlined,
   LogoutOutlined,
   MoneyCollectOutlined,
@@ -37,6 +42,24 @@ import atuLogo from '/ATU-LOGO.png';
 
 const { Header, Content, Footer, Sider } = Layout;
 
+const breadcrumbNameMap: any = {
+  '/AdminDashboard': 'ATU Lorms',
+  '/AdminDashboard/DashboardOverview': 'Dashboard',
+  '/AdminDashboard/StudentsList': 'Students List',
+  '/AdminDashboard/AddStudent': 'Add Student',
+  '/AdminDashboard/BorrowedBooks': 'Borrowed Books',
+  '/AdminDashboard/AddToList': 'Add to Borrowed List',
+  '/AdminDashboard/OffenseList': 'Offense List',
+  '/AdminDashboard/AddOffenses': 'Add Offense',
+  '/AdminDashboard/PaymentList': 'Payment List',
+  '/AdminDashboard/AddPayment': 'Add Payment',
+  '/AdminDashboard/MyProfile': 'My Profile',
+  '/AdminDashboard/EditProfile': 'Edit Profile',
+  '/AdminDashboard/Settings': 'Settings',
+  '/AdminDashboard/Calender': 'Calendar',
+  '/AdminDashboard/Notifications': 'Notifications',
+};
+
 const { SubMenu } = Menu;
 const AdminDashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -45,6 +68,17 @@ const AdminDashboard = () => {
     { id: 2, message: 'System update available', read: false },
     { id: 3, message: 'New offense reported', read: true },
   ]);
+
+  const location = useLocation(); // Get the current location
+
+  // Convert the pathname into breadcrumb items
+  const pathSnippets = location.pathname.split('/').filter((i) => i);
+  const breadcrumbItems = pathSnippets.map((_, index) => {
+    const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
+    return {
+      title: <Link to={url}>{breadcrumbNameMap[url] || 'Page'}</Link>,
+    };
+  });
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -116,75 +150,101 @@ const AdminDashboard = () => {
           collapsible
           collapsed={collapsed}
         >
-          <div className="flex items-center justify-center space-x-3 py-3 ">
-            <img src={atuLogo} className="w-11 h-11" alt="ATU's Logo" />
-            {!collapsed && (
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.4, ease: 'easeInOut' }}
-              >
-                <h1 className="text-black text-xl font-extrabold">ATU Lorms</h1>
-              </motion.div>
-            )}
-          </div>
+          <Link to="DashboardOverview">
+            <div className="flex items-center justify-center space-x-3 py-3 ">
+              <img src={atuLogo} className="w-11 h-11" alt="ATU's Logo" />
+              {!collapsed && (
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.4, ease: 'easeInOut' }}
+                >
+                  <h1 className="text-black cursor-pointer text-xl font-extrabold">
+                    ATU Lorms
+                  </h1>
+                </motion.div>
+              )}
+            </div>
+          </Link>
           <div className="demo-logo-vertical mt-2" />
           <Menu mode="inline" defaultSelectedKeys={['1']}>
-            <Menu.Item
-              key="1"
-              icon={<DashboardOutlined style={{ color: '' }} />}
-            >
+            <Menu.Item key="1" icon={<DashboardOutlined />}>
               <Link to="DashboardOverview">Dashboard</Link>
             </Menu.Item>
-            <Menu.Item key="2" icon={<TeamOutlined />}>
-              <Link to="Students">Students</Link>
-            </Menu.Item>
-            <Menu.Item key="3" icon={<BookOutlined />}>
-              Borrowed Books
-            </Menu.Item>
-            <Menu.Item key="4" icon={<ExclamationCircleOutlined />}>
-              <Link to="Offenses">Offenses</Link>
-            </Menu.Item>
-            <Menu.Item key="5" icon={<MoneyCollectOutlined />}>
-              Payments
-            </Menu.Item>
-            {/* Submenu for Authentication */}
-            <SubMenu key="6" icon={<LockOutlined />} title="Authentication">
-              <Menu.Item
-                key="logout"
-                icon={<LogoutOutlined />}
-                onClick={() => alert('Logging out...')}
-              >
-                Logout
+
+            {/* Submenu for Students */}
+            <SubMenu key="2" icon={<TeamOutlined />} title="Students">
+              <Menu.Item key="Students List" icon={<TeamOutlined />}>
+                <Link to="StudentsList">Students List</Link>
               </Menu.Item>
-              <Menu.Item
-                key="logout"
-                icon={<LogoutOutlined />}
-                onClick={() => alert('Logging out...')}
-              >
-                404 Page
-              </Menu.Item>
-              <Menu.Item
-                key="logout"
-                icon={<LogoutOutlined />}
-                onClick={() => alert('Logging out...')}
-              >
-                Forgot Password
+              <Menu.Item key="Add A Student" icon={<PlusSquareOutlined />}>
+                <Link to="AddStudent">Add Student</Link>
               </Menu.Item>
             </SubMenu>
-
-            <Menu.Item key="7" icon={<CalendarOutlined />}>
-              Calender
+            {/* Submenu for Borrowed Books */}
+            <SubMenu key="3" icon={<BookOutlined />} title="Borrowed Books">
+              <Menu.Item key="Borrowed Books" icon={<UnorderedListOutlined />}>
+                <Link to="BorrowedBooks">Borrowed Books</Link>
+              </Menu.Item>
+              <Menu.Item key="Add To List" icon={<PlusSquareOutlined />}>
+                <Link to="AddToList">Add To List</Link>
+              </Menu.Item>
+            </SubMenu>
+            {/* Submenu for Offenses */}
+            <SubMenu
+              key="4"
+              icon={<ExclamationCircleOutlined />}
+              title="Offenses"
+            >
+              <Menu.Item key="Offense List" icon={<UnorderedListOutlined />}>
+                <Link to="OffenseList">Offense List</Link>
+              </Menu.Item>
+              <Menu.Item key="Add Offense" icon={<PlusSquareOutlined />}>
+                <Link to="AddOffenses">Add Offense</Link>
+              </Menu.Item>
+            </SubMenu>
+            {/* Submenu for Payments*/}
+            <SubMenu key="5" icon={<MoneyCollectOutlined />} title="Payments">
+              <Menu.Item key="Payment List" icon={<UnorderedListOutlined />}>
+                <Link to="PaymentList">Payment List</Link>
+              </Menu.Item>
+              <Menu.Item key="Add Payment" icon={<PlusSquareOutlined />}>
+                <Link to="AddPayment">Add Payment</Link>
+              </Menu.Item>
+            </SubMenu>
+            {/* Submenu for Authentication */}
+            <SubMenu key="7" icon={<LockOutlined />} title="Authentication">
+              <Menu.Item key="logout" icon={<LogoutOutlined />}>
+                <Link to="">Logout</Link>
+              </Menu.Item>
+              <Menu.Item key="404 Page" icon={<WarningOutlined />}>
+                <Link to="*">404 Page</Link>
+              </Menu.Item>
+              <Menu.Item
+                key="Forgot Password"
+                icon={<QuestionCircleOutlined />}
+              >
+                <Link to="">Forgot Password</Link>
+              </Menu.Item>
+            </SubMenu>
+            <Menu.Item key="8" icon={<CalendarOutlined />}>
+              <Link to="Calender">Calender</Link>
             </Menu.Item>
-            <Menu.Item key="8" icon={<BellOutlined />}>
-              Notifications
+            <Menu.Item key="9" icon={<BellOutlined />}>
+              <Link to="Notifications">Notifications</Link>
             </Menu.Item>
-            <Menu.Item key="9" icon={<ProfileOutlined />}>
-              <Link to="AdminProfile">Profile</Link>
-            </Menu.Item>
-            <Menu.Item key="10" icon={<SettingOutlined />}>
-              Settings
+            {/* Submenu for Payments*/}
+            <SubMenu key="10" icon={<ProfileOutlined />} title="Profile">
+              <Menu.Item key="My Profile" icon={<ProfileOutlined />}>
+                <Link to="MyProfile">My Profile</Link>
+              </Menu.Item>
+              <Menu.Item key="Edit Profile" icon={<EditOutlined />}>
+                <Link to="EditProfile">Edit Profile</Link>
+              </Menu.Item>
+            </SubMenu>
+            <Menu.Item key="11" icon={<SettingOutlined />}>
+              <Link to="Settings">Settings</Link>
             </Menu.Item>
           </Menu>
         </Sider>
@@ -218,7 +278,7 @@ const AdminDashboard = () => {
                   <Input.Search
                     style={{}}
                     size="middle"
-                    placeholder="search"
+                    placeholder="Search Entire Dashboard"
                     enterButton
                   />
                 </AutoComplete>
@@ -239,7 +299,7 @@ const AdminDashboard = () => {
                       <Button
                         type="text"
                         size="large"
-                        icon={<BellOutlined style={{ fontSize: '20px' }} />}
+                        icon={<BellOutlined style={{ fontSize: '22px' }} />}
                       />
                     </Badge>
                   </Dropdown>
@@ -269,18 +329,12 @@ const AdminDashboard = () => {
               Welcome Admin!
             </p>
             <Breadcrumb
-              style={{
-                fontSize: '16px',
-              }}
               items={[
                 {
-                  href: '',
+                  href: '/AdminDashboard/DashboardOverview',
                   title: <HomeOutlined />,
-                },
-                {
-                  href: '',
-                  title: <span>Dashboard</span>,
-                },
+                }, // Home link
+                ...breadcrumbItems, // Dynamically generated breadcrumbs
               ]}
             />
           </div>

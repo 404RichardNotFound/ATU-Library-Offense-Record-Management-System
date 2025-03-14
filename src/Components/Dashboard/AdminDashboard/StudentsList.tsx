@@ -1,4 +1,4 @@
-const Students = () => {
+const StudentsList = () => {
   return (
     <div>
       <p>gdhjdh</p>
@@ -7,4 +7,4 @@ const Students = () => {
   );
 };
 
-export default Students;
+export default StudentsList;
