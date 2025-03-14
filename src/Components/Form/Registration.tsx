@@ -11,7 +11,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import fileIcon from '../../assets/document.png';
 
-// Define the schema for form validation using Zod
 const schema = z.object({
   name: z
     .string()
@@ -35,19 +34,16 @@ const schema = z.object({
   programme: z.string().min(2, 'invalid programme'),
 });
 
-// Infer the type of the schema
 type RegistrationFormData = z.infer<typeof schema>;
 
-// Create a resolver for the schema
 const RegistrationSchemaResolver = zodResolver(schema);
 
 const Registration = () => {
-  // State for error and success messages
   const [gender, setGender] = useState<String>('');
   const [errorMessage, setErrorMessage] = useState<String | null>(null);
   const [successMessage, setSuccessMessage] = useState<String | null>(null);
 
-  // Destructure the useForm hook
+  // React Hook Form
   const {
     register,
     handleSubmit,
@@ -61,7 +57,7 @@ const Registration = () => {
     mode: 'onChange', // Enable real-time validation feedback
   });
 
-  // Mutation for Posting Sign-Up Data
+  // ✅ Mutation for Posting Sign-Up Data
   const registrationMutation = useMutation({
     mutationFn: async (studentData: RegistrationFormData) => {
       const response = await axios.post(
@@ -89,7 +85,7 @@ const Registration = () => {
     reset();
   };
 
-  // Automatically clear error after 5 seconds
+  // ✅ Automatically clear error after 5 seconds
   useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => setErrorMessage(null), 5000);
@@ -109,7 +105,7 @@ const Registration = () => {
         className="w-vh pb-10 md:lg:justify-center lg:h-vh max-2xl:pt-16 2xl:pt-16 flex flex-col gap-8 justify-center items-center"
       >
         <div className="flex max-sm:7/12 max-md:w-11/12 max-xl:w-8/12 max-2xl:w-5/7 max-lg:w-10/12 max-md:pl-3 justify-evenly gap-3 items-start ">
-          <img src={atuLogo} alt="ATU's Logo" className="max-w-24 max-h-24" />
+          <img src={atuLogo} alt="ATU's Logo" className="max-w-20 max-h-20" />
           <div className="flex flex-col">
             <h1 className="text-2xl text-wrap font-bold">
               ATU Library Offense Record Management System (LORMS)
@@ -123,14 +119,14 @@ const Registration = () => {
         >
           <div className="flex items-center gap-3">
             <h2 className="text-2xl font-semibold text-start">
-              Student Registration
+              Registration Form
             </h2>
             <img src={fileIcon} className="w-8 h-8" alt="A Form Icon" />
           </div>
           <div className="flex max-sm:flex-col max-sm:gap-3 gap-10 justify-between">
             <div className="w-full flex flex-col gap-3">
               <div className="flex flex-col gap-2">
-                <label htmlFor="name">Name :</label>
+                <label htmlFor="name">Name</label>
                 <input
                   {...register('name')}
                   id="name"
@@ -145,7 +141,7 @@ const Registration = () => {
                 )}
               </div>
               <div className="flex flex-col gap-2">
-                <label htmlFor="studentID">Student ID :</label>
+                <label htmlFor="studentID">Student ID</label>
                 <input
                   {...register('studentID')}
                   id="studentID"
@@ -173,7 +169,7 @@ const Registration = () => {
             </div>
             <div className="w-full flex flex-col gap-3">
               <div className="flex flex-col gap-2">
-                <label htmlFor="password">Password :</label>
+                <label htmlFor="password">Password</label>
                 <input
                   {...register('password')}
                   id="password"
@@ -187,7 +183,7 @@ const Registration = () => {
                 )}
               </div>
               <div className="flex flex-col gap-4 ">
-                <span>Gender :</span>
+                <span>Gender</span>
                 <div className="flex gap-10">
                   <div className="inline-flex items-center">
                     <input
@@ -199,7 +195,7 @@ const Registration = () => {
                       value="Male"
                       checked={gender === 'Male'}
                       onChange={(e) => setGender(e.target.value)}
-                      className="form-radio text-blue-500"
+                      className="form-radio cursor-pointer text-blue-500"
                     />
                     <label htmlFor="Male" className="ml-2">
                       Male
@@ -215,7 +211,7 @@ const Registration = () => {
                       value="Female"
                       checked={gender === 'Female'}
                       onChange={(e) => setGender(e.target.value)}
-                      className="form-radio text-pink-500"
+                      className="form-radio cursor-pointer text-pink-500"
                     />
                     <label htmlFor="Female" className="ml-2">
                       Female
@@ -224,7 +220,7 @@ const Registration = () => {
                 </div>
               </div>
               <div className="flex flex-col gap-2 mt-3">
-                <label htmlFor="phoneNumber">Phone Number :</label>
+                <label htmlFor="phoneNumber">Phone Number</label>
                 <input
                   {...register('phoneNumber')}
                   id="phoneNumber"
@@ -296,7 +292,7 @@ const Registration = () => {
         <div className="flex max-sm:flex-col max-sm:items-center max-md:8/12 max-lg:w-10/12 w-2/5 justify-around ">
           <div className="mb-3">
             <p>
-              Already Registered ?
+              A member ?
               <Link to={'/StudentLogin'}>
                 <span className="text-blue-500 ml-2 hover:text-blue-700 cursor-pointer">
                   Login here

@@ -122,7 +122,7 @@ function ForgotPassword() {
         </div>
         <div className="w-full flex flex-col gap-3">
           <div className="flex w-full flex-col gap-2">
-            <label htmlFor="ID">Enter ID :</label>
+            <label htmlFor="ID">Enter ID</label>
             <input
               {...register('ID')}
               id="adminID"
@@ -136,7 +136,7 @@ function ForgotPassword() {
         </div>
         <div className="w-full flex flex-col gap-3">
           <div className="flex flex-col gap-2">
-            <label htmlFor="password">Password :</label>
+            <label htmlFor="password">Password</label>
             <input
               {...register('password')}
               id="password"
@@ -151,7 +151,7 @@ function ForgotPassword() {
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="password">Password :</label>
+          <label htmlFor="password">Confirm Password</label>
           <input
             {...register('confirmPassword')}
             id="confirmPassword"

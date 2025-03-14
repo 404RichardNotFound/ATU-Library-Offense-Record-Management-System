@@ -1,3 +1,5 @@
+@import "antd/dist/reset.css";  /* Use reset.css to prevent style conflicts */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

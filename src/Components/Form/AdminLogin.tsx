@@ -115,7 +115,7 @@ function AdminLogin() {
         </div>
         <div className="w-full flex flex-col gap-3">
           <div className="flex w-full flex-col gap-2">
-            <label htmlFor="adminID">Admin ID :</label>
+            <label htmlFor="adminID">Admin ID</label>
             <input
               {...register('adminID')}
               id="adminID"
@@ -131,7 +131,7 @@ function AdminLogin() {
         </div>
         <div className="w-full flex flex-col gap-3">
           <div className="flex flex-col gap-2">
-            <label htmlFor="password">Password :</label>
+            <label htmlFor="password">Password</label>
             <input
               {...register('password')}
               id="password"
