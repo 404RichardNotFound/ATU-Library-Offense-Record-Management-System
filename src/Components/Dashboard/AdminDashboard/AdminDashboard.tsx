@@ -42,15 +42,15 @@ import atuLogo from '/ATU-LOGO.png';
 
 const { Header, Content, Footer, Sider } = Layout;
 
+// Defining breadcrumbs links
 const breadcrumbNameMap: any = {
-  '/AdminDashboard': 'ATU Lorms',
   '/AdminDashboard/DashboardOverview': 'Dashboard',
   '/AdminDashboard/StudentsList': 'Students List',
   '/AdminDashboard/AddStudent': 'Add Student',
   '/AdminDashboard/BorrowedBooks': 'Borrowed Books',
   '/AdminDashboard/AddToList': 'Add to Borrowed List',
   '/AdminDashboard/OffenseList': 'Offense List',
-  '/AdminDashboard/AddOffenses': 'Add Offense',
+  '/AdminDashboard/AddOffense': 'Add Offense',
   '/AdminDashboard/PaymentList': 'Payment List',
   '/AdminDashboard/AddPayment': 'Add Payment',
   '/AdminDashboard/MyProfile': 'My Profile',
@@ -65,8 +65,7 @@ const AdminDashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [notifications, setNotifications] = useState([
     { id: 1, message: 'New student registered', read: false },
-    { id: 2, message: 'System update available', read: false },
-    { id: 3, message: 'New offense reported', read: true },
+    { id: 3, message: 'New student added', read: true },
   ]);
 
   const location = useLocation(); // Get the current location
@@ -76,7 +75,7 @@ const AdminDashboard = () => {
   const breadcrumbItems = pathSnippets.map((_, index) => {
     const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
     return {
-      title: <Link to={url}>{breadcrumbNameMap[url] || 'Page'}</Link>,
+      title: <Link to={url}>{breadcrumbNameMap[url] || 'ATU Lorms'}</Link>,
     };
   });
   const {
@@ -106,7 +105,7 @@ const AdminDashboard = () => {
 
   // Dropdown menu for notifications
   const notificationMenu = (
-    <Menu>
+    <Menu style={{ width: '270px' }}>
       {notifications.length > 0 ? (
         <>
           <div className="py-2 gap-2 flex justify-center">
@@ -118,16 +117,16 @@ const AdminDashboard = () => {
             <Menu.Item
               key={notif.id}
               className={notif.read ? 'text-gray-500' : 'font-bold'}
-              icon={<UserAddOutlined />}
+              icon={
+                <UserAddOutlined className="bg-blue-300 text-slate-700 p-2 rounded-full" />
+              }
             >
               {notif.message}
+              <p>2 Hours ago</p>
             </Menu.Item>
           ))}
           <Menu.Divider />
-          <Menu.Item
-            onClick={markAllAsRead}
-            className="text-center text-blue-500"
-          >
+          <Menu.Item onClick={markAllAsRead} className="text-center">
             Mark all as read
           </Menu.Item>
         </>
@@ -201,7 +200,7 @@ const AdminDashboard = () => {
                 <Link to="OffenseList">Offense List</Link>
               </Menu.Item>
               <Menu.Item key="Add Offense" icon={<PlusSquareOutlined />}>
-                <Link to="AddOffenses">Add Offense</Link>
+                <Link to="AddOffense">Add Offense</Link>
               </Menu.Item>
             </SubMenu>
             {/* Submenu for Payments*/}
@@ -325,7 +324,7 @@ const AdminDashboard = () => {
             </div>
           </Header>
           <div className="flex px-5 pt-4 justify-between items-center">
-            <p className="text-lg text-black opacity-40  max-md:hidden">
+            <p className="text-base text-black opacity-40  max-md:hidden">
               Welcome Admin!
             </p>
             <Breadcrumb
@@ -341,7 +340,6 @@ const AdminDashboard = () => {
           <Content
             style={{
               margin: '24px 16px',
-              padding: 24,
               minHeight: 280,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
