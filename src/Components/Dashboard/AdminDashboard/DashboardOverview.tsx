@@ -1,5 +1,3 @@
-'use client';
-
 import bookIcon from '../../../assets/open-book.png';
 import {
   BarChart,
@@ -139,7 +137,7 @@ const DashboardOverview = () => {
                   `${name} ${(percent * 100).toFixed(0)}%`
                 } // Shows labels inside slices
               >
-                {data.map((entry, index) => (
+                {pieData.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index]} />
                 ))}
               </Pie>
