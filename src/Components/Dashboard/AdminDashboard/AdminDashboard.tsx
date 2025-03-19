@@ -144,8 +144,8 @@ const AdminDashboard = () => {
         }}
       >
         <Sider
-          trigger={null}
           className="bg-white"
+          trigger={null}
           collapsible
           collapsed={collapsed}
         >
