@@ -1,4 +1,5 @@
 import userPhoto from '../../../assets/woman-photo.jpg';
+import { Tag } from 'antd';
 
 const MyProfile = () => {
   return (
@@ -11,10 +12,17 @@ const MyProfile = () => {
           alt=""
         />
         <div className="flex max-sm:text-center gap-1 max-md:gap-[2px] flex-col overflow-hidden">
-          <p className="text-base">Jessica Davidson</p>
-          <p className="text-sm">Accra Technical University</p>
-          <p className="text-xs">Jessicadavid789@gmail.com</p>
-          <p>Admin</p>
+          <p className="text-xl font-medium">Jessica Davidson</p>
+          <p className="text-base">Accra Technical University</p>
+          <p className="text-sm">Jessicadavid789@gmail.com</p>
+          <p>
+            <span className="mr-1">Tel:</span>0548225869
+          </p>
+          <div>
+            <Tag className="w-14 mt-1" color="blue">
+              Admin
+            </Tag>
+          </div>
         </div>
       </div>
       {/* Edit Profile */}

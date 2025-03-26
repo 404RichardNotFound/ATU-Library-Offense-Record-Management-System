@@ -36,7 +36,7 @@ import {
   Input,
   Breadcrumb,
 } from 'antd';
-import userPhoto from '../../../assets/customer-support.png';
+import userPhoto from '../../../assets/woman-photo.jpg';
 
 import atuLogo from '/ATU-LOGO.png';
 

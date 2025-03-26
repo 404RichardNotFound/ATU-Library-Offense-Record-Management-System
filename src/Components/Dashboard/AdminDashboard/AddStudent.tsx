@@ -1,252 +1,210 @@
-import { Spinner } from '@radix-ui/themes';
-import { useEffect } from 'react';
-import { z } from 'zod';
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-const schema = z.object({
-  name: z
-    .string()
-    .min(5, 'Must be at least 5 characters!')
-    .max(20, 'Name is too long!') // name must be a string
-    .regex(/^[A-Za-z\s]+$/, 'Name can only contain letters and spaces!'),
-  studentID: z.string(),
-  email: z.string().email(), // Must be a valid email
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters long!') // Minimum length of 8
-    .regex(/[A-Z]/, 'At least one uppercase letter!')
-    .regex(/[a-z]/, 'At least one lowercase letter!')
-    .regex(/\d/, 'At least one number!')
-    .regex(/[@$!%*?&]/, 'At least one special character (@$!%*?&)!'),
-  phoneNumber: z
-    .string()
-    .min(10, 'Invalid phone number!')
-    .max(10, 'Invalid phone number!'),
-  gender: z.enum(['Male', 'Female']),
-  programme: z.string().min(2, 'invalid programme'),
-});
-
-type AddStudentFormData = z.infer<typeof schema>;
-
-const AddStudentSchemaResolver = zodResolver(schema);
 
 const AddStudent = () => {
-  const [gender, setGender] = useState<String>('');
-  const [errorMessage, setErrorMessage] = useState<String | null>(null);
-  const [successMessage, setSuccessMessage] = useState<String | null>(null);
-
-  // React Hook Form
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<AddStudentFormData>({
-    defaultValues: {
-      gender: 'Male',
-    }, // Default value
-    resolver: AddStudentSchemaResolver,
-    mode: 'onChange', // Enable real-time validation feedback
+  // State to manage form data
+  const [formData, setFormData] = useState({
+    name: '',
+    studentID: '',
+    email: '',
+    password: '',
+    phoneNumber: '',
+    gender: 'Male',
+    programme: '',
   });
 
-  // ✅ Mutation for Posting Sign-Up Data
-  const AddStudentMutation = useMutation({
-    mutationFn: async (studentData: AddStudentFormData) => {
-      const response = await axios.post(
-        'http://localhost/Backend/registration.php',
-        studentData
-      );
-      return response.data;
-    },
-    onError: () => {
-      setErrorMessage('Error Adding Student, Try again.');
-      setSuccessMessage(null);
-    },
-    onSuccess: () => {
-      reset(); // Reset form after successful registration
-      setSuccessMessage('Student Added Successfully!');
-      setErrorMessage(null);
-    },
-  });
+  // State to manage loading spinner during form submission
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit = async (data: AddStudentFormData) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    // Submit form data to the server
-    AddStudentMutation.mutate(data);
-    console.log(data);
-    reset();
+  // Handle form field changes
+  const handleChange = (e: any) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // ✅ Automatically clear error after 5 seconds
-  useEffect(() => {
-    if (errorMessage) {
-      const timer = setTimeout(() => setErrorMessage(null), 5000);
-      return () => clearTimeout(timer);
-    } else if (successMessage) {
-      const timer = setTimeout(() => setSuccessMessage(null), 5000);
-      return () => clearTimeout(timer);
+  // Handle form submission
+  const handleSubmit = async (e: any) => {
+    e.preventDefault(); // Prevents page reload on form submission
+    setIsSubmitting(true); // Show spinner and disable button
+
+    try {
+      // Send form data to the backend API
+      await axios.post('http://localhost/Backend/registration.php', formData);
+
+      // Show success message
+      toast.success('Student added successfully!', {
+        duration: 3000,
+        position: 'top-right',
+      });
+
+      // Reset form fields after successful submission
+      setFormData({
+        name: '',
+        studentID: '',
+        email: '',
+        password: '',
+        phoneNumber: '',
+        gender: 'Male',
+        programme: '',
+      });
+    } catch (error) {
+      // Show error message if submission fails
+      toast.error('Error adding student. Please try again.');
+    } finally {
+      setIsSubmitting(false); // Hide spinner and enable button
     }
-  }, [errorMessage, successMessage]);
+  };
 
   return (
     <div className="w-full bg-zinc-100 h-full flex justify-center">
+      {/* Toast notifications for success and error messages */}
+      <Toaster />
+
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit}
         className="rounded-md border-2 border-zinc-200 bg-white h-auto w-full max-sm:w-full p-6 flex flex-col gap-3"
       >
         <h1 className="text-center font-medium text-lg">Add Student</h1>
-        <div className="flex flex-col gap-4 h-auto justify-between">
-          <div className="flex flex-col w-full gap-4">
-            <div className="text-base w-full flex gap-2 flex-col">
-              <label>Name:</label>
-              <input
-                {...register('name')}
-                className="rounded-sm bg-slate-50 border-2 px-2 w-full"
-                type="text"
-                name="name"
-              />
 
-              {errors.name && (
-                <p className="text-red-500">{errors.name.message}</p>
-              )}
-            </div>
-            <div className="text-base flex gap-2 w-auto flex-col">
-              <label>Student ID:</label>
+        {/* Name Input */}
+        <div className="text-base w-full flex gap-2 flex-col">
+          <label>Name:</label>
+          <input
+            className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Student ID Input */}
+        <div className="text-base flex gap-2 w-auto flex-col">
+          <label>Student ID:</label>
+          <input
+            className="rounded-sm px-2 w-full bg-slate-50 border-2"
+            type="text"
+            name="studentID"
+            value={formData.studentID}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Email Input */}
+        <div className="text-base flex gap-2 w-full flex-col">
+          <label>Email:</label>
+          <input
+            className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Password Input */}
+        <div className="text-base flex gap-2 w-full flex-col">
+          <label>Password:</label>
+          <input
+            className="rounded-sm bg-slate-50 border-2 px-2"
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Gender Selection */}
+        <div className="w-full flex flex-col gap-2">
+          <label className="text-base">Gender:</label>
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2">
               <input
-                {...register('studentID')}
-                className="rounded-sm px-2 w-full bg-slate-50 border-2"
-                type="text"
-                name="studentID"
+                type="radio"
+                name="gender"
+                value="Male"
+                checked={formData.gender === 'Male'}
+                onChange={handleChange}
               />
-              {errors.studentID && (
-                <p className="text-red-500">{errors.studentID.message}</p>
-              )}
-            </div>
-            <div className="text-base flex gap-2 w-full flex-col">
-              <label>Email:</label>
+              Male
+            </label>
+            <label className="flex items-center gap-2">
               <input
-                {...register('email')}
-                className="rounded-sm bg-slate-50 border-2 px-2 w-full"
-                type="email"
-                name="email"
+                type="radio"
+                name="gender"
+                value="Female"
+                checked={formData.gender === 'Female'}
+                onChange={handleChange}
               />
-              {errors.email && (
-                <p className="text-red-500">{errors.email.message}</p>
-              )}
-            </div>
-          </div>
-          <div className="flex flex-col gap-4 w-full">
-            <div className="text-base flex gap-2 w-full flex-col">
-              <label>Password:</label>
-              <input
-                {...register('password')}
-                className="rounded-sm bg-slate-50 border-2 px-2"
-                type="password"
-                name="password"
-              />
-              {errors.password && (
-                <p className="text-red-500">{errors.password.message}</p>
-              )}
-            </div>
-            <div className="w-full flex flex-col gap-2">
-              <label className="text-base">Gender:</label>
-              <div className="flex gap-4">
-                <div className="flex items-center gap-2">
-                  <label className="text-base" htmlFor="Male">
-                    Male
-                  </label>
-                  <input
-                    {...register('gender')}
-                    value="Male"
-                    checked={gender === 'Male'}
-                    onChange={(e) => setGender(e.target.value)}
-                    className="form-radio mt-1 cursor-pointer"
-                    type="checkbox"
-                    name="Male"
-                    id="Male"
-                  />
-                </div>
-                <div className="flex items-center gap-2">
-                  <label className="text-base" htmlFor="Female">
-                    Female
-                  </label>
-                  <input
-                    {...register('gender')}
-                    id="Female"
-                    type="checkbox"
-                    name="gender"
-                    value="Female"
-                    checked={gender === 'Female'}
-                    onChange={(e) => setGender(e.target.value)}
-                    className="form-radio  cursor-pointer mt-1"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="text-base w-full flex gap-2 flex-col">
-              <label>Phone Number:</label>
-              <input
-                {...register('phoneNumber')}
-                className="rounded-sm bg-slate-50 border-2 px-2"
-                type="tel"
-                name="phoneNumber"
-              />
-              {errors.phoneNumber && (
-                <p className="text-red-500">{errors.phoneNumber.message}</p>
-              )}
-            </div>
+              Female
+            </label>
           </div>
         </div>
+
+        {/* Phone Number Input */}
+        <div className="text-base w-full flex gap-2 flex-col">
+          <label>Phone Number:</label>
+          <input
+            className="rounded-sm bg-slate-50 border-2 px-2"
+            type="tel"
+            name="phoneNumber"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Programme Input */}
         <div className="text-base flex w-full gap-4 flex-col">
           <label>Programme:</label>
           <input
-            {...register('programme')}
             className="rounded-sm bg-slate-50 border-2 px-2"
             type="text"
             name="programme"
+            value={formData.programme}
+            onChange={handleChange}
+            required
           />
-          {errors.programme && (
-            <p className="text-red-500">{errors.programme.message}</p>
-          )}
         </div>
+
+        {/* Submit Button with Loading Spinner */}
         <div className="flex gap-2 justify-start">
           <button
             type="submit"
-            className="border-2 items-center flex gap-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
+            className="border-2 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
+            disabled={isSubmitting} // Disable button while submitting
           >
-            {isSubmitting && <Spinner />}
-            {isSubmitting ? 'Please wait..' : 'Add'}
+            {/* Show spinner when submitting */}
+            {isSubmitting && (
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+              </svg>
+            )}
+            {/* Change button text when submitting */}
+            {isSubmitting ? 'Please wait...' : 'Add Student'}
           </button>
         </div>
-        {/* Show Success Message */}
-        {successMessage && (
-          <p
-            className={`text-green-500 bg-green-100 p-2 rounded mt-2 transition-all duration-300 ${
-              successMessage
-                ? 'opacity-100 h-auto'
-                : 'opacity-0 h-0 overflow-hidden'
-            }`}
-          >
-            {successMessage}
-          </p>
-        )}
-
-        {/* Show Error Message */}
-        {errorMessage && (
-          <p
-            className={`text-red-500 bg-red-100 p-2 rounded mt-2 transition-all duration-300 ${
-              errorMessage
-                ? 'opacity-100 h-auto'
-                : 'opacity-0 h-0 overflow-hidden'
-            }`}
-          >
-            {errorMessage}
-          </p>
-        )}
       </form>
     </div>
   );

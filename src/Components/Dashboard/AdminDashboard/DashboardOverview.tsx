@@ -38,7 +38,7 @@ const DashboardOverview = () => {
       <div className="grid grid-cols-4 max-sm:grid-cols-1 bg-zinc-100 max-lg:grid-cols-2 gap-4 p-1 w-full">
         <div className="flex text-black shadow-sm max-lg:w-full w-full rounded-md h-auto items-center justify-between bg-white py-5 px-3">
           <div className="flex flex-col gap-3">
-            <h1 className="text-md opacity-60 font-semibold">Total Students</h1>
+            <h1 className="text-md opacity-60">Total Students</h1>
             <h2 className="text-lg font-semibold">359</h2>
           </div>
           <div>
@@ -47,7 +47,7 @@ const DashboardOverview = () => {
         </div>
         <div className="flex shadow-sm max-lg:w-full w-full rounded-md h-auto items-center justify-between bg-white text-black py-5 px-3">
           <div className="flex flex-col gap-3">
-            <h1 className="text-md opacity-60 font-semibold">Programs</h1>
+            <h1 className="text-md opacity-60">Programs</h1>
             <h2 className="text-lg font-semibold">25</h2>
           </div>
           <div>
@@ -60,7 +60,7 @@ const DashboardOverview = () => {
         </div>
         <div className="flex shadow-sm  max-lg:w-full  w-full rounded-md h-auto items-center justify-between bg-white text-black py-5 px-3">
           <div className="flex flex-col gap-3">
-            <h1 className="text-md opacity-60 font-semibold">Borrowed Books</h1>
+            <h1 className="text-md opacity-60">Borrowed Books</h1>
             <h2 className="text-lg font-semibold">359</h2>
           </div>
           <div>
@@ -69,7 +69,7 @@ const DashboardOverview = () => {
         </div>
         <div className="flex shadow-sm max-lg:w-full bg-white text-black w-full rounded-md h-auto items-center justify-between py-5 px-3">
           <div className="flex flex-col gap-3">
-            <h1 className="text-md opacity-60 font-semibold">Offenses</h1>
+            <h1 className="text-md opacity-60">Offenses</h1>
             <h2 className="text-lg font-semibold">150</h2>
           </div>
           <div>
@@ -80,9 +80,7 @@ const DashboardOverview = () => {
       <div className="pt-4 w-full bg-zinc-100 gap-4 flex justify-between max-lg:flex-col">
         {/*Bar Chart*/}
         <div className="w-full p-3 py-6 border rounded-lg shadow-sm bg-white">
-          <h2 className="text-lg font-semibold text-center mb-4">
-            Offense Overview
-          </h2>
+          <h2 className="text-lg text-center mb-4">Offense Overview</h2>
           <ResponsiveContainer className="-ml-4" width="100%" height={300}>
             <BarChart data={data} className="p-3">
               <CartesianGrid strokeDasharray="3 3" className="opacity-0" />
@@ -112,16 +110,14 @@ const DashboardOverview = () => {
                   style={{ backgroundColor: item.color }}
                 ></div>{' '}
                 {/* Square */}
-                <span className="text-sm font-medium">{item.name}</span>
+                <span className="text-sm">{item.name}</span>
               </div>
             ))}
           </div>
         </div>
         {/* Pie Chart */}
         <div className="w-1/2 max-lg:w-full p-4 border rounded-lg shadow-sm bg-white">
-          <h2 className="text-lg font-semibold text-center mb-4">
-            Gender Distribution
-          </h2>
+          <h2 className="text-lg text-center mb-4">Gender Distribution</h2>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -154,7 +150,7 @@ const DashboardOverview = () => {
                   style={{ backgroundColor: COLORS[index] }}
                 ></div>
                 {/* Square */}
-                <span className="text-sm font-medium">{entry.name}</span>
+                <span className="text-sm">{entry.name}</span>
               </div>
             ))}
           </div>

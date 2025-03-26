@@ -4,7 +4,6 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { useState, useRef } from 'react';
 import { Pencil, Trash2, RotateCcw, Loader } from 'lucide-react'; // Import icons
-
 import {
   Dialog,
   DialogContent,
@@ -13,13 +12,15 @@ import {
 } from '@/Components/ui/dialog';
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
+import { DatePicker } from 'antd'; // Import Ant Design DatePicker
+import dayjs from 'dayjs'; // Import dayjs for date handling
 
 // Register all Community features for AG Grid
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const date = new Date();
 const BorrowedBooks = () => {
-  // Row Data for the Table
+  // State to manage table row data
   const [rowData, setRowData] = useState([
     {
       Student: 'Richard Okoro',
@@ -52,24 +53,22 @@ const BorrowedBooks = () => {
   // Refresh Table Data
   const refreshTable = async () => {
     setIsRefreshing(true);
-
-    // Simulate API delay (Replace this with actual backend call later)
     setTimeout(() => {
-      setRowData([...rowData]); // For now, just reloading the same data
+      setRowData([...rowData]); // Simulating refresh
       setIsRefreshing(false);
     }, 1500);
   };
 
-  // Open edit modal
+  // Open edit modal and deep clone data to avoid state mutation issues
   const openEditModal = (row: any) => {
     setSelectedRow(row);
-    setEditedData(row);
+    setEditedData({ ...row }); // Deep clone row data
     setIsDialogOpen(true);
   };
 
-  // Handle input changes in modal
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditedData({ ...editedData, [e.target.name]: e.target.value });
+  // Handle date changes in modal
+  const handleDateChange = (_date: any, dateString: string, field: string) => {
+    setEditedData((prevData: any) => ({ ...prevData, [field]: dateString }));
   };
 
   // Save edited data
@@ -87,84 +86,25 @@ const BorrowedBooks = () => {
     setRowData((prevData) => prevData.filter((row) => row.ID !== id));
   };
 
-  // Export table to CSV (Fixed)
-  const exportToCSV = () => {
-    if (gridRef.current) {
-      gridRef.current.api.exportDataAsCsv({
-        processCellCallback: (params) => {
-          // Exclude the "Actions" column
-          if (params.column.getColId() === 'Actions') {
-            return null;
-          }
-          if (params.column.getColId() === 'BorrowDate') {
-            const date = new Date(params.value);
-            return date instanceof Date && !isNaN(date.getTime())
-              ? date.toLocaleDateString('en-GB') // Format as DD/MM/YYYY
-              : '';
-          }
-          if (params.column.getColId() === 'ReturnDate') {
-            const date = new Date(params.value);
-            return date instanceof Date && !isNaN(date.getTime())
-              ? date.toLocaleDateString('en-GB') // Format as DD/MM/YYYY
-              : '';
-          }
-          return params.value;
-        },
-        columnKeys: [
-          'Student',
-          'ID',
-          'Book',
-          'BorrowDate',
-          'ReturnDate',
-          'Status',
-        ], // Only export these columns
-      });
-    }
-  };
-
   // Column Definitions
   const [colDefs] = useState<ColDef[]>([
     { field: 'Student', headerName: 'Name' },
     { field: 'ID', headerName: 'ID' },
-    {
-      field: 'Book',
-      headerName: 'Book',
-    },
-    {
-      field: 'BorrowDate',
-      headerName: 'Borrow Date',
-      valueFormatter: (params) => {
-        if (!params.value) return ''; // Prevents errors if null
-        const date = new Date(params.value);
-        return date.toISOString().split('T')[0]; // Ensures "YYYY-MM-DD"
-      },
-    },
-    {
-      field: 'ReturnDate',
-      headerName: 'Return Date',
-      valueFormatter: (params) => {
-        if (!params.value) return ''; // Prevents errors if null
-        const date = new Date(params.value);
-        return date.toISOString().split('T')[0]; // Ensures "YYYY-MM-DD"
-      },
-    },
-    {
-      field: 'Status',
-      headerName: 'Status',
-    },
+    { field: 'Book', headerName: 'Book Title' },
+    { field: 'BorrowDate', headerName: 'Borrow Date' },
+    { field: 'ReturnDate', headerName: 'Return Date' },
+    { field: 'Status', headerName: 'Status' },
     {
       field: 'Actions',
       headerName: 'Actions',
       cellRenderer: (params: any) => (
         <div className="flex gap-4 h-full items-center">
-          {/* Edit Icon */}
           <button
             onClick={() => openEditModal(params.data)}
             className="text-blue-500 hover:text-blue-700"
           >
             <Pencil size={20} />
           </button>
-          {/* Delete Icon */}
           <button
             onClick={() => deleteRow(params.data.ID)}
             className="text-red-500 hover:text-red-700"
@@ -181,7 +121,6 @@ const BorrowedBooks = () => {
       {/* Header Buttons */}
       <div className="flex justify-end items-center py-1 mb-2 px-0">
         <div className="flex gap-4">
-          {/* Refresh Button */}
           <Button
             onClick={refreshTable}
             className="flex items-center gap-2 hover:bg-blue-600 bg-blue-500"
@@ -190,16 +129,14 @@ const BorrowedBooks = () => {
               <Loader className="animate-spin" size={18} />
             ) : (
               <RotateCcw size={18} />
-            )}
+            )}{' '}
             Refresh
           </Button>
-
-          {/* Export Button */}
           <Button
-            onClick={exportToCSV}
+            onClick={() => gridRef.current?.api.exportDataAsCsv()}
             className="bg-blue-500 hover:bg-blue-600"
           >
-            Export to CSV
+            Export To CSV
           </Button>
         </div>
       </div>
@@ -219,56 +156,53 @@ const BorrowedBooks = () => {
       {/* Edit Modal */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-sm:w-3/4 rounded-sm">
-          <DialogTitle>Edit Student Details</DialogTitle>
+          <DialogTitle>Edit Row</DialogTitle>
           <DialogDescription>
             Modify the student details below.
           </DialogDescription>
-
           <div className="flex flex-col gap-4">
             <Input
               name="Student"
               value={editedData.Student || ''}
-              onChange={handleInputChange}
+              onChange={(e) =>
+                setEditedData({ ...editedData, Student: e.target.value })
+              }
               placeholder="Student Name"
             />
+            <Input name="ID" value={editedData.ID || ''} placeholder="ID" />
             <Input
-              name="ID"
-              value={editedData.ID || ''}
-              onChange={handleInputChange}
-              placeholder="ID"
+              name="Book"
+              value={editedData.Book || ''}
+              onChange={(e) =>
+                setEditedData({ ...editedData, Book: e.target.value })
+              }
+              placeholder="Book Title"
+            />
+            <DatePicker
+              onChange={(date, dateString: any) =>
+                handleDateChange(date, dateString, 'BorrowDate')
+              }
+              value={dayjs(editedData.BorrowDate)}
+              placeholder="Borrow Date"
+              className="w-full"
+            />
+            <DatePicker
+              onChange={(date, dateString: any) =>
+                handleDateChange(date, dateString, 'ReturnDate')
+              }
+              value={dayjs(editedData.ReturnDate)}
+              placeholder="Return Date"
+              className="w-full"
             />
             <Input
-              name="Email"
-              value={editedData.Email || ''}
-              onChange={handleInputChange}
-              placeholder="Email"
-            />
-            <Input
-              name="Program"
-              value={editedData.Program || ''}
-              onChange={handleInputChange}
-              placeholder="Program"
-            />
-            <Input
-              name="Phone"
-              value={editedData.Phone || ''}
-              onChange={handleInputChange}
-              placeholder="Phone Number"
-            />
-            <Input
-              name="Gender"
-              value={editedData.Gender || ''}
-              onChange={handleInputChange}
-              placeholder="Gender"
-            />
-            <Input
-              name="Joined"
-              value={editedData.Joined || ''}
-              onChange={handleInputChange}
-              placeholder="Joined"
+              name="Status"
+              value={editedData.Status || ''}
+              onChange={(e) =>
+                setEditedData({ ...editedData, Status: e.target.value })
+              }
+              placeholder="Status"
             />
           </div>
-
           <div className="flex justify-end gap-2 mt-4">
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
               Cancel
