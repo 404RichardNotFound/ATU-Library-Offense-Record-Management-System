@@ -1,7 +1,3 @@
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
-import { useState } from 'react';
-import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
-
 import bookIcon from '../../../assets/books-stack-of-three.png';
 import {
   BarChart,
@@ -17,9 +13,6 @@ import { PieChart, Pie, Cell } from 'recharts';
 import studentIcon from '../../../assets/reading-book.png';
 import judgeIcon from '../../../assets/child.png';
 import programIcon from '../../../assets/classroom.png';
-import { ColDef } from 'ag-grid-community';
-// Register all Community features for AG Grid
-ModuleRegistry.registerModules([AllCommunityModule]);
 
 // Barchart Data
 const data = [
@@ -40,81 +33,10 @@ const pieData = [
 const COLORS = ['#3C81FF', '#ffc75f']; // Blue for Male, Pink for Female
 
 const DashboardOverview = () => {
-  const [rowData, setRowData] = useState([
-    {
-      Student: 'Tesla',
-      ID: 'Model Y',
-      Email: 64950,
-      Joined: '1/22/2025',
-      Phone: '0548225869',
-      Gender: 'Female',
-    },
-    {
-      Student: 'Ford',
-      ID: 'F-Series',
-      Email: 33850,
-      Joined: '1/22/2025',
-      Phone: '0548225869',
-      Gender: 'Female',
-    },
-    {
-      Student: 'Toyota',
-      ID: 'Corolla',
-      Email: 29600,
-      Joined: '1/22/2025',
-      Phone: '0548225869',
-      Gender: 'Female',
-    },
-    {
-      Student: 'Toyota',
-      ID: 'Corolla',
-      Email: 29600,
-      Joined: '1/22/2025',
-      Phone: '0548225869',
-      Gender: 'Female',
-    },
-    {
-      Student: 'Toyota',
-      ID: 'Corolla',
-      Email: 29600,
-      Joined: '1/22/2025',
-      Phone: '0548225869',
-      Gender: 'Female',
-    },
-  ]);
-
-  const defaultColDef: ColDef = {
-    flex: 1, // Makes columns take equal space
-    resizable: true, // Allows column resizing
-    sortable: true, // Enables sorting
-    filter: true, // Enables filtering
-    minWidth: 150, // Ensures columns have a minimum width
-    cellStyle: { textAlign: 'left' }, // Centers text in cells
-  };
-
-  // Column Definitions: Defines the columns to be displayed.
-  const [colDefs, setColDefs] = useState<
-    ColDef<{
-      Student: string;
-      ID: string;
-      Email: number;
-      Joined: boolean;
-      Phone: string;
-      Gender: string;
-    }>[]
-  >([
-    { field: 'Student' },
-    { field: 'ID' },
-    { field: 'Email' },
-    { field: 'Joined' },
-    { field: 'Phone' },
-    { field: 'Gender' },
-  ]);
-
   return (
-    <div className="w-full bg-zinc-100">
+    <div className="w-full h-full bg-zinc-100">
       <div className="grid grid-cols-4 max-sm:grid-cols-1 bg-zinc-100 max-lg:grid-cols-2 gap-4 p-1 w-full">
-        <div className="flex text-white shadow-sm max-lg:w-full w-full rounded-md h-auto items-center justify-between bg-blue-500 py-5 px-3">
+        <div className="flex text-black shadow-sm max-lg:w-full w-full rounded-md h-auto items-center justify-between bg-white py-5 px-3">
           <div className="flex flex-col gap-3">
             <h1 className="text-md opacity-60 font-semibold">Total Students</h1>
             <h2 className="text-lg font-semibold">359</h2>
@@ -123,7 +45,7 @@ const DashboardOverview = () => {
             <img src={studentIcon} className="w-12 h-12" alt="Team Icon" />
           </div>
         </div>
-        <div className="flex shadow-sm max-lg:w-full w-full rounded-md h-auto items-center justify-between bg-blue-500 text-white py-5 px-3">
+        <div className="flex shadow-sm max-lg:w-full w-full rounded-md h-auto items-center justify-between bg-white text-black py-5 px-3">
           <div className="flex flex-col gap-3">
             <h1 className="text-md opacity-60 font-semibold">Programs</h1>
             <h2 className="text-lg font-semibold">25</h2>
@@ -136,7 +58,7 @@ const DashboardOverview = () => {
             />
           </div>
         </div>
-        <div className="flex shadow-sm  max-lg:w-full  w-full rounded-md h-auto items-center justify-between bg-blue-500 text-white py-5 px-3">
+        <div className="flex shadow-sm  max-lg:w-full  w-full rounded-md h-auto items-center justify-between bg-white text-black py-5 px-3">
           <div className="flex flex-col gap-3">
             <h1 className="text-md opacity-60 font-semibold">Borrowed Books</h1>
             <h2 className="text-lg font-semibold">359</h2>
@@ -145,7 +67,7 @@ const DashboardOverview = () => {
             <img src={bookIcon} className="w-11 h-11" alt="Book Icon" />
           </div>
         </div>
-        <div className="flex shadow-sm max-lg:w-full bg-blue-500 text-white w-full rounded-md h-auto items-center justify-between py-5 px-3">
+        <div className="flex shadow-sm max-lg:w-full bg-white text-black w-full rounded-md h-auto items-center justify-between py-5 px-3">
           <div className="flex flex-col gap-3">
             <h1 className="text-md opacity-60 font-semibold">Offenses</h1>
             <h2 className="text-lg font-semibold">150</h2>
@@ -236,15 +158,6 @@ const DashboardOverview = () => {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-      <div className="mt-4 w-full h-[300px] bg-zinc-100">
-        <div className="ag-theme-alpine h-full">
-          <AgGridReact
-            rowData={rowData}
-            columnDefs={colDefs}
-            defaultColDef={defaultColDef}
-          />
         </div>
       </div>
     </div>

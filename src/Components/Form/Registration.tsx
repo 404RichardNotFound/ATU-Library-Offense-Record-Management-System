@@ -150,6 +150,9 @@ const Registration = () => {
                   type="text"
                   placeholder="ID"
                 />
+                {errors.studentID && (
+                  <p className="text-red-500">{errors.studentID.message}</p>
+                )}
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor="email">Email :</label>
@@ -245,6 +248,9 @@ const Registration = () => {
               name="programme"
               placeholder="Programme"
             />
+            {errors.programme && (
+              <p className="text-red-500">{errors.programme.message}</p>
+            )}
           </div>
           <div className="flex gap-2 justify-start">
             <button

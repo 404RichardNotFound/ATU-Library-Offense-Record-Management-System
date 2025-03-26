@@ -1,8 +1,15 @@
+import { Calendar } from 'antd';
+import type { CalendarProps } from 'antd';
+import type { Dayjs } from 'dayjs';
+
 const Calender = () => {
+  const onPanelChange = (value: Dayjs, mode: CalendarProps<Dayjs>['mode']) => {
+    console.log(value.format('YYYY-MM-DD'), mode);
+  };
+
   return (
-    <div>
-      <p>gdhdh</p>
-      <p>hjdhdj</p>
+    <div className="p-3 border-2 rounded-md">
+      <Calendar onPanelChange={onPanelChange} />
     </div>
   );
 };

@@ -36,7 +36,7 @@ import {
   Input,
   Breadcrumb,
 } from 'antd';
-import userPhoto from '../../../assets/woman-photo.jpg';
+import userPhoto from '../../../assets/customer-support.png';
 
 import atuLogo from '/ATU-LOGO.png';
 
@@ -57,7 +57,7 @@ const breadcrumbNameMap: any = {
   '/AdminDashboard/EditProfile': 'Edit Profile',
   '/AdminDashboard/Settings': 'Settings',
   '/AdminDashboard/Calender': 'Calendar',
-  '/AdminDashboard/Notifications': 'Notifications',
+  '/AdminDashboard/Notice': 'Notice',
 };
 
 const { SubMenu } = Menu;
@@ -214,8 +214,8 @@ const AdminDashboard = () => {
             </SubMenu>
             {/* Submenu for Authentication */}
             <SubMenu key="7" icon={<LockOutlined />} title="Authentication">
-              <Menu.Item key="logout" icon={<LogoutOutlined />}>
-                <Link to="">Logout</Link>
+              <Menu.Item key="Logout" icon={<LogoutOutlined />}>
+                <Link to="/AdminLogin">Logout</Link>
               </Menu.Item>
               <Menu.Item key="404 Page" icon={<WarningOutlined />}>
                 <Link to="*">404 Page</Link>
@@ -224,26 +224,18 @@ const AdminDashboard = () => {
                 key="Forgot Password"
                 icon={<QuestionCircleOutlined />}
               >
-                <Link to="">Forgot Password</Link>
+                <Link to="/ForgotPassword">Forgot Password</Link>
               </Menu.Item>
             </SubMenu>
             <Menu.Item key="8" icon={<CalendarOutlined />}>
               <Link to="Calender">Calender</Link>
             </Menu.Item>
             <Menu.Item key="9" icon={<BellOutlined />}>
-              <Link to="Notifications">Notifications</Link>
+              <Link to="Notice">Notice</Link>
             </Menu.Item>
             {/* Submenu for Payments*/}
-            <SubMenu key="10" icon={<ProfileOutlined />} title="Profile">
-              <Menu.Item key="My Profile" icon={<ProfileOutlined />}>
-                <Link to="MyProfile">My Profile</Link>
-              </Menu.Item>
-              <Menu.Item key="Edit Profile" icon={<EditOutlined />}>
-                <Link to="EditProfile">Edit Profile</Link>
-              </Menu.Item>
-            </SubMenu>
-            <Menu.Item key="11" icon={<SettingOutlined />}>
-              <Link to="Settings">Settings</Link>
+            <Menu.Item key="10" icon={<ProfileOutlined />}>
+              <Link to="MyProfile">My Profile</Link>
             </Menu.Item>
           </Menu>
         </Sider>
@@ -268,19 +260,6 @@ const AdminDashboard = () => {
                     height: 64,
                   }}
                 />
-                <AutoComplete
-                  popupMatchSelectWidth={252}
-                  style={{ width: 220 }}
-                  size="middle"
-                  className="max-md:hidden"
-                >
-                  <Input.Search
-                    style={{}}
-                    size="middle"
-                    placeholder="Search Entire Dashboard"
-                    enterButton
-                  />
-                </AutoComplete>
               </div>
               <div className="flex items-center gap-3 pr-5">
                 {/* Notification Icon & Avatar */}
@@ -324,8 +303,8 @@ const AdminDashboard = () => {
             </div>
           </Header>
           <div className="flex px-5 pt-4 justify-between items-center">
-            <p className="text-base text-black opacity-40  max-md:hidden">
-              Welcome Admin!
+            <p className="text-base text-black max-md:hidden">
+              {breadcrumbNameMap[location.pathname] || 'Welcome Admin'}
             </p>
             <Breadcrumb
               items={[
@@ -337,9 +316,10 @@ const AdminDashboard = () => {
               ]}
             />
           </div>
+
           <Content
             style={{
-              margin: '24px 16px',
+              margin: '14px 16px',
               minHeight: 280,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,

@@ -16,10 +16,8 @@ import AddOffense from '../Components/Dashboard/AdminDashboard/AddOffense';
 import OffenseList from '../Components/Dashboard/AdminDashboard/OffenseList';
 import Calender from '../Components/Dashboard/AdminDashboard/Calender';
 import PaymentList from '../Components/Dashboard/AdminDashboard/PaymentList';
-import Notifications from '../Components/Dashboard/AdminDashboard/Notifications';
-import Settings from '../Components/Dashboard/AdminDashboard/Settings';
 import MyProfile from '../Components/Dashboard/AdminDashboard/MyProfile';
-import EditProfile from '../Components/Dashboard/AdminDashboard/EditProfile';
+import Notice from '../Components/Dashboard/AdminDashboard/Notice.tsx';
 
 export default function AppRoute() {
   return (
@@ -36,11 +34,9 @@ export default function AppRoute() {
         <Route path="Calender" element={<Calender />} />
         <Route path="AdminProfile" element={<AdminProfile />} />
         <Route path="PaymentList" element={<PaymentList />} />
-        <Route path="Notifications" element={<Notifications />} />
+        <Route path="Notice" element={<Notice />} />
         <Route path="OffenseList" element={<OffenseList />} />
         <Route path="BorrowedBooks" element={<BorrowedBooks />} />
-        <Route path="EditProfile" element={<EditProfile />} />
-        <Route path="Settings" element={<Settings />} />
         <Route path="AddStudent" element={<AddStudent />} />
         <Route path="MyProfile" element={<MyProfile />} />
         <Route path="AddOffense" element={<AddOffense />} />
