@@ -2,6 +2,7 @@
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
+import { Tag } from 'antd';
 import { useState, useRef } from 'react';
 import { Pencil, Trash2, RotateCcw, Loader } from 'lucide-react'; // Import icons
 import {
@@ -93,7 +94,30 @@ const BorrowedBooks = () => {
     { field: 'Book', headerName: 'Book Title' },
     { field: 'BorrowDate', headerName: 'Borrow Date' },
     { field: 'ReturnDate', headerName: 'Return Date' },
-    { field: 'Status', headerName: 'Status' },
+    {
+      field: 'Status',
+      headerName: 'Status',
+      cellRenderer: (params: any) => {
+        const status = params.value?.toLowerCase(); // Convert to lowercase
+
+        // Define color mapping for different statuses
+        const getStatusColor = (status: string) => {
+          switch (status) {
+            case 'returned':
+              return 'green';
+            case 'borrowed':
+              return 'blue';
+            case 'overdue':
+              return 'red';
+            default:
+              return 'blue';
+          }
+        };
+
+        return <Tag color={getStatusColor(status)}>{params.value}</Tag>; // Display original text
+      },
+    },
+
     {
       field: 'Actions',
       headerName: 'Actions',

@@ -18,6 +18,7 @@ import Calender from '../Components/Dashboard/AdminDashboard/Calender';
 import PaymentList from '../Components/Dashboard/AdminDashboard/PaymentList';
 import MyProfile from '../Components/Dashboard/AdminDashboard/MyProfile';
 import Notice from '../Components/Dashboard/AdminDashboard/Notice.tsx';
+import AddPayment from '@/Components/Dashboard/AdminDashboard/AddPayment.tsx';
 
 export default function AppRoute() {
   return (
@@ -39,6 +40,7 @@ export default function AppRoute() {
         <Route path="BorrowedBooks" element={<BorrowedBooks />} />
         <Route path="AddStudent" element={<AddStudent />} />
         <Route path="MyProfile" element={<MyProfile />} />
+        <Route path="AddPayment" element={<AddPayment />} />
         <Route path="AddOffense" element={<AddOffense />} />
         <Route path="AddToList" element={<AddToList />} />
       </Route>

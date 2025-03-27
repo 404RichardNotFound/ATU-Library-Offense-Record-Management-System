@@ -4,7 +4,6 @@ import {
   MenuFoldOutlined,
   UnorderedListOutlined,
   QuestionCircleOutlined,
-  EditOutlined,
   MenuUnfoldOutlined,
   PlusSquareOutlined,
   TeamOutlined,
@@ -31,9 +30,7 @@ import {
   Menu,
   theme,
   Badge,
-  AutoComplete,
   Dropdown,
-  Input,
   Breadcrumb,
 } from 'antd';
 import userPhoto from '../../../assets/woman-photo.jpg';
@@ -48,7 +45,7 @@ const breadcrumbNameMap: any = {
   '/AdminDashboard/StudentsList': 'Students List',
   '/AdminDashboard/AddStudent': 'Add Student',
   '/AdminDashboard/BorrowedBooks': 'Borrowed Books',
-  '/AdminDashboard/AddToList': 'Add to Borrowed List',
+  '/AdminDashboard/AddToList': 'Add to List',
   '/AdminDashboard/OffenseList': 'Offense List',
   '/AdminDashboard/AddOffense': 'Add Offense',
   '/AdminDashboard/PaymentList': 'Payment List',

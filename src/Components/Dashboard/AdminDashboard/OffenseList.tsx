@@ -2,6 +2,7 @@ import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { useState, useRef } from 'react';
+import { Tag } from 'antd';
 import { Pencil, Trash2, RotateCcw, Loader } from 'lucide-react'; // Import icons
 
 import {
@@ -127,7 +128,27 @@ const OffenseList = () => {
       valueFormatter: (params) => params.value.split('T')[0],
     },
     { field: 'Penalty', headerName: 'Penalty' },
-    { field: 'Status', headerName: 'Status' },
+    {
+      field: 'Status',
+      headerName: 'Status',
+      cellRenderer: (params: any) => {
+        const status = params.value?.toLowerCase(); // Convert to lowercase
+
+        // Define color mapping for different statuses
+        const getStatusColor = (status: string) => {
+          switch (status) {
+            case 'resolved':
+              return 'green';
+            case 'pending':
+              return 'orange';
+            default:
+              return 'blue';
+          }
+        };
+
+        return <Tag color={getStatusColor(status)}>{params.value}</Tag>; // Display original text
+      },
+    },
 
     {
       field: 'Actions',

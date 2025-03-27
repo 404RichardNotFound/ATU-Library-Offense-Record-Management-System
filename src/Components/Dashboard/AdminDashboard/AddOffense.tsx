@@ -6,20 +6,25 @@ import toast, { Toaster } from 'react-hot-toast'; // Import React Hot Toast
 const AddOffense = () => {
   // State for offense date
   const [offenseDate, setOffenseDate] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false); // ✅ Loading state
 
   // ✅ Handle form submission
   const handleSubmit = (e: any) => {
     e.preventDefault(); // Prevent page reload
+    setIsSubmitting(true); // Start loading
 
-    // 📢 Show success toast
-    toast.success('Offense has been recorded!', {
-      duration: 3000,
-      position: 'top-center',
-    });
+    setTimeout(() => {
+      // 📢 Show success toast
+      toast.success('Offense has been recorded!', {
+        duration: 3000,
+        position: 'top-center',
+      });
 
-    // Reset form fields
-    e.target.reset();
-    setOffenseDate(null);
+      // Reset form fields
+      e.target.reset();
+      setOffenseDate(null);
+      setIsSubmitting(false); // Stop loading after success
+    }, 2000); // Simulate network delay
   };
 
   return (
@@ -29,7 +34,7 @@ const AddOffense = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-md border-2 border-zinc-200 bg-white h-auto w-full max-sm:w-full p-6 flex flex-col gap-3"
+        className="rounded-md border-2 border-zinc-200 bg-white h-[875px] w-full max-sm:w-full p-6 flex flex-col gap-3"
       >
         <h1 className="text-center font-medium text-lg">Add Offense</h1>
 
@@ -129,13 +134,38 @@ const AddOffense = () => {
           />
         </div>
 
-        {/* Submit Button */}
-        <div className="flex gap-2 justify-start">
+        {/* ✅ Submit Button with Loading Spinner */}
+        <div className="flex gap-2 mt-1 justify-start">
           <button
             type="submit"
-            className="border-2 items-center flex gap-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
+            className="border-2 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
+            disabled={isSubmitting} // Disable button while submitting
           >
-            Submit
+            {/* Show spinner when submitting */}
+            {isSubmitting && (
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+              </svg>
+            )}
+            {/* Change button text when submitting */}
+            {isSubmitting ? 'Please wait...' : 'Record Offense'}
           </button>
         </div>
       </form>
