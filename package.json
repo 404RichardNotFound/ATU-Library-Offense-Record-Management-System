@@ -8,8 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint src --fix",
     "format": "prettier --write .",
-    "preview": "vite preview",
-    "postinstall": "flowbite-react patch"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@fullcalendar/daygrid": "^6.1.15",
