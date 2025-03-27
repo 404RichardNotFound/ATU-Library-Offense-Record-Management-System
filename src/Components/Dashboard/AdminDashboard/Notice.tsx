@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useState } from 'react';
 import { MessageSquare, Trash2 } from 'lucide-react'; // Import icons
 import { Empty } from 'antd'; // Ant Design Empty component

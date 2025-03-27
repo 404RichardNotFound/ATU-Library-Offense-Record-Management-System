@@ -39,9 +39,9 @@ type RegistrationFormData = z.infer<typeof schema>;
 const RegistrationSchemaResolver = zodResolver(schema);
 
 const Registration = () => {
-  const [gender, setGender] = useState<String>('');
-  const [errorMessage, setErrorMessage] = useState<String | null>(null);
-  const [successMessage, setSuccessMessage] = useState<String | null>(null);
+  const [gender, setGender] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // React Hook Form
   const {

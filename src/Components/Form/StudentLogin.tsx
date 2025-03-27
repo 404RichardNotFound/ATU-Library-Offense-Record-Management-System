@@ -31,8 +31,8 @@ const StudentLoginSchemaResolver = zodResolver(schema);
 
 function StudentLogin() {
   // State for error and success messages
-  const [errorMessage, setErrorMessage] = useState<String | null>('');
-  const [successMessage, setSuccessMessage] = useState<String | null>('');
+  const [errorMessage, setErrorMessage] = useState<string | null>('');
+  const [successMessage, setSuccessMessage] = useState<string | null>('');
 
   // Destructure the useForm hook
   const {

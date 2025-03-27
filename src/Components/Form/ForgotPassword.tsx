@@ -37,8 +37,8 @@ const ResetPasswordSchemaResolver = zodResolver(schema);
 
 function ForgotPassword() {
   // State for error and success messages
-  const [errorMessage, setErrorMessage] = useState<String | null>('');
-  const [successMessage, setSuccessMessage] = useState<String | null>('');
+  const [errorMessage, setErrorMessage] = useState<string | null>('');
+  const [successMessage, setSuccessMessage] = useState<string | null>('');
   const navigate = useNavigate();
 
   // Destructure the useForm hook

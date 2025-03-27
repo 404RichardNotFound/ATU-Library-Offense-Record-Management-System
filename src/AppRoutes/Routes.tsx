@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Registration from '../Components/Form/Registration';
 import StudentLogin from '../Components/Form/StudentLogin';
