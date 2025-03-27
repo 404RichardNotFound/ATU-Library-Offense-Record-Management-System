@@ -1,4 +1,3 @@
-import * as React from 'react';
 import bookIcon from '../../../assets/books-stack-of-three.png';
 import {
   BarChart,
