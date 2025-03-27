@@ -31,7 +31,7 @@
     "npm": "^11.2.0",
     "react": "^19.0.0",
     "react-datepicker": "^8.2.1",
-    "react-day-picker": "^8.10.1",
+    "react-day-picker": "^9.0.0-rc.4",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
     "react-hot-toast": "^2.5.2",
