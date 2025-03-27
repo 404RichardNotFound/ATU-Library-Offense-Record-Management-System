@@ -36,7 +36,7 @@ const DashboardOverview = () => {
   return (
     <div className="w-full h-full bg-zinc-100">
       <div className="grid grid-cols-4 max-sm:grid-cols-1 bg-zinc-100 max-lg:grid-cols-2 gap-4 p-1 w-full">
-        <div className="flex text-black shadow-sm max-lg:w-full w-full rounded-md h-auto items-center justify-between bg-white py-5 px-3">
+        <div className="flex text-black border-[1px] max-lg:w-full w-full rounded-md h-auto items-center justify-between bg-white py-5 px-3">
           <div className="flex flex-col gap-3">
             <h1 className="text-md opacity-60">Total Students</h1>
             <h2 className="text-lg font-semibold">359</h2>
@@ -45,7 +45,7 @@ const DashboardOverview = () => {
             <img src={studentIcon} className="w-12 h-12" alt="Team Icon" />
           </div>
         </div>
-        <div className="flex shadow-sm max-lg:w-full w-full rounded-md h-auto items-center justify-between bg-white text-black py-5 px-3">
+        <div className="flex border-[1px] max-lg:w-full w-full rounded-md h-auto items-center justify-between bg-white text-black py-5 px-3">
           <div className="flex flex-col gap-3">
             <h1 className="text-md opacity-60">Programs</h1>
             <h2 className="text-lg font-semibold">25</h2>
@@ -58,7 +58,7 @@ const DashboardOverview = () => {
             />
           </div>
         </div>
-        <div className="flex shadow-sm  max-lg:w-full  w-full rounded-md h-auto items-center justify-between bg-white text-black py-5 px-3">
+        <div className="flex max-lg:w-full  w-full rounded-md h-auto items-center justify-between bg-white text-black py-5 px-3 border-[1px]">
           <div className="flex flex-col gap-3">
             <h1 className="text-md opacity-60">Borrowed Books</h1>
             <h2 className="text-lg font-semibold">359</h2>
@@ -67,7 +67,7 @@ const DashboardOverview = () => {
             <img src={bookIcon} className="w-11 h-11" alt="Book Icon" />
           </div>
         </div>
-        <div className="flex shadow-sm max-lg:w-full bg-white text-black w-full rounded-md h-auto items-center justify-between py-5 px-3">
+        <div className="flex border-[1px] max-lg:w-full bg-white text-black w-full rounded-md h-auto items-center justify-between py-5 px-3">
           <div className="flex flex-col gap-3">
             <h1 className="text-md opacity-60">Offenses</h1>
             <h2 className="text-lg font-semibold">150</h2>
