@@ -186,7 +186,7 @@ const PaymentList = () => {
       </div>
 
       {/* Table */}
-      <div className="ag-theme-alpine w-full h-full pb-9 bg-zinc-100">
+      <div className="ag-theme-alpine w-full h-[600px] bg-zinc-100">
         <AgGridReact
           ref={gridRef}
           rowData={rowData}
