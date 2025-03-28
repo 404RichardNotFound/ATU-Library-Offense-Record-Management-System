@@ -17,12 +17,14 @@ import PaymentList from '../Components/Dashboard/AdminDashboard/PaymentList';
 import MyProfile from '../Components/Dashboard/AdminDashboard/MyProfile';
 import Notice from '../Components/Dashboard/AdminDashboard/Notice.tsx';
 import AddPayment from '@/Components/Dashboard/AdminDashboard/AddPayment.tsx';
+import LandingPage from '@/Components/LandingPage/LandingPage.tsx';
 
 export default function AppRoute() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/StudentLogin" />} />
+      <Route path="/" element={<Navigate to="/LandingPage" />} />
       <Route path="/Registration" element={<Registration />} />
+      <Route path="/LandingPage" element={<LandingPage />} />
       <Route path="/StudentLogin" element={<StudentLogin />} />
       <Route path="/AdminLogin" element={<AdminLogin />} />
       <Route path="/AdminDashboard" element={<AdminDashboard />}>

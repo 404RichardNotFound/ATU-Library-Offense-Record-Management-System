@@ -25,7 +25,7 @@ function NotFoundPage() {
       </p>
       <button
         onClick={() => navigate(-1)}
-        className="bg-blue-500 hover:bg-blue-700 font-semibold text-white py-2 px-6 rounded mt-4"
+        className="bg-blue-500 border-2 hover:bg-blue-700 font-semibold text-white py-2 px-6 rounded-md mt-4"
       >
         <p>Go Back</p>
       </button>

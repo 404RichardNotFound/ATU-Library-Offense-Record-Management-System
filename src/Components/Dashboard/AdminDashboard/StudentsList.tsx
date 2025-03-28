@@ -2,6 +2,7 @@
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
+import { Tag } from 'antd';
 import { useState, useRef } from 'react';
 import { Pencil, Trash2, RotateCcw, Loader } from 'lucide-react'; // Import icons
 
@@ -176,7 +177,28 @@ const StudentsList = () => {
       headerName: 'Phone Number',
       valueFormatter: (params) => `${params.value}`, // Forces string formatting
     },
-    { field: 'Gender', headerName: 'Gender' },
+    {
+      field: 'Gender',
+      headerName: 'Gender',
+      cellRenderer: (params: any) => {
+        const gender = params.value?.toLowerCase(); // Convert to lowercase
+
+        // Define color mapping for different statuses
+        const getStatusColor = (gender: string) => {
+          switch (gender) {
+            case 'girl':
+              return 'yellow';
+            case 'boy':
+              return 'blue';
+            default:
+              return '';
+          }
+        };
+
+        return <Tag color={getStatusColor(gender)}>{params.value}</Tag>; // Display original text
+      },
+    },
+
     {
       field: 'Joined',
       headerName: 'Joined',
@@ -218,7 +240,7 @@ const StudentsList = () => {
           {/* Refresh Button */}
           <Button
             onClick={refreshTable}
-            className="flex items-center gap-2 hover:bg-blue-600 bg-blue-500"
+            className="flex items-center gap-2 hover:bg-blue-600 bg-blue-500 border-2"
           >
             {isRefreshing ? (
               <Loader className="animate-spin" size={18} />
@@ -231,7 +253,7 @@ const StudentsList = () => {
           {/* Export Button */}
           <Button
             onClick={exportToCSV}
-            className="bg-blue-500 hover:bg-blue-600"
+            className="bg-blue-500 hover:bg-blue-600 border-2"
           >
             Export To CSV
           </Button>
@@ -239,21 +261,21 @@ const StudentsList = () => {
       </div>
 
       {/* Table */}
-      <div className="ag-theme-alpine w-full h-[600px] bg-zinc-100">
+      <div className="ag-theme-alpine w-full h-[500px] bg-zinc-100">
         <AgGridReact
           ref={gridRef}
           rowData={rowData}
           columnDefs={colDefs}
           defaultColDef={defaultColDef}
           pagination={true}
-          paginationPageSize={13}
+          paginationPageSize={20}
         />
       </div>
 
       {/* Edit Modal */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-sm:w-3/4 rounded-sm">
-          <DialogTitle>Edit Student Details</DialogTitle>
+          <DialogTitle>Edit Student</DialogTitle>
           <DialogDescription>
             Modify the student details below.
           </DialogDescription>
@@ -304,11 +326,15 @@ const StudentsList = () => {
           </div>
 
           <div className="flex justify-end gap-2 mt-4">
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+            <Button
+              variant="outline"
+              className="border-2"
+              onClick={() => setIsDialogOpen(false)}
+            >
               Cancel
             </Button>
             <Button
-              className="bg-blue-500 hover:bg-blue-600"
+              className="bg-blue-500 hover:bg-blue-600 border-2"
               onClick={saveEditedData}
             >
               Save Changes

@@ -83,14 +83,11 @@ const AdminDashboard = () => {
   const menu = (
     <Menu>
       <Menu.Item key="profile" icon={<ProfileOutlined />}>
-        Profile
-      </Menu.Item>
-      <Menu.Item key="settings" icon={<SettingOutlined />}>
-        Settings
+        <Link to="MyProfile"> Profile</Link>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout" icon={<LogoutOutlined />} danger>
-        Logout
+        <Link to="/AdminLogin">Logout</Link>
       </Menu.Item>
     </Menu>
   );
@@ -99,39 +96,6 @@ const AdminDashboard = () => {
   const markAllAsRead = () => {
     setNotifications(notifications.map((n) => ({ ...n, read: true })));
   };
-
-  // Dropdown menu for notifications
-  const notificationMenu = (
-    <Menu style={{ width: '270px' }}>
-      {notifications.length > 0 ? (
-        <>
-          <div className="py-2 gap-2 flex justify-center">
-            {<BellOutlined />}
-            <p className="text-center">Notifications</p>
-          </div>
-          <hr />
-          {notifications.map((notif) => (
-            <Menu.Item
-              key={notif.id}
-              className={notif.read ? 'text-gray-500' : 'font-bold'}
-              icon={
-                <UserAddOutlined className="bg-blue-300 text-slate-700 p-2 rounded-full" />
-              }
-            >
-              {notif.message}
-              <p>2 Hours ago</p>
-            </Menu.Item>
-          ))}
-          <Menu.Divider />
-          <Menu.Item onClick={markAllAsRead} className="text-center">
-            Mark all as read
-          </Menu.Item>
-        </>
-      ) : (
-        <Menu.Item className="text-center">No new notifications</Menu.Item>
-      )}
-    </Menu>
-  );
 
   return (
     <div>
@@ -259,26 +223,6 @@ const AdminDashboard = () => {
                 />
               </div>
               <div className="flex items-center gap-3 pr-5">
-                {/* Notification Icon & Avatar */}
-                <div className="flex items-center space-x-4">
-                  {/* Notification Dropdown */}
-                  <Dropdown
-                    overlay={notificationMenu}
-                    trigger={['click']}
-                    placement="bottomRight"
-                  >
-                    <Badge
-                      count={notifications.filter((n) => !n.read).length}
-                      size="small"
-                    >
-                      <Button
-                        type="text"
-                        size="large"
-                        icon={<BellOutlined style={{ fontSize: '22px' }} />}
-                      />
-                    </Badge>
-                  </Dropdown>
-                </div>
                 {/* Avatar with Dropdown */}
                 <Dropdown
                   overlay={menu}
@@ -288,10 +232,10 @@ const AdminDashboard = () => {
                   <button className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition duration-200 border-none bg-transparent">
                     <Avatar
                       src={userPhoto}
-                      size="default"
+                      size="large"
                       icon={<UserOutlined />}
                     />
-                    <p className="text-black max-md:hidden text-md ">
+                    <p className="text-black max-md:hidden text-md">
                       Jessica Davidson
                     </p>
                   </button>

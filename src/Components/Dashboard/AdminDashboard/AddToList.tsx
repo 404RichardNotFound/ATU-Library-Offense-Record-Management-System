@@ -47,6 +47,7 @@ const AddToList = () => {
               <input
                 className="rounded-sm bg-slate-50 border-2 px-2 w-full"
                 type="text"
+                placeholder="Name"
                 name="name"
                 required
               />
@@ -56,6 +57,7 @@ const AddToList = () => {
               <input
                 className="rounded-sm px-2 w-full bg-slate-50 border-2"
                 type="text"
+                placeholder="Student ID"
                 name="studentID"
                 required
               />
@@ -65,6 +67,7 @@ const AddToList = () => {
               <input
                 className="rounded-sm bg-slate-50 border-2 px-2 w-full"
                 type="text"
+                placeholder="Book"
                 name="book"
                 required
               />
@@ -100,6 +103,7 @@ const AddToList = () => {
           <input
             className="rounded-sm bg-slate-50 border-2 px-2"
             type="text"
+            placeholder="Status"
             name="status"
             required
           />

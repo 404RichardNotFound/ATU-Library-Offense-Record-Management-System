@@ -82,6 +82,7 @@ const AddPayment = () => {
               className="rounded-sm bg-slate-50 border-2 px-2 w-full"
               type="text"
               name="studentName"
+              placeholder="Name"
               value={formData.studentName}
               onChange={handleChange}
               required
@@ -93,6 +94,7 @@ const AddPayment = () => {
             <input
               className="rounded-sm px-2 w-full bg-slate-50 border-2"
               type="text"
+              placeholder="Student ID"
               name="studentID"
               value={formData.studentID}
               onChange={handleChange}
@@ -105,6 +107,7 @@ const AddPayment = () => {
             <input
               className="rounded-sm bg-slate-50 border-2 px-2 w-full"
               type="text"
+              placeholder="Program"
               name="program"
               value={formData.program}
               onChange={handleChange}
@@ -121,6 +124,7 @@ const AddPayment = () => {
               className="rounded-sm bg-slate-50 border-2 px-2 w-full"
               type="text"
               name="amount"
+              placeholder="Amount"
               value={formData.amount}
               onChange={handleChange}
               required
@@ -133,6 +137,7 @@ const AddPayment = () => {
               className="rounded-sm bg-slate-50 border-2 px-2 w-full"
               type="text"
               name="reason"
+              placeholder="Reason"
               value={formData.reason}
               onChange={handleChange}
               required
@@ -157,6 +162,7 @@ const AddPayment = () => {
             className="rounded-sm bg-slate-50 border-2 px-2"
             type="text"
             name="status"
+            placeholder="Status"
             value={formData.status}
             onChange={handleChange}
             required

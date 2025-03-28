@@ -11,11 +11,11 @@ const AddStudent = () => {
     password: '',
     phoneNumber: '',
     gender: 'Male',
-    programme: '',
+    program: '',
   });
 
   // State to manage loading spinner during form submission
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean | undefined>(false);
 
   // Handle form field changes
   const handleChange = (e: any) => {
@@ -45,7 +45,7 @@ const AddStudent = () => {
         password: '',
         phoneNumber: '',
         gender: 'Male',
-        programme: '',
+        program: '',
       });
     } catch (error) {
       // Show error message if submission fails
@@ -73,6 +73,7 @@ const AddStudent = () => {
             className="rounded-sm bg-slate-50 border-2 px-2 w-full"
             type="text"
             name="name"
+            placeholder="Name"
             value={formData.name}
             onChange={handleChange}
             required
@@ -86,6 +87,7 @@ const AddStudent = () => {
             className="rounded-sm px-2 w-full bg-slate-50 border-2"
             type="text"
             name="studentID"
+            placeholder="Student ID"
             value={formData.studentID}
             onChange={handleChange}
             required
@@ -99,6 +101,7 @@ const AddStudent = () => {
             className="rounded-sm bg-slate-50 border-2 px-2 w-full"
             type="email"
             name="email"
+            placeholder="Email"
             value={formData.email}
             onChange={handleChange}
             required
@@ -111,6 +114,7 @@ const AddStudent = () => {
           <input
             className="rounded-sm bg-slate-50 border-2 px-2"
             type="password"
+            placeholder="Password"
             name="password"
             value={formData.password}
             onChange={handleChange}
@@ -124,7 +128,7 @@ const AddStudent = () => {
           <div className="flex gap-4">
             <label className="flex items-center gap-2">
               <input
-                type="radio"
+                type="checkbox"
                 name="gender"
                 value="Male"
                 checked={formData.gender === 'Male'}
@@ -134,7 +138,7 @@ const AddStudent = () => {
             </label>
             <label className="flex items-center gap-2">
               <input
-                type="radio"
+                type="checkbox"
                 name="gender"
                 value="Female"
                 checked={formData.gender === 'Female'}
@@ -151,6 +155,7 @@ const AddStudent = () => {
           <input
             className="rounded-sm bg-slate-50 border-2 px-2"
             type="tel"
+            placeholder="Phone Number"
             name="phoneNumber"
             value={formData.phoneNumber}
             onChange={handleChange}
@@ -160,12 +165,13 @@ const AddStudent = () => {
 
         {/* Programme Input */}
         <div className="text-base flex w-full gap-4 flex-col">
-          <label>Programme:</label>
+          <label>Program:</label>
           <input
             className="rounded-sm bg-slate-50 border-2 px-2"
             type="text"
-            name="programme"
-            value={formData.programme}
+            name="program"
+            placeholder="Program"
+            value={formData.program}
             onChange={handleChange}
             required
           />

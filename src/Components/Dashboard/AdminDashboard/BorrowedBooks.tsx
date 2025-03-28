@@ -147,7 +147,7 @@ const BorrowedBooks = () => {
         <div className="flex gap-4">
           <Button
             onClick={refreshTable}
-            className="flex items-center gap-2 hover:bg-blue-600 bg-blue-500"
+            className="flex items-center border-2 gap-2 hover:bg-blue-600 bg-blue-500"
           >
             {isRefreshing ? (
               <Loader className="animate-spin" size={18} />
@@ -158,7 +158,7 @@ const BorrowedBooks = () => {
           </Button>
           <Button
             onClick={() => gridRef.current?.api.exportDataAsCsv()}
-            className="bg-blue-500 hover:bg-blue-600"
+            className="bg-blue-500 hover:bg-blue-600 border-2"
           >
             Export To CSV
           </Button>
@@ -166,24 +166,22 @@ const BorrowedBooks = () => {
       </div>
 
       {/* Table */}
-      <div className="ag-theme-alpine w-full h-[600px] bg-zinc-100">
+      <div className="ag-theme-alpine w-full h-[500px] bg-zinc-100">
         <AgGridReact
           ref={gridRef}
           rowData={rowData}
           columnDefs={colDefs}
           defaultColDef={defaultColDef}
           pagination={true}
-          paginationPageSize={13}
+          paginationPageSize={20}
         />
       </div>
 
       {/* Edit Modal */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-sm:w-3/4 rounded-sm">
-          <DialogTitle>Edit Row</DialogTitle>
-          <DialogDescription>
-            Modify the student details below.
-          </DialogDescription>
+          <DialogTitle>Edit Borrowed Book</DialogTitle>
+          <DialogDescription>Modify the details below.</DialogDescription>
           <div className="flex flex-col gap-4">
             <Input
               name="Student"
@@ -228,11 +226,15 @@ const BorrowedBooks = () => {
             />
           </div>
           <div className="flex justify-end gap-2 mt-4">
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+            <Button
+              variant="outline"
+              className="border-2"
+              onClick={() => setIsDialogOpen(false)}
+            >
               Cancel
             </Button>
             <Button
-              className="bg-blue-500 hover:bg-blue-600"
+              className="bg-blue-500 hover:bg-blue-600 border-2"
               onClick={saveEditedData}
             >
               Save Changes

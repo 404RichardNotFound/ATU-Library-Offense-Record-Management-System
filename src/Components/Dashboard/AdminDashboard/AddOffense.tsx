@@ -6,15 +6,15 @@ import toast, { Toaster } from 'react-hot-toast'; // Import React Hot Toast
 const AddOffense = () => {
   // State for offense date
   const [offenseDate, setOffenseDate] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false); // ✅ Loading state
+  const [isSubmitting, setIsSubmitting] = useState(false); // Loading state
 
-  // ✅ Handle form submission
+  //Handle form submission
   const handleSubmit = (e: any) => {
     e.preventDefault(); // Prevent page reload
     setIsSubmitting(true); // Start loading
 
     setTimeout(() => {
-      // 📢 Show success toast
+      //Show success toast
       toast.success('Offense has been recorded!', {
         duration: 3000,
         position: 'top-center',
@@ -29,7 +29,7 @@ const AddOffense = () => {
 
   return (
     <div className="w-full bg-zinc-100 h-full flex justify-center">
-      {/* 🔥 Toast Container */}
+      {/* Toast Container */}
       <Toaster />
 
       <form
@@ -46,6 +46,7 @@ const AddOffense = () => {
               className="rounded-sm bg-slate-50 border-2 px-2 w-full"
               type="text"
               name="studentName"
+              placeholder="Name"
               required
             />
           </div>
@@ -56,6 +57,7 @@ const AddOffense = () => {
               className="rounded-sm px-2 w-full bg-slate-50 border-2"
               type="text"
               name="studentID"
+              placeholder="Student ID"
               required
             />
           </div>
@@ -66,6 +68,7 @@ const AddOffense = () => {
               className="rounded-sm bg-slate-50 border-2 px-2 w-full"
               type="email"
               name="email"
+              placeholder="Email"
               required
             />
           </div>
@@ -76,6 +79,7 @@ const AddOffense = () => {
               className="rounded-sm bg-slate-50 border-2 px-2 w-full"
               type="text"
               name="program"
+              placeholder="Program"
               required
             />
           </div>
@@ -88,6 +92,7 @@ const AddOffense = () => {
             <input
               className="rounded-sm bg-slate-50 border-2 px-2 w-full"
               type="text"
+              placeholder="Offense Type"
               name="offenseType"
               required
             />
@@ -98,6 +103,7 @@ const AddOffense = () => {
             <textarea
               className="rounded-sm bg-slate-50 border-2 px-2 w-full h-20"
               name="description"
+              placeholder="Offense Description .."
               required
             />
           </div>
@@ -119,6 +125,7 @@ const AddOffense = () => {
           <input
             className="rounded-sm bg-slate-50 border-2 px-2"
             type="text"
+            placeholder="Penalty"
             name="penalty"
             required
           />
@@ -129,12 +136,13 @@ const AddOffense = () => {
           <input
             className="rounded-sm bg-slate-50 border-2 px-2"
             type="text"
+            placeholder="Status"
             name="status"
             required
           />
         </div>
 
-        {/* ✅ Submit Button with Loading Spinner */}
+        {/* Submit Button with Loading Spinner */}
         <div className="flex gap-2 mt-1 justify-start">
           <button
             type="submit"

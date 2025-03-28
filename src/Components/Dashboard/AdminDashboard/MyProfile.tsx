@@ -30,16 +30,18 @@ const MyProfile = () => {
       <div className="flex max-sm:flex-col max-sm:items-center overflow-hidden border-2 max-lg:w-full p-3 gap-4 w-full bg-white rounded-md">
         <img
           src={userPhoto}
-          className="w-24 h-24 rounded-full object-cover"
+          className="w-24 h-24 border-2 rounded-full object-cover"
           alt=""
         />
-        <div className="flex max-sm:text-center gap-1 max-md:gap-[2px] flex-col overflow-hidden">
-          <p className="text-xl font-medium">Jessica Davidson</p>
-          <p className="text-base">Accra Technical University</p>
-          <p className="text-base">Jessicadavid789@gmail.com</p>
-          <p className="text-base">0548225869</p>
+        <div className="flex max-sm:text-center max-md:gap-[1px] flex-col overflow-hidden">
+          <p className="text-[17px] font-medium">Jessica Davidson</p>
+          <p className="text-sm">Accra Technical University</p>
+          <p className="max-md:text-[13px] text-sm">
+            Jessicadavid789@gmail.com
+          </p>
+          <p className="max-md:text-[12px] text-[13px]">01234567D</p>
           <div>
-            <Tag className="w-14 mt-1 text-center" color="blue">
+            <Tag className="w-14 mt-1 text-center font-medium" color="blue">
               Admin
             </Tag>
           </div>
@@ -105,7 +107,7 @@ const MyProfile = () => {
         <div className="flex justify-end mt-2">
           <button
             type="submit"
-            className="bg-blue-500 flex items-center justify-center gap-2 cursor-pointer rounded-md p-2 text-white font-medium hover:bg-blue-600 disabled:opacity-50"
+            className="bg-blue-500 border-2 flex items-center justify-center gap-2 cursor-pointer rounded-md p-2 text-white font-medium hover:bg-blue-600 disabled:opacity-50"
             disabled={isSubmitting} // Disable button while submitting
           >
             {/* Show spinner when submitting */}
