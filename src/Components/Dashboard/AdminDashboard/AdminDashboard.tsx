@@ -12,10 +12,8 @@ import {
   LogoutOutlined,
   MoneyCollectOutlined,
   BookOutlined,
-  UserAddOutlined,
   LockOutlined,
   BellOutlined,
-  SettingOutlined,
   UserOutlined,
   ProfileOutlined,
   DashboardOutlined,
@@ -29,7 +27,6 @@ import {
   Layout,
   Menu,
   theme,
-  Badge,
   Dropdown,
   Breadcrumb,
 } from 'antd';
@@ -60,10 +57,6 @@ const breadcrumbNameMap: any = {
 const { SubMenu } = Menu;
 const AdminDashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const [notifications, setNotifications] = useState([
-    { id: 1, message: 'New student registered', read: false },
-    { id: 3, message: 'New student added', read: true },
-  ]);
 
   const location = useLocation(); // Get the current location
 
@@ -91,11 +84,6 @@ const AdminDashboard = () => {
       </Menu.Item>
     </Menu>
   );
-
-  // Mark all notifications as read
-  const markAllAsRead = () => {
-    setNotifications(notifications.map((n) => ({ ...n, read: true })));
-  };
 
   return (
     <div>
