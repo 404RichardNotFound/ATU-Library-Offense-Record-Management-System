@@ -25,6 +25,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
+    "firebase": "^11.5.0",
     "install": "^0.13.0",
     "lucide-react": "^0.479.0",
     "motion": "^12.4.12",

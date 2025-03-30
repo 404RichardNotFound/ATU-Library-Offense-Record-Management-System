@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import {
   MenuFoldOutlined,
@@ -57,7 +57,8 @@ const breadcrumbNameMap: any = {
 
 const { SubMenu } = Menu;
 const AdminDashboard = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const location = useLocation(); // Get the current location
 
@@ -72,6 +73,14 @@ const AdminDashboard = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Dropdown menu for avatar
   const menu = (
@@ -97,10 +106,12 @@ const AdminDashboard = () => {
         }}
       >
         <Sider
-          className="bg-white"
+          className={`bg-white fixed h-screen ${collapsed ? 'w-0' : 'w-64'} 
+    ${isMobile ? 'z-50' : 'relative'} transition-all duration-300`}
           trigger={null}
           collapsible
           collapsed={collapsed}
+          collapsedWidth={isMobile ? 0 : 80} // Fully hide on mobile
         >
           <Link to="DashboardOverview">
             <div className="flex items-center justify-center space-x-3 py-3 ">
@@ -196,6 +207,14 @@ const AdminDashboard = () => {
             </SubMenu>
           </Menu>
         </Sider>
+        {/* Overlay for mobile */}
+        {isMobile && !collapsed && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setCollapsed(true)}
+          ></div>
+        )}
+
         {/* Main Layout */}
         <Layout>
           <Header
@@ -232,9 +251,7 @@ const AdminDashboard = () => {
                       size="large"
                       icon={<UserOutlined />}
                     />
-                    <p className="text-black max-md:hidden text-md">
-                      Jessica Davidson
-                    </p>
+                    <p className="text-black text-md">Jessica Davidson</p>
                   </button>
                 </Dropdown>
               </div>
