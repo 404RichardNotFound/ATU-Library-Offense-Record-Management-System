@@ -18,6 +18,7 @@ import MyProfile from '../Components/Dashboard/AdminDashboard/MyProfile';
 import Notice from '../Components/Dashboard/AdminDashboard/Notice.tsx';
 import AddPayment from '@/Components/Dashboard/AdminDashboard/AddPayment.tsx';
 import LandingPage from '@/Components/LandingPage/LandingPage.tsx';
+import EditAdminProfile from '@/Components/Dashboard/AdminDashboard/EditAdminProfile.tsx';
 
 export default function AppRoute() {
   return (
@@ -35,6 +36,7 @@ export default function AppRoute() {
         <Route path="PaymentList" element={<PaymentList />} />
         <Route path="Notice" element={<Notice />} />
         <Route path="OffenseList" element={<OffenseList />} />
+        <Route path="EditAdminProfile" element={<EditAdminProfile />} />
         <Route path="BorrowedBooks" element={<BorrowedBooks />} />
         <Route path="AddStudent" element={<AddStudent />} />
         <Route path="MyProfile" element={<MyProfile />} />

@@ -36,7 +36,7 @@ const AddToList = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-md border-2 border-zinc-200 h-[590px] bg-white w-full max-sm:w-full p-6 flex flex-col gap-3"
+        className="rounded-md border-[1px] border-zinc-200 h-[630px] bg-white w-full max-sm:w-full p-6 flex flex-col gap-3"
       >
         <h1 className="text-center font-medium text-lg">Add Borrowed Book</h1>
         <div className="flex flex-col gap-4 h-auto justify-between">
@@ -45,7 +45,7 @@ const AddToList = () => {
             <div className="text-base w-full flex gap-2 flex-col">
               <label>Name:</label>
               <input
-                className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+                className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
                 type="text"
                 placeholder="Name"
                 name="name"
@@ -55,7 +55,7 @@ const AddToList = () => {
             <div className="text-base flex gap-2 w-auto flex-col">
               <label>Student ID:</label>
               <input
-                className="rounded-sm px-2 w-full bg-slate-50 border-2"
+                className="rounded-sm px-2 w-full bg-slate-50 border-[1px] py-1 hover:border-dotted"
                 type="text"
                 placeholder="Student ID"
                 name="studentID"
@@ -65,7 +65,7 @@ const AddToList = () => {
             <div className="text-base flex gap-2 w-full flex-col">
               <label>Book:</label>
               <input
-                className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+                className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
                 type="text"
                 placeholder="Book"
                 name="book"
@@ -79,7 +79,7 @@ const AddToList = () => {
             <div className="text-base flex gap-2 w-full flex-col">
               <label>Borrow Date:</label>
               <DatePicker
-                className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+                className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted hover:border-zinc-200"
                 value={borrowDate ? dayjs(borrowDate) : null}
                 onChange={(_date, dateString: any) => setBorrowDate(dateString)}
                 required
@@ -88,7 +88,7 @@ const AddToList = () => {
             <div className="text-base w-full flex gap-2 flex-col">
               <label>Return Date:</label>
               <DatePicker
-                className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+                className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted hover:border-zinc-200"
                 value={returnDate ? dayjs(returnDate) : null}
                 onChange={(_date, dateString: any) => setReturnDate(dateString)}
                 required
@@ -101,7 +101,7 @@ const AddToList = () => {
         <div className="text-base flex w-full gap-4 flex-col">
           <label>Status:</label>
           <input
-            className="rounded-sm bg-slate-50 border-2 px-2"
+            className="rounded-sm bg-slate-50 border-[1px] px-2 py-1 hover:border-dotted"
             type="text"
             placeholder="Status"
             name="status"

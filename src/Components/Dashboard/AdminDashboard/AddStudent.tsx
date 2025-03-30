@@ -62,7 +62,7 @@ const AddStudent = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-md border-2 border-zinc-200 bg-white h-[640px] w-full max-sm:w-full p-6 flex flex-col gap-3"
+        className="rounded-md border-[1px] border-zinc-200 bg-white h-[675px] w-full max-sm:w-full p-6 flex flex-col gap-3"
       >
         <h1 className="text-center font-medium text-lg">Add Student</h1>
 
@@ -70,7 +70,7 @@ const AddStudent = () => {
         <div className="text-base w-full flex gap-2 flex-col">
           <label>Name:</label>
           <input
-            className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+            className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
             type="text"
             name="name"
             placeholder="Name"
@@ -84,7 +84,7 @@ const AddStudent = () => {
         <div className="text-base flex gap-2 w-auto flex-col">
           <label>Student ID:</label>
           <input
-            className="rounded-sm px-2 w-full bg-slate-50 border-2"
+            className="rounded-sm px-2 w-full bg-slate-50 border-[1px] py-1 hover:border-dotted"
             type="text"
             name="studentID"
             placeholder="Student ID"
@@ -98,7 +98,7 @@ const AddStudent = () => {
         <div className="text-base flex gap-2 w-full flex-col">
           <label>Email:</label>
           <input
-            className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+            className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
             type="email"
             name="email"
             placeholder="Email"
@@ -112,7 +112,7 @@ const AddStudent = () => {
         <div className="text-base flex gap-2 w-full flex-col">
           <label>Password:</label>
           <input
-            className="rounded-sm bg-slate-50 border-2 px-2"
+            className="rounded-sm bg-slate-50 border-[1px] px-2 py-1 hover:border-dotted"
             type="password"
             placeholder="Password"
             name="password"
@@ -125,7 +125,7 @@ const AddStudent = () => {
         {/* Gender Selection */}
         <div className="w-full flex flex-col gap-2">
           <label className="text-base">Gender:</label>
-          <div className="flex gap-4">
+          <div className="flex text-base gap-4">
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -153,7 +153,7 @@ const AddStudent = () => {
         <div className="text-base w-full flex gap-2 flex-col">
           <label>Phone Number:</label>
           <input
-            className="rounded-sm bg-slate-50 border-2 px-2"
+            className="rounded-sm bg-slate-50 border-[1px] px-2 py-1 hover:border-dotted"
             type="tel"
             placeholder="Phone Number"
             name="phoneNumber"
@@ -167,7 +167,7 @@ const AddStudent = () => {
         <div className="text-base flex w-full gap-4 flex-col">
           <label>Program:</label>
           <input
-            className="rounded-sm bg-slate-50 border-2 px-2"
+            className="rounded-sm bg-slate-50 border-[1px] px-2 py-1 hover:border-dotted"
             type="text"
             name="program"
             placeholder="Program"

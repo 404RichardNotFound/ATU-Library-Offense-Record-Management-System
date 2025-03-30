@@ -60,7 +60,7 @@ const Notice = () => {
   const displayedNotices = showAllNotices ? noticeArray : noticeArray.slice(-3);
 
   return (
-    <div className="bg-white rounded-md p-3 h-full border-2">
+    <div className="bg-white rounded-md p-3 h-full border-[1px]">
       {/* Toast Notification - Positioned at the Top Center */}
       <Toaster position="top-center" reverseOrder={false} />
 
@@ -69,7 +69,7 @@ const Notice = () => {
         <h1 className="text-base">Write Notice</h1>
         <form onSubmit={handleSubmit}>
           <textarea
-            className="bg-zinc-100 p-2 w-full shadow-sm border-2"
+            className="bg-zinc-100 p-2 w-full shadow-sm border-[1px] hover:border-dotted"
             onChange={(e) => setNoticeText(e.target.value)}
             value={noticeText}
             rows={5}
@@ -110,7 +110,7 @@ const Notice = () => {
                 className="flex justify-between items-center border-2 shadow-sm gap-3 bg-zinc-100 rounded-md p-3 w-full"
               >
                 {/* Notice Content */}
-                <div className="w-full overflow-hidden">
+                <div className="w-full overflow-hidden space-y-2">
                   <div className="flex h-auto gap-2">
                     <h1 className="font-bold">Message:</h1>
                     <h2 className="break-words whitespace-normal w-full">

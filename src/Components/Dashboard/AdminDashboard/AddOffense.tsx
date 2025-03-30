@@ -34,7 +34,7 @@ const AddOffense = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-md border-2 border-zinc-200 bg-white h-[875px] w-full max-sm:w-full p-6 flex flex-col gap-3"
+        className="rounded-md border-[1px] border-zinc-200 bg-white h-[915px] w-full max-sm:w-full p-6 flex flex-col gap-3"
       >
         <h1 className="text-center font-medium text-lg">Add Offense</h1>
 
@@ -43,7 +43,7 @@ const AddOffense = () => {
           <div className="text-base w-full flex gap-2 flex-col">
             <label>Name:</label>
             <input
-              className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+              className="rounded-sm py-1 bg-slate-50 border-[1px] px-2 w-full hover:border-dotted"
               type="text"
               name="studentName"
               placeholder="Name"
@@ -54,7 +54,7 @@ const AddOffense = () => {
           <div className="text-base flex gap-2 w-full flex-col">
             <label>Student ID:</label>
             <input
-              className="rounded-sm px-2 w-full bg-slate-50 border-2"
+              className="rounded-sm py-1 px-2 w-full bg-slate-50 hover:border-dotted border-[1px]"
               type="text"
               name="studentID"
               placeholder="Student ID"
@@ -65,7 +65,7 @@ const AddOffense = () => {
           <div className="text-base flex gap-2 w-full flex-col">
             <label>Email:</label>
             <input
-              className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+              className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="email"
               name="email"
               placeholder="Email"
@@ -76,7 +76,7 @@ const AddOffense = () => {
           <div className="text-base flex gap-2 w-full flex-col">
             <label>Program:</label>
             <input
-              className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+              className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="text"
               name="program"
               placeholder="Program"
@@ -90,7 +90,7 @@ const AddOffense = () => {
           <div className="text-base flex gap-2 w-full flex-col">
             <label>Offense Type:</label>
             <input
-              className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+              className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="text"
               placeholder="Offense Type"
               name="offenseType"
@@ -101,7 +101,7 @@ const AddOffense = () => {
           <div className="text-base flex gap-2 w-full flex-col">
             <label>Offense Description:</label>
             <textarea
-              className="rounded-sm bg-slate-50 border-2 px-2 w-full h-20"
+              className="rounded-sm bg-slate-50 border-[1px] px-2 w-full h-20 py-1 hover:border-dotted"
               name="description"
               placeholder="Offense Description .."
               required
@@ -111,7 +111,7 @@ const AddOffense = () => {
           <div className="text-base flex gap-2 w-full flex-col">
             <label>Offense Date:</label>
             <DatePicker
-              className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+              className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted hover:border-zinc-200"
               value={offenseDate ? dayjs(offenseDate) : null}
               onChange={(_date, dateString: any) => setOffenseDate(dateString)}
               required
@@ -123,7 +123,7 @@ const AddOffense = () => {
         <div className="text-base flex w-full gap-4 flex-col">
           <label>Penalty:</label>
           <input
-            className="rounded-sm bg-slate-50 border-2 px-2"
+            className="rounded-sm bg-slate-50 border-[1px] px-2 py-1 hover:border-dotted"
             type="text"
             placeholder="Penalty"
             name="penalty"
@@ -134,7 +134,7 @@ const AddOffense = () => {
         <div className="text-base flex w-full gap-4 flex-col">
           <label>Status:</label>
           <input
-            className="rounded-sm bg-slate-50 border-2 px-2"
+            className="rounded-sm bg-slate-50 border-[1px] px-2 py-1 hover:border-dotted"
             type="text"
             placeholder="Status"
             name="status"
@@ -173,7 +173,7 @@ const AddOffense = () => {
               </svg>
             )}
             {/* Change button text when submitting */}
-            {isSubmitting ? 'Please wait...' : 'Record Offense'}
+            {isSubmitting ? 'Please wait...' : 'Add Offense'}
           </button>
         </div>
       </form>

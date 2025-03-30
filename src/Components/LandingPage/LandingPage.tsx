@@ -21,7 +21,7 @@ const LandingPage = () => {
           <img src={atuLogo} className="w-32 h-32" alt="" />
 
           {/* Typewriter for Welcome Message */}
-          <h1 className="text-2xl font-bold">
+          <h1 className="max-md:text-2xl text-3xl font-bold">
             <Typewriter
               onInit={(typewriter) => {
                 typewriter
@@ -40,7 +40,7 @@ const LandingPage = () => {
 
           {/* Typewriter for "Which are you?" Appears after first text completes */}
           {showQuestion && (
-            <p className="text-xl font-medium">
+            <p className="max-md:text-xl text-2xl font-medium">
               <Typewriter
                 onInit={(typewriter) => {
                   typewriter
@@ -61,13 +61,13 @@ const LandingPage = () => {
         {/* Buttons */}
         <div className="flex justify-between">
           <Link className="cursor-pointer" to="/StudentLogin">
-            <button className="font-medium flex py-1 items-center border-slate-200 px-3 hover:bg-blue-600 text-sm rounded-md text-white bg-blue-500 border-2">
+            <button className="font-medium flex py-1.5 items-center border-slate-200 px-3 hover:bg-blue-600 max-md:text-sm text-base rounded-md text-white bg-blue-500 border-2">
               <img src={studentIcon} className="w-6 h-6" alt="" />
               Student
             </button>
           </Link>
           <Link className="cursor-pointer" to="/AdminLogin">
-            <button className="font-medium py-1 flex items-center border-slate-200 px-3 hover:bg-blue-600 text-sm rounded-md text-white bg-blue-500 border-2">
+            <button className="font-medium text-base py-1.5 flex items-center border-slate-200 px-3 hover:bg-blue-600 max-md:text-sm rounded-md text-white bg-blue-500 border-2">
               <img src={adminIcon} className="w-6 h-6" alt="" />
               Admin
             </button>

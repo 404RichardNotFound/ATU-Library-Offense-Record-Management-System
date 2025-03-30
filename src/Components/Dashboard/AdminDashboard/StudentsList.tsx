@@ -4,7 +4,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { Tag } from 'antd';
 import { useState, useRef } from 'react';
-import { Pencil, Trash2, RotateCcw, Loader } from 'lucide-react'; // Import icons
+import { Pencil, Trash2 } from 'lucide-react'; // Import icons
 
 import {
   Dialog,
@@ -77,9 +77,35 @@ const StudentsList = () => {
       Gender: 'Male',
       Joined: date.toISOString().split('T')[0],
     },
+    {
+      Student: 'Richard Okoro',
+      ID: '01222631D',
+      Email: 'Drexlerwrld@gmail.com',
+      Program: 'Computer Science',
+      Phone: '0548225869',
+      Gender: 'Male',
+      Joined: date.toISOString().split('T')[0],
+    },
+    {
+      Student: 'Richard Okoro',
+      ID: '01222631D',
+      Email: 'Drexlerwrld@gmail.com',
+      Program: 'Computer Science',
+      Phone: '0548225869',
+      Gender: 'Male',
+      Joined: date.toISOString().split('T')[0],
+    },
+    {
+      Student: 'Richard Okoro',
+      ID: '01222631D',
+      Email: 'Drexlerwrld@gmail.com',
+      Program: 'Computer Science',
+      Phone: '0548225869',
+      Gender: 'Male',
+      Joined: date.toISOString().split('T')[0],
+    },
   ]);
 
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const gridRef = useRef<AgGridReact>(null);
 
   // State for edit modal
@@ -95,17 +121,6 @@ const StudentsList = () => {
     filter: true,
     minWidth: 150,
     cellStyle: { textAlign: 'left' },
-  };
-
-  // Refresh Table Data
-  const refreshTable = async () => {
-    setIsRefreshing(true);
-
-    // Simulate API delay (Replace this with actual backend call later)
-    setTimeout(() => {
-      setRowData([...rowData]); // For now, just reloading the same data
-      setIsRefreshing(false);
-    }, 1500);
   };
 
   // Open edit modal
@@ -186,9 +201,9 @@ const StudentsList = () => {
         // Define color mapping for different statuses
         const getStatusColor = (gender: string) => {
           switch (gender) {
-            case 'girl':
-              return 'yellow';
-            case 'boy':
+            case 'female':
+              return 'orange';
+            case 'male':
               return 'blue';
             default:
               return '';
@@ -236,32 +251,17 @@ const StudentsList = () => {
     <div className="p-0 h-full bg-zinc-100">
       {/* Header Buttons */}
       <div className="flex justify-end items-center py-1 mb-2 px-0">
-        <div className="flex gap-4">
-          {/* Refresh Button */}
-          <Button
-            onClick={refreshTable}
-            className="flex items-center gap-2 hover:bg-blue-600 bg-blue-500 border-2"
-          >
-            {isRefreshing ? (
-              <Loader className="animate-spin" size={18} />
-            ) : (
-              <RotateCcw size={18} />
-            )}
-            Refresh
-          </Button>
-
-          {/* Export Button */}
-          <Button
-            onClick={exportToCSV}
-            className="bg-blue-500 hover:bg-blue-600 border-2"
-          >
-            Export To CSV
-          </Button>
-        </div>
+        {/* Export Button */}
+        <Button
+          onClick={exportToCSV}
+          className="bg-blue-500 hover:bg-blue-600 border-[1px]"
+        >
+          Export To CSV
+        </Button>
       </div>
 
       {/* Table */}
-      <div className="ag-theme-alpine w-full h-[500px] bg-zinc-100">
+      <div className="ag-theme-alpine w-full h-full pb-10 bg-zinc-100">
         <AgGridReact
           ref={gridRef}
           rowData={rowData}
@@ -269,6 +269,8 @@ const StudentsList = () => {
           defaultColDef={defaultColDef}
           pagination={true}
           paginationPageSize={20}
+          suppressPaginationPanel={true}
+          suppressScrollOnNewData={true}
         />
       </div>
 
@@ -328,13 +330,13 @@ const StudentsList = () => {
           <div className="flex justify-end gap-2 mt-4">
             <Button
               variant="outline"
-              className="border-2"
+              className="border-[1px]"
               onClick={() => setIsDialogOpen(false)}
             >
               Cancel
             </Button>
             <Button
-              className="bg-blue-500 hover:bg-blue-600 border-2"
+              className="bg-blue-500 hover:bg-blue-600 border-[1px]"
               onClick={saveEditedData}
             >
               Save Changes

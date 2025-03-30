@@ -70,7 +70,7 @@ const AddPayment = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-md border-2 border-zinc-200 bg-white h-[680px] w-full max-sm:w-full p-6 flex flex-col gap-3"
+        className="rounded-md border-[1px] border-zinc-200 bg-white h-[710px] w-full max-sm:w-full p-6 flex flex-col gap-3"
       >
         <h1 className="text-center font-medium text-lg">Add Payment</h1>
 
@@ -79,7 +79,7 @@ const AddPayment = () => {
           <div className="text-base w-full flex gap-2 flex-col">
             <label>Name:</label>
             <input
-              className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+              className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="text"
               name="studentName"
               placeholder="Name"
@@ -92,7 +92,7 @@ const AddPayment = () => {
           <div className="text-base flex gap-2 w-full flex-col">
             <label>Student ID:</label>
             <input
-              className="rounded-sm px-2 w-full bg-slate-50 border-2"
+              className="rounded-sm px-2 w-full bg-slate-50 border-[1px] py-1 hover:border-dotted"
               type="text"
               placeholder="Student ID"
               name="studentID"
@@ -105,7 +105,7 @@ const AddPayment = () => {
           <div className="text-base flex gap-2 w-full flex-col">
             <label>Program:</label>
             <input
-              className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+              className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="text"
               placeholder="Program"
               name="program"
@@ -121,7 +121,7 @@ const AddPayment = () => {
           <div className="text-base flex gap-2 w-full flex-col">
             <label>Amount:</label>
             <input
-              className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+              className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="text"
               name="amount"
               placeholder="Amount"
@@ -134,7 +134,7 @@ const AddPayment = () => {
           <div className="text-base flex gap-2 w-full flex-col">
             <label>Reason:</label>
             <input
-              className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+              className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="text"
               name="reason"
               placeholder="Reason"
@@ -147,7 +147,7 @@ const AddPayment = () => {
           <div className="text-base flex gap-2 w-full flex-col">
             <label>Payment Date:</label>
             <DatePicker
-              className="rounded-sm bg-slate-50 border-2 px-2 w-full"
+              className="rounded-sm bg-slate-50 hover:border-zinc-200 border-[1px] px-2 w-full py-1 hover:border-dotted"
               value={formData.paymentDate ? dayjs(formData.paymentDate) : null}
               onChange={handleDateChange}
               required
@@ -159,7 +159,7 @@ const AddPayment = () => {
         <div className="text-base flex w-full gap-4 flex-col">
           <label>Status:</label>
           <input
-            className="rounded-sm bg-slate-50 border-2 px-2"
+            className="rounded-sm bg-slate-50 border-[1px] px-2 py-1 hover:border-dotted"
             type="text"
             name="status"
             placeholder="Status"

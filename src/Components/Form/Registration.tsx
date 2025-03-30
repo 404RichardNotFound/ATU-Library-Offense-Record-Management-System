@@ -31,7 +31,7 @@ const schema = z.object({
     .min(10, 'Invalid phone number!')
     .max(10, 'Invalid phone number!'),
   gender: z.enum(['Male', 'Female']),
-  programme: z.string().min(2, 'invalid programme'),
+  program: z.string().min(2, 'invalid program'),
 });
 
 type RegistrationFormData = z.infer<typeof schema>;
@@ -193,7 +193,7 @@ const Registration = () => {
                       {...register('gender')}
                       required
                       id="Male"
-                      type="radio"
+                      type="checkbox"
                       name="gender"
                       value="Male"
                       checked={gender === 'Male'}
@@ -209,7 +209,7 @@ const Registration = () => {
                       {...register('gender')}
                       required
                       id="Female"
-                      type="radio"
+                      type="checkbox"
                       name="gender"
                       value="Female"
                       checked={gender === 'Female'}
@@ -230,7 +230,7 @@ const Registration = () => {
                   className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
                   type="tel"
                   name="phoneNumber"
-                  placeholder="Phone"
+                  placeholder="Phone Number"
                 />
                 {errors.phoneNumber && (
                   <p className="text-red-500">{errors.phoneNumber.message}</p>
@@ -239,17 +239,17 @@ const Registration = () => {
             </div>
           </div>
           <div className="w-full flex flex-col gap-2">
-            <label htmlFor="programme">Programme</label>
+            <label htmlFor="program">Program</label>
             <input
-              {...register('programme')}
+              {...register('program')}
               type="text"
               className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
-              id="programme"
-              name="programme"
-              placeholder="Programme"
+              id="program"
+              name="program"
+              placeholder="Program"
             />
-            {errors.programme && (
-              <p className="text-red-500">{errors.programme.message}</p>
+            {errors.program && (
+              <p className="text-red-500">{errors.program.message}</p>
             )}
           </div>
           <div className="flex gap-2 justify-start">

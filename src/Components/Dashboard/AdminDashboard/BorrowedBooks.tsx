@@ -4,7 +4,7 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { Tag } from 'antd';
 import { useState, useRef } from 'react';
-import { Pencil, Trash2, RotateCcw, Loader } from 'lucide-react'; // Import icons
+import { Pencil, Trash2 } from 'lucide-react'; // Import icons
 import {
   Dialog,
   DialogContent,
@@ -33,7 +33,6 @@ const BorrowedBooks = () => {
     },
   ]);
 
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const gridRef = useRef<AgGridReact>(null);
 
   // State for edit modal
@@ -49,15 +48,6 @@ const BorrowedBooks = () => {
     filter: true,
     minWidth: 150,
     cellStyle: { textAlign: 'left' },
-  };
-
-  // Refresh Table Data
-  const refreshTable = async () => {
-    setIsRefreshing(true);
-    setTimeout(() => {
-      setRowData([...rowData]); // Simulating refresh
-      setIsRefreshing(false);
-    }, 1500);
   };
 
   // Open edit modal and deep clone data to avoid state mutation issues
@@ -144,29 +134,16 @@ const BorrowedBooks = () => {
     <div className="p-0 h-full bg-zinc-100">
       {/* Header Buttons */}
       <div className="flex justify-end items-center py-1 mb-2 px-0">
-        <div className="flex gap-4">
-          <Button
-            onClick={refreshTable}
-            className="flex items-center border-2 gap-2 hover:bg-blue-600 bg-blue-500"
-          >
-            {isRefreshing ? (
-              <Loader className="animate-spin" size={18} />
-            ) : (
-              <RotateCcw size={18} />
-            )}{' '}
-            Refresh
-          </Button>
-          <Button
-            onClick={() => gridRef.current?.api.exportDataAsCsv()}
-            className="bg-blue-500 hover:bg-blue-600 border-2"
-          >
-            Export To CSV
-          </Button>
-        </div>
+        <Button
+          onClick={() => gridRef.current?.api.exportDataAsCsv()}
+          className="bg-blue-500 hover:bg-blue-600 border-[1px]"
+        >
+          Export To CSV
+        </Button>
       </div>
 
       {/* Table */}
-      <div className="ag-theme-alpine w-full h-[500px] bg-zinc-100">
+      <div className="ag-theme-alpine w-full h-full pb-10 bg-zinc-100">
         <AgGridReact
           ref={gridRef}
           rowData={rowData}
@@ -174,6 +151,8 @@ const BorrowedBooks = () => {
           defaultColDef={defaultColDef}
           pagination={true}
           paginationPageSize={20}
+          suppressPaginationPanel={true}
+          suppressScrollOnNewData={true}
         />
       </div>
 
@@ -228,13 +207,13 @@ const BorrowedBooks = () => {
           <div className="flex justify-end gap-2 mt-4">
             <Button
               variant="outline"
-              className="border-2"
+              className="border-[1px]"
               onClick={() => setIsDialogOpen(false)}
             >
               Cancel
             </Button>
             <Button
-              className="bg-blue-500 hover:bg-blue-600 border-2"
+              className="bg-blue-500 hover:bg-blue-600 border-[1px]"
               onClick={saveEditedData}
             >
               Save Changes

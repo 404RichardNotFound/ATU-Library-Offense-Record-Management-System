@@ -8,6 +8,7 @@ import {
   PlusSquareOutlined,
   TeamOutlined,
   WarningOutlined,
+  EditOutlined,
   HomeOutlined,
   LogoutOutlined,
   MoneyCollectOutlined,
@@ -48,7 +49,7 @@ const breadcrumbNameMap: any = {
   '/AdminDashboard/PaymentList': 'Payment List',
   '/AdminDashboard/AddPayment': 'Add Payment',
   '/AdminDashboard/MyProfile': 'My Profile',
-  '/AdminDashboard/EditProfile': 'Edit Profile',
+  '/AdminDashboard/EditAdminProfile': 'Edit Profile',
   '/AdminDashboard/Settings': 'Settings',
   '/AdminDashboard/Calender': 'Calendar',
   '/AdminDashboard/Notice': 'Notice',
@@ -77,6 +78,9 @@ const AdminDashboard = () => {
     <Menu>
       <Menu.Item key="profile" icon={<ProfileOutlined />}>
         <Link to="MyProfile"> Profile</Link>
+      </Menu.Item>
+      <Menu.Item key="EditProfile" icon={<EditOutlined />}>
+        <Link to="EditAdminProfile">Edit Profile</Link>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item key="logout" icon={<LogoutOutlined />} danger>
@@ -120,7 +124,6 @@ const AdminDashboard = () => {
             <Menu.Item key="1" icon={<DashboardOutlined />}>
               <Link to="DashboardOverview">Dashboard</Link>
             </Menu.Item>
-
             {/* Submenu for Students */}
             <SubMenu key="2" icon={<TeamOutlined />} title="Students">
               <Menu.Item key="Students List" icon={<TeamOutlined />}>
@@ -182,12 +185,18 @@ const AdminDashboard = () => {
             <Menu.Item key="9" icon={<BellOutlined />}>
               <Link to="Notice">Notice</Link>
             </Menu.Item>
-            {/* Submenu for Payments*/}
-            <Menu.Item key="10" icon={<ProfileOutlined />}>
-              <Link to="MyProfile">My Profile</Link>
-            </Menu.Item>
+            {/* Submenu for Profile */}
+            <SubMenu key="11" icon={<LockOutlined />} title="Profile">
+              <Menu.Item key="MyProfile" icon={<ProfileOutlined />}>
+                <Link to="MyProfile">My Profile</Link>
+              </Menu.Item>
+              <Menu.Item key="EditProfile" icon={<EditOutlined />}>
+                <Link to="EditAdminProfile">Edit Profile</Link>
+              </Menu.Item>
+            </SubMenu>
           </Menu>
         </Sider>
+        {/* Main Layout */}
         <Layout>
           <Header
             style={{
@@ -257,7 +266,7 @@ const AdminDashboard = () => {
             <Outlet />
           </Content>
           <Footer style={{ textAlign: 'center', minHeight: '30px' }}>
-            ATU Lorms ©2025 Created by ATU Management
+            ATU Lorms ©2025
           </Footer>
         </Layout>
       </Layout>

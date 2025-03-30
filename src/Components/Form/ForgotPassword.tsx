@@ -15,16 +15,16 @@ import { useMutation } from '@tanstack/react-query';
 const schema = z
   .object({
     ID: z.string().min(9, 'Must be 9 characters!'),
-    password: z
+    newPassword: z
       .string()
       .min(8, 'Password must be at least 8 characters long!')
       .regex(/[A-Z]/, 'At least one uppercase letter!')
       .regex(/[a-z]/, 'At least one lowercase letter!')
       .regex(/\d/, 'At least one number!')
       .regex(/[@$!%*?&]/, 'At least one special character (@$!%*?&)!'),
-    confirmPassword: z.string(),
+    confirmNewPassword: z.string(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
     message: 'Passwords do not match!',
     path: ['confirmPassword'],
   });
@@ -136,31 +136,31 @@ function ForgotPassword() {
         </div>
         <div className="w-full flex flex-col gap-3">
           <div className="flex flex-col gap-2">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">New Password</label>
             <input
-              {...register('password')}
+              {...register('newPassword')}
               id="password"
               className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
               type="password"
               name="password"
-              placeholder="Password"
+              placeholder="New Password"
             />
-            {errors.password && (
-              <p className="text-red-500">{errors.password.message}</p>
+            {errors.newPassword && (
+              <p className="text-red-500">{errors.newPassword.message}</p>
             )}
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="password">Confirm Password</label>
+          <label htmlFor="password">Confirm New Password</label>
           <input
-            {...register('confirmPassword')}
+            {...register('confirmNewPassword')}
             id="confirmPassword"
             className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
             type="password"
-            placeholder="Confirm Password"
+            placeholder="Confirm New Password"
           />
-          {errors.confirmPassword && (
-            <p className="text-red-500">{errors.confirmPassword.message}</p>
+          {errors.confirmNewPassword && (
+            <p className="text-red-500">{errors.confirmNewPassword.message}</p>
           )}
         </div>
         <div className="flex gap-2 justify-start">
