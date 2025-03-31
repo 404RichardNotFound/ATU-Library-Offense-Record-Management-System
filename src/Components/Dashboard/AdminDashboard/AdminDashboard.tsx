@@ -106,8 +106,8 @@ const AdminDashboard = () => {
         }}
       >
         <Sider
-          className={`bg-white fixed h-screen ${collapsed ? 'w-0' : 'w-64'} 
-    ${isMobile ? 'z-50' : 'relative'} transition-all duration-300`}
+          className={`bg-white fixed pr-3 h-screen ${collapsed ? 'w-0' : 'w-64'} 
+    ${isMobile ? 'z-50 overflow-auto' : 'relative'} transition-all duration-300`}
           trigger={null}
           collapsible
           collapsed={collapsed}
