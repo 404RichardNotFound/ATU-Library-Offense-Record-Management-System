@@ -270,6 +270,7 @@ const StudentsList = () => {
           pagination={true}
           paginationPageSize={20}
           suppressPaginationPanel={true}
+          theme="legacy"
           suppressScrollOnNewData={true}
         />
       </div>

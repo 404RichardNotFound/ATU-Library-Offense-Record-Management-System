@@ -188,6 +188,7 @@ const OffenseList = () => {
           paginationPageSize={20}
           suppressPaginationPanel={true}
           suppressScrollOnNewData={true}
+          theme="legacy"
         />
       </div>
 
