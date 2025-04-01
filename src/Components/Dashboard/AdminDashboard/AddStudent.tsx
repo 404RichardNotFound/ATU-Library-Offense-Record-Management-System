@@ -181,7 +181,7 @@ const AddStudent = () => {
         <div className="flex gap-2 mt-1 justify-start">
           <button
             type="submit"
-            className="border-2 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
+            className="border-2 transition-colors duration-300 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
             disabled={isSubmitting} // Disable button while submitting
           >
             {/* Show spinner when submitting */}

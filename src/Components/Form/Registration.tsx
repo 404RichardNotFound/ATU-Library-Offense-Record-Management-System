@@ -311,7 +311,7 @@ const Registration = () => {
             <p>
               An admin ?
               <Link to={'/AdminLogin'}>
-                <span className="text-blue-500 ml-2 hover:text-blue-700 cursor-pointer">
+                <span className="text-blue-500 ml-2 transition-colors duration-300 hover:text-blue-700 cursor-pointer">
                   Login here
                 </span>
               </Link>

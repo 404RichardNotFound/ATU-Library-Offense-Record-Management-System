@@ -203,7 +203,7 @@ function ForgotPassword() {
         <div className="mb-3">
           <p
             onClick={() => navigate(-1)}
-            className="text-blue-500 ml-2 hover:text-blue-700 cursor-pointer"
+            className="text-blue-500 ml-2 hover:text-blue-700 cursor-pointer transition-colors duration-300"
           >
             Go Back
           </p>

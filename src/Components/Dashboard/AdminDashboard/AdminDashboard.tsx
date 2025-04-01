@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   MenuFoldOutlined,
   UnorderedListOutlined,
@@ -34,6 +34,7 @@ import {
 import userPhoto from '../../../assets/woman-photo.jpg';
 
 import atuLogo from '/ATU-LOGO.png';
+import { Spinner } from '@radix-ui/themes';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -57,6 +58,8 @@ const breadcrumbNameMap: any = {
 
 const { SubMenu } = Menu;
 const AdminDashboard = () => {
+  const navigate = useNavigate();
+  const [admin, setAdmin] = useState<any>('');
   const [collapsed, setCollapsed] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -75,13 +78,37 @@ const AdminDashboard = () => {
   } = theme.useToken();
 
   useEffect(() => {
+    const storedAdmin = sessionStorage.getItem('admin');
+
+    if (!storedAdmin) {
+      navigate('/AdminLogin'); // Redirect to login if no admin data
+      return;
+    }
+
+    try {
+      const adminData = JSON.parse(storedAdmin);
+      setAdmin(adminData);
+    } catch (error) {
+      console.error('Error parsing admin data:', error);
+      sessionStorage.removeItem('admin'); // Clear invalid data
+      navigate('/AdminLogin'); // Redirect to login
+    }
+
+    // Fetch admin data from session storage
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [navigate]);
 
+  //Display Spinner component while fetching admin data
+  if (!admin)
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   // Dropdown menu for avatar
   const menu = (
     <Menu>
@@ -92,8 +119,16 @@ const AdminDashboard = () => {
         <Link to="EditAdminProfile">Edit Profile</Link>
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="logout" icon={<LogoutOutlined />} danger>
-        <Link to="/AdminLogin">Logout</Link>
+      <Menu.Item
+        onClick={() => {
+          sessionStorage.removeItem('admin'); // Clear session on logout
+          navigate('/AdminLogin');
+        }}
+        key="logout"
+        icon={<LogoutOutlined />}
+        danger
+      >
+        Logout
       </Menu.Item>
     </Menu>
   );
@@ -106,6 +141,9 @@ const AdminDashboard = () => {
         }}
       >
         <Sider
+          style={{
+            boxShadow: '0 0px 0.6px 0px',
+          }}
           className={`bg-white fixed h-screen ${collapsed ? 'w-0' : 'w-64'} 
     ${isMobile ? 'z-50 overflow-auto' : 'relative'} transition-all duration-300`}
           trigger={null}
@@ -221,6 +259,7 @@ const AdminDashboard = () => {
             style={{
               padding: 0,
               background: colorBgContainer,
+              boxShadow: '0 0px 0.6px 0px',
             }}
           >
             <div className="flex justify-between w-full h-full">
@@ -251,7 +290,9 @@ const AdminDashboard = () => {
                       size="large"
                       icon={<UserOutlined />}
                     />
-                    <p className="text-black text-md">Jessica Davidson</p>
+                    <p className="text-black text-md font-medium">
+                      {admin.name}
+                    </p>
                   </button>
                 </Dropdown>
               </div>

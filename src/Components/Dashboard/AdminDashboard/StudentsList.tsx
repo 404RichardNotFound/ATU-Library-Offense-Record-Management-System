@@ -25,6 +25,33 @@ const StudentsList = () => {
   const [rowData, setRowData] = useState([
     {
       Student: 'Richard Okoro',
+      ID: '03222631D',
+      Email: 'Drexlerwrld@gmail.com',
+      Program: 'Computer Science',
+      Phone: '0548225869',
+      Gender: 'Male',
+      Joined: date.toISOString().split('T')[0],
+    },
+    {
+      Student: 'Richard Okoro',
+      ID: '04222631D',
+      Email: 'Drexlerwrld@gmail.com',
+      Program: 'Computer Science',
+      Phone: '0548225869',
+      Gender: 'Male',
+      Joined: date.toISOString().split('T')[0],
+    },
+    {
+      Student: 'Richard Okoro',
+      ID: '01222631D',
+      Email: 'Drexlerwrld@gmail.com',
+      Program: 'Computer Science',
+      Phone: '0548225869',
+      Gender: 'Male',
+      Joined: date.toISOString().split('T')[0],
+    },
+    {
+      Student: 'Richard Okoro',
       ID: '01222631D',
       Email: 'Drexlerwrld@gmail.com',
       Program: 'Computer Science',
@@ -254,7 +281,7 @@ const StudentsList = () => {
         {/* Export Button */}
         <Button
           onClick={exportToCSV}
-          className="bg-blue-500 hover:bg-blue-600 border-[1px]"
+          className="bg-blue-500 hover:bg-blue-600 border-[1px] transition-colors duration-300"
         >
           Export To CSV
         </Button>
@@ -270,8 +297,8 @@ const StudentsList = () => {
           pagination={true}
           paginationPageSize={20}
           suppressPaginationPanel={true}
-          theme="legacy"
           suppressScrollOnNewData={true}
+          theme="legacy"
         />
       </div>
 
@@ -331,13 +358,13 @@ const StudentsList = () => {
           <div className="flex justify-end gap-2 mt-4">
             <Button
               variant="outline"
-              className="border-[1px]"
+              className="border-[1px] transition-colors duration-300"
               onClick={() => setIsDialogOpen(false)}
             >
               Cancel
             </Button>
             <Button
-              className="bg-blue-500 hover:bg-blue-600 border-[1px]"
+              className="bg-blue-500 hover:bg-blue-600 border-[1px] transition-colors duration-300"
               onClick={saveEditedData}
             >
               Save Changes

@@ -77,7 +77,7 @@ const Notice = () => {
           ></textarea>
           <button
             type="submit"
-            className="mt-4 bg-blue-500 border-2 flex items-center justify-center gap-2 cursor-pointer w-32 font-semibold hover:bg-blue-600 text-white p-1.5 rounded-md disabled:opacity-50"
+            className="mt-4 bg-blue-500 border-2 flex items-center justify-center gap-2 cursor-pointer w-32 font-semibold hover:bg-blue-600 text-white p-1.5 rounded-md disabled:opacity-50 transition-colors duration-300"
             disabled={loading}
           >
             {loading ? 'Updating...' : 'Add Notice'}

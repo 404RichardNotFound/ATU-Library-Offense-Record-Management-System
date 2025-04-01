@@ -1,15 +1,15 @@
 import authenticationIcon from '../../assets/authentication.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { z } from 'zod';
+import { getDocs, query, where, collection } from 'firebase/firestore';
+import { db } from '../../Firebase/firebase-config';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import atuLogo from '/ATU-LOGO.png';
 import { motion } from 'motion/react';
-import axios from 'axios';
 import { Spinner } from '@radix-ui/themes';
-import { useMutation } from '@tanstack/react-query';
 
 // Define the schema for form validation using Zod
 const schema = z.object({
@@ -26,51 +26,70 @@ const schema = z.object({
 // Infer the type of the schema
 type AdminLoginSchema = z.infer<typeof schema>;
 
-// Create a resolver for the schema
+// Resolver for the schema
 const AdminLoginSchemaResolver = zodResolver(schema);
 
 function AdminLogin() {
   // State for error and success messages
   const [errorMessage, setErrorMessage] = useState<string | null>('');
   const [successMessage, setSuccessMessage] = useState<string | null>('');
+  const navigate = useNavigate();
 
-  // Destructure the useForm hook
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<AdminLoginSchema>({
     resolver: AdminLoginSchemaResolver,
     mode: 'onChange', // Enable real-time validation feedback
   });
 
-  // Mutation for Posting Sign-Up Data
-  const loginMutation = useMutation({
-    mutationFn: async (adminLoginData: AdminLoginSchema) => {
-      const response = await axios.post(
-        'http://localhost/Backend/registration.php',
-        adminLoginData
-      );
-      return response.data;
-    },
-    onError: () => {
-      setErrorMessage('Login Error, Try again.');
-      setSuccessMessage(null);
-    },
-    onSuccess: () => {
-      reset(); // Reset form after successful registration
-      setSuccessMessage('Login Successful!');
-      setErrorMessage(null);
-    },
-  });
+  const onSubmit = async (adminLogins: AdminLoginSchema) => {
+    setErrorMessage('');
+    setSuccessMessage('');
+    const data: AdminLoginSchema = adminLogins;
 
-  const onSubmit = async (adminData: AdminLoginSchema) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    // Submit form data to the server
-    loginMutation.mutate(adminData);
-    console.log(adminData);
-    reset();
+    console.log(data);
+
+    try {
+      // Query Firestore to find the admin with the entered adminID
+      const q: any = query(
+        collection(db, 'Admin'),
+        where('ID', '==', data.adminID)
+      );
+
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        setErrorMessage('Admin ID not found');
+        return;
+      }
+
+      const adminDoc = querySnapshot.docs[0]; // Get the first matching document
+      const adminData: any = adminDoc.data();
+
+      if (adminData.Password === data.password) {
+        // Store admin data in session storage
+        sessionStorage.setItem(
+          'admin',
+          JSON.stringify({
+            adminID: adminData.ID,
+            gender: adminData.Gender,
+            name: adminData.Name,
+            email: adminData.Email,
+            role: adminData.Role,
+            phoneNumber: adminData.Phone_Number,
+          })
+        );
+
+        setSuccessMessage('Login successful! Redirecting...');
+        setTimeout(() => navigate('/AdminDashboard'), 2000);
+      } else {
+        setErrorMessage('Incorrect password');
+      }
+    } catch (error) {
+      setErrorMessage('Error logging in. Try again.');
+      console.error('Login Error:', error);
+    }
   };
 
   // Automatically clear error after 5 seconds
@@ -194,7 +213,7 @@ function AdminLogin() {
           <p>
             Not an admin ?
             <Link to={'/StudentLogin'}>
-              <span className="text-blue-500 ml-2 hover:text-blue-700 cursor-pointer">
+              <span className="text-blue-500 ml-2 hover:text-blue-700 cursor-pointer transition-colors duration-300">
                 Click here
               </span>
             </Link>

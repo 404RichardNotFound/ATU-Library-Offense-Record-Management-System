@@ -171,7 +171,7 @@ const OffenseList = () => {
         {/* Export Button */}
         <Button
           onClick={exportToCSV}
-          className="bg-blue-500 hover:bg-blue-600 border-[1px]"
+          className="bg-blue-500 hover:bg-blue-600 border-[1px] transition-colors duration-300"
         >
           Export To CSV
         </Button>
@@ -215,13 +215,13 @@ const OffenseList = () => {
           <div className="flex justify-end gap-2 mt-4">
             <Button
               variant="outline"
-              className="border-[1px]"
+              className="border-[1px] transition-colors duration-300"
               onClick={() => setIsDialogOpen(false)}
             >
               Cancel
             </Button>
             <Button
-              className="bg-blue-500 hover:bg-blue-600 border-[1px]"
+              className="bg-blue-500 hover:bg-blue-600 border-[1px] transition-colors duration-300"
               onClick={saveEditedData}
             >
               Save Changes

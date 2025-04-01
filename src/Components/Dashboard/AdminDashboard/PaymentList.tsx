@@ -156,7 +156,7 @@ const PaymentList = () => {
       <div className="flex justify-end items-center py-1 mb-2 px-0">
         <Button
           onClick={() => gridRef.current?.api.exportDataAsCsv()}
-          className="bg-blue-500 hover:bg-blue-600 border-[1px]"
+          className="bg-blue-500 hover:bg-blue-600 border-[1px] transition-colors duration-300"
         >
           Export To CSV
         </Button>
@@ -245,13 +245,13 @@ const PaymentList = () => {
           <div className="flex justify-end gap-2 mt-4">
             <Button
               variant="outline"
-              className="border-[1px]"
+              className="border-[1px] transition-colors duration-300"
               onClick={() => setIsDialogOpen(false)}
             >
               Cancel
             </Button>
             <Button
-              className="bg-blue-500 border-[1px] hover:bg-blue-600"
+              className="bg-blue-500 border-[1px] hover:bg-blue-600 transition-colors duration-300"
               onClick={saveEditedData}
             >
               Save Changes

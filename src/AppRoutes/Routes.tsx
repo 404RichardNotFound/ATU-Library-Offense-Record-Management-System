@@ -1,51 +1,95 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Registration from '../Components/Form/Registration';
-import StudentLogin from '../Components/Form/StudentLogin';
-import ForgotPassword from '../Components/Form/ForgotPassword';
-import NotFoundPage from '../Components/NotFoundPage.tsx/NotFoundPage';
-import AdminLogin from '../Components/Form/AdminLogin';
-import StudentsList from '../Components/Dashboard/AdminDashboard/StudentsList';
-import AdminDashboard from '../Components/Dashboard/AdminDashboard/AdminDashboard';
-import DashboardOverview from '../Components/Dashboard/AdminDashboard/DashboardOverview';
-import AddStudent from '../Components/Dashboard/AdminDashboard/AddStudent';
-import BorrowedBooks from '../Components/Dashboard/AdminDashboard/BorrowedBooks';
-import AddToList from '../Components/Dashboard/AdminDashboard/AddToList';
-import AddOffense from '../Components/Dashboard/AdminDashboard/AddOffense';
-import OffenseList from '../Components/Dashboard/AdminDashboard/OffenseList';
-import Calender from '../Components/Dashboard/AdminDashboard/Calender';
-import PaymentList from '../Components/Dashboard/AdminDashboard/PaymentList';
-import MyProfile from '../Components/Dashboard/AdminDashboard/MyProfile';
-import Notice from '../Components/Dashboard/AdminDashboard/Notice.tsx';
-import AddPayment from '@/Components/Dashboard/AdminDashboard/AddPayment.tsx';
-import LandingPage from '@/Components/LandingPage/LandingPage.tsx';
-import EditAdminProfile from '@/Components/Dashboard/AdminDashboard/EditAdminProfile.tsx';
+import { lazy, Suspense } from 'react';
+
+// Lazy-loaded components
+const Registration = lazy(() => import('../Components/Form/Registration'));
+const StudentLogin = lazy(() => import('../Components/Form/StudentLogin'));
+const ForgotPassword = lazy(() => import('../Components/Form/ForgotPassword'));
+const NotFoundPage = lazy(
+  () => import('../Components/NotFoundPage.tsx/NotFoundPage')
+);
+const AdminLogin = lazy(() => import('../Components/Form/AdminLogin'));
+const StudentsList = lazy(
+  () => import('../Components/Dashboard/AdminDashboard/StudentsList')
+);
+const AdminDashboard = lazy(
+  () => import('../Components/Dashboard/AdminDashboard/AdminDashboard')
+);
+const DashboardOverview = lazy(
+  () => import('../Components/Dashboard/AdminDashboard/DashboardOverview')
+);
+const AddStudent = lazy(
+  () => import('../Components/Dashboard/AdminDashboard/AddStudent')
+);
+const BorrowedBooks = lazy(
+  () => import('../Components/Dashboard/AdminDashboard/BorrowedBooks')
+);
+const AddToList = lazy(
+  () => import('../Components/Dashboard/AdminDashboard/AddToList')
+);
+const AddOffense = lazy(
+  () => import('../Components/Dashboard/AdminDashboard/AddOffense')
+);
+const OffenseList = lazy(
+  () => import('../Components/Dashboard/AdminDashboard/OffenseList')
+);
+const Calender = lazy(
+  () => import('../Components/Dashboard/AdminDashboard/Calender')
+);
+const PaymentList = lazy(
+  () => import('../Components/Dashboard/AdminDashboard/PaymentList')
+);
+const MyProfile = lazy(
+  () => import('../Components/Dashboard/AdminDashboard/MyProfile')
+);
+const Notice = lazy(
+  () => import('../Components/Dashboard/AdminDashboard/Notice.tsx')
+);
+const AddPayment = lazy(
+  () => import('@/Components/Dashboard/AdminDashboard/AddPayment.tsx')
+);
+const LandingPage = lazy(
+  () => import('@/Components/LandingPage/LandingPage.tsx')
+);
+const EditAdminProfile = lazy(
+  () => import('@/Components/Dashboard/AdminDashboard/EditAdminProfile.tsx')
+);
+
+// Import Fallback normally (DO NOT lazy-load)
+import Fallback from '@/Components/FallbackUI/Fallback.tsx';
 
 export default function AppRoute() {
   return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/LandingPage" />} />
-      <Route path="/Registration" element={<Registration />} />
-      <Route path="/LandingPage" element={<LandingPage />} />
-      <Route path="/StudentLogin" element={<StudentLogin />} />
-      <Route path="/AdminLogin" element={<AdminLogin />} />
-      <Route path="/AdminDashboard" element={<AdminDashboard />}>
-        <Route index element={<DashboardOverview />} />
-        <Route path="DashboardOverview" element={<DashboardOverview />} />
-        <Route path="StudentsList" element={<StudentsList />} />
-        <Route path="Calender" element={<Calender />} />
-        <Route path="PaymentList" element={<PaymentList />} />
-        <Route path="Notice" element={<Notice />} />
-        <Route path="OffenseList" element={<OffenseList />} />
-        <Route path="EditAdminProfile" element={<EditAdminProfile />} />
-        <Route path="BorrowedBooks" element={<BorrowedBooks />} />
-        <Route path="AddStudent" element={<AddStudent />} />
-        <Route path="MyProfile" element={<MyProfile />} />
-        <Route path="AddPayment" element={<AddPayment />} />
-        <Route path="AddOffense" element={<AddOffense />} />
-        <Route path="AddToList" element={<AddToList />} />
-      </Route>
-      <Route path="/ForgotPassword" element={<ForgotPassword />} />
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+    <Suspense fallback={<Fallback />}>
+      <Routes>
+        <Route path="/" element={<Navigate to="/LandingPage" />} />
+        <Route path="/LandingPage" element={<LandingPage />} />
+        <Route path="/Registration" element={<Registration />} />
+        <Route path="/StudentLogin" element={<StudentLogin />} />
+        <Route path="/AdminLogin" element={<AdminLogin />} />
+        <Route path="/ForgotPassword" element={<ForgotPassword />} />
+
+        {/* Admin Dashboard with nested routes */}
+        <Route path="/AdminDashboard" element={<AdminDashboard />}>
+          <Route index element={<DashboardOverview />} />
+          <Route path="DashboardOverview" element={<DashboardOverview />} />
+          <Route path="StudentsList" element={<StudentsList />} />
+          <Route path="Calender" element={<Calender />} />
+          <Route path="PaymentList" element={<PaymentList />} />
+          <Route path="Notice" element={<Notice />} />
+          <Route path="OffenseList" element={<OffenseList />} />
+          <Route path="EditAdminProfile" element={<EditAdminProfile />} />
+          <Route path="BorrowedBooks" element={<BorrowedBooks />} />
+          <Route path="AddStudent" element={<AddStudent />} />
+          <Route path="MyProfile" element={<MyProfile />} />
+          <Route path="AddPayment" element={<AddPayment />} />
+          <Route path="AddOffense" element={<AddOffense />} />
+          <Route path="AddToList" element={<AddToList />} />
+        </Route>
+
+        {/* 404 Page */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </Suspense>
   );
 }
