@@ -9,7 +9,7 @@ function NotFoundPage() {
       initial={{ y: -50, opacity: 0 }} // Start above screen and invisible
       animate={{ y: 0, opacity: 1 }} // Slide down to normal position
       transition={{ duration: 0.6, ease: 'easeOut' }} // Smooth transition
-      className="flex flex-col items-center pb-20 pt-20 max-md:pt-20 h-screen"
+      className="flex flex-col items-center pb-10 pt-20 max-md:pt-20 h-screen overflow-hidden"
     >
       <img
         src={notFound}
