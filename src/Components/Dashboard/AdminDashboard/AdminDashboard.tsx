@@ -31,7 +31,7 @@ import {
   Dropdown,
   Breadcrumb,
 } from 'antd';
-import userPhoto from '../../../assets/woman-photo.jpg';
+import userPhoto from '../../../assets/profile-picture.png';
 
 import atuLogo from '/ATU-LOGO.png';
 import { Spinner } from '@radix-ui/themes';
@@ -141,10 +141,7 @@ const AdminDashboard = () => {
         }}
       >
         <Sider
-          style={{
-            boxShadow: '0 0px 0.6px 0px',
-          }}
-          className={`bg-white fixed h-screen ${collapsed ? 'w-0' : 'w-64'} 
+          className={`bg-white max-md:h-full fixed border-r-[1px] border-zinc-200 ${collapsed ? 'w-0' : 'w-64'} 
     ${isMobile ? 'z-50 overflow-auto' : 'relative'} transition-all duration-300`}
           trigger={null}
           collapsible
@@ -235,7 +232,12 @@ const AdminDashboard = () => {
               <Link to="Notice">Notice</Link>
             </Menu.Item>
             {/* Submenu for Profile */}
-            <SubMenu key="11" icon={<LockOutlined />} title="Profile">
+            <SubMenu
+              key="11"
+              className="max-md:mb-4"
+              icon={<LockOutlined />}
+              title="Profile"
+            >
               <Menu.Item key="MyProfile" icon={<ProfileOutlined />}>
                 <Link to="MyProfile">My Profile</Link>
               </Menu.Item>
@@ -287,12 +289,11 @@ const AdminDashboard = () => {
                   <button className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition duration-200 border-none bg-transparent">
                     <Avatar
                       src={userPhoto}
+                      alt="User Icon"
                       size="large"
                       icon={<UserOutlined />}
                     />
-                    <p className="text-black text-md font-medium">
-                      {admin.name}
-                    </p>
+                    <p className="text-black text-[14px]">{admin.name}</p>
                   </button>
                 </Dropdown>
               </div>

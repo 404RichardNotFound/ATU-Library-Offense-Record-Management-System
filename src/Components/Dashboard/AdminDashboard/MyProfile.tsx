@@ -1,4 +1,4 @@
-import userPhoto from '../../../assets/woman-photo.jpg';
+import userPhoto from '../../../assets/profile-picture.png';
 import { Tag } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { EditIcon } from 'lucide-react';
@@ -38,14 +38,14 @@ const MyProfile = () => {
   return (
     <div className="flex flex-col max-lg:flex-col p-1 bg-zinc-100 h-full w-full gap-4">
       {/* Admin Profile */}
-      <div className="flex max-sm:flex-col max-sm:items-center overflow-hidden border-[1px] max-lg:w-full p-3 gap-4 w-full bg-white rounded-md">
+      <div className="flex max-sm:flex-col max-sm:items-center overflow-hidden border-[1px] max-lg:w-full px-3 py-4 gap-5 w-full bg-white rounded-md">
         <img
           src={userPhoto}
           className="w-24 h-24 border-2 rounded-full object-cover"
-          alt=""
+          alt="User Icon"
         />
         <div className="flex justify-center max-sm:text-center max-md:gap-[1px] flex-col overflow-hidden">
-          <p className="text-[17px] font-medium">{admin.name}</p>
+          <p className="text-[17px]">{admin.name}</p>
           <p>Accra, Ghana</p>
           <div>
             <Tag className="w-14 mt-1 text-center font-medium" color="blue">

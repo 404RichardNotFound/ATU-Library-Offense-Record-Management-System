@@ -39,7 +39,7 @@ const EditAdminProfile = () => {
           <div className="text-base flex gap-2 w-full flex-col">
             <label>Role:</label>
             <input
-              className="rounded-sm bg-slate-50 border-2 px-2 w-full py-1 hover:border-dotted"
+              className="rounded-sm bg-slate-100 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="text"
               placeholder="Admin"
               name="Role"
