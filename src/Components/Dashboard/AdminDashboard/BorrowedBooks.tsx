@@ -1,10 +1,9 @@
-// React Data Grid Component
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { Tag } from 'antd';
-import { useState, useRef } from 'react';
-import { Pencil, Trash2 } from 'lucide-react'; // Import icons
+import { useState, useEffect, useRef } from 'react';
+import { Pencil, Trash2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -13,32 +12,63 @@ import {
 } from '@/Components/ui/dialog';
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
-import { DatePicker } from 'antd'; // Import Ant Design DatePicker
-import dayjs from 'dayjs'; // Import dayjs for date handling
+import {
+  collection,
+  getDocs,
+  updateDoc,
+  doc,
+  deleteDoc,
+} from 'firebase/firestore';
+import { db } from '../../../Firebase/firebase-config';
 
 // Register all Community features for AG Grid
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const date = new Date();
 const BorrowedBooks = () => {
-  // State to manage table row data
-  const [rowData, setRowData] = useState([
-    {
-      Student: 'Richard Okoro',
-      ID: '01222631D',
-      Book: 'Tell No One, Vol 1',
-      BorrowDate: date.toISOString().split('T')[0],
-      ReturnDate: date.toISOString().split('T')[0],
-      Status: 'Borrowed',
-    },
-  ]);
-
-  const gridRef = useRef<AgGridReact>(null);
+  // Row Data for the Table
+  const [rowData, setRowData] = useState<{ id: string; [key: string]: any }[]>(
+    []
+  );
 
   // State for edit modal
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editedData, setEditedData] = useState<any>({});
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  const gridRef = useRef<AgGridReact>(null);
+
+  useEffect(() => {
+    const fetchBorrowedBooks = async () => {
+      try {
+        const borrowedBooksCollection = collection(db, 'BorrowedBooks');
+        const borrowedBooksSnapshot = await getDocs(borrowedBooksCollection);
+        const borrowedBooksList = borrowedBooksSnapshot.docs.map((doc) => {
+          const data = doc.data();
+          // Only return the fields you want (omit the document id)
+
+          return {
+            id: doc.id, // Include the document ID
+            Student: data.Student_Name || 'N/A',
+            ID: data.Student_ID || 'N/A',
+            Program: data.Student_Program || 'N/A',
+            BookTitle: data.Book_Title || 'N/A',
+            BorrowDate: data.Borrow_Date || 'N/A',
+            ReturnDate: data.Return_Date || 'N/A',
+            Status: data.Status || 'N/A',
+          };
+        });
+
+        console.log('Final Processed Data:', borrowedBooksList); // Ensure data is mapped correctly
+        setRowData(borrowedBooksList); // Set rowData without the document ID
+      } catch (error) {
+        console.error('Error fetching borrowed books:', error);
+      }
+    };
+
+    fetchBorrowedBooks();
+  }, []);
 
   // Default Column Definitions
   const defaultColDef: ColDef = {
@@ -50,45 +80,89 @@ const BorrowedBooks = () => {
     cellStyle: { textAlign: 'left' },
   };
 
-  // Open edit modal and deep clone data to avoid state mutation issues
+  // Open edit modal
   const openEditModal = (row: any) => {
     setSelectedRow(row);
-    setEditedData({ ...row }); // Deep clone row data
+    setEditedData(row);
     setIsDialogOpen(true);
   };
 
-  // Handle date changes in modal
-  const handleDateChange = (_date: any, dateString: string, field: string) => {
-    setEditedData((prevData: any) => ({ ...prevData, [field]: dateString }));
+  // Open delete modal
+  const openDeleteModal = (id: string) => {
+    setDeleteId(id);
+    setIsDeleteDialogOpen(true);
   };
 
-  // Save edited data
-  const saveEditedData = () => {
-    setRowData((prevData) =>
-      prevData.map((row) =>
-        row.ID === selectedRow.ID ? { ...row, ...editedData } : row
-      )
-    );
+  // Confirms delete action
+  const confirmDelete = async () => {
+    if (deleteId) {
+      try {
+        await deleteDoc(doc(db, 'BorrowedBooks', deleteId));
+        setRowData((prev) => prev.filter((row) => row.id !== deleteId));
+      } catch (error) {
+        console.error('Error deleting row:', error);
+      }
+    }
+    setIsDeleteDialogOpen(false);
+  };
+
+  // Handle input changes in modal
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditedData({ ...editedData, [e.target.name]: e.target.value });
+  };
+
+  //Saves edited data to database
+  const saveEditedData = async () => {
+    if (selectedRow) {
+      const borrowedBooksRef = doc(db, 'BorrowedBooks', selectedRow.id);
+      try {
+        await updateDoc(borrowedBooksRef, {
+          Student_Name: editedData.Student,
+          Student_ID: editedData.ID,
+          Student_Program: editedData.Program,
+          Book_Title: editedData.BookTitle,
+          Borrow_Date: editedData.BorrowDate,
+          Return_Date: editedData.ReturnDate,
+          Status: editedData.Status,
+        });
+        setRowData((prev) =>
+          prev.map((row) =>
+            row.id === selectedRow.id ? { ...row, ...editedData } : row
+          )
+        );
+        console.log(`Updated row with ID: ${selectedRow.id}`);
+      } catch (error) {
+        console.error('Error updating row:', error);
+      }
+    }
     setIsDialogOpen(false);
-  };
-
-  // Delete row
-  const deleteRow = (id: string) => {
-    setRowData((prevData) => prevData.filter((row) => row.ID !== id));
   };
 
   // Column Definitions
   const [colDefs] = useState<ColDef[]>([
     { field: 'Student', headerName: 'Name' },
     { field: 'ID', headerName: 'ID' },
-    { field: 'Book', headerName: 'Book Title' },
-    { field: 'BorrowDate', headerName: 'Borrow Date' },
-    { field: 'ReturnDate', headerName: 'Return Date' },
+    { field: 'Program', headerName: 'Program' },
+    { field: 'BookTitle', headerName: 'Book Title' },
+    {
+      field: 'BorrowDate',
+      headerName: 'Borrow Date',
+      valueFormatter: (params) => {
+        return params.value || 'N/A'; // Display the string directly
+      },
+    },
+    {
+      field: 'ReturnDate',
+      headerName: 'Return Date',
+      valueFormatter: (params) => {
+        return params.value || 'N/A';
+      },
+    },
     {
       field: 'Status',
       headerName: 'Status',
       cellRenderer: (params: any) => {
-        const status = params.value?.toLowerCase(); // Convert to lowercase
+        const status = params.value?.toLowerCase();
 
         // Define color mapping for different statuses
         const getStatusColor = (status: string) => {
@@ -120,7 +194,7 @@ const BorrowedBooks = () => {
             <Pencil size={20} />
           </button>
           <button
-            onClick={() => deleteRow(params.data.ID)}
+            onClick={() => openDeleteModal(params.data.id)}
             className="text-red-500 hover:text-red-700"
           >
             <Trash2 size={20} />
@@ -141,7 +215,6 @@ const BorrowedBooks = () => {
           Export To CSV
         </Button>
       </div>
-
       {/* Table */}
       <div className="ag-theme-alpine w-full h-full pb-10 rounded-md bg-zinc-100">
         <AgGridReact
@@ -156,7 +229,6 @@ const BorrowedBooks = () => {
           theme="legacy"
         />
       </div>
-
       {/* Edit Modal */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-sm:w-3/4 rounded-sm">
@@ -166,42 +238,43 @@ const BorrowedBooks = () => {
             <Input
               name="Student"
               value={editedData.Student || ''}
-              onChange={(e) =>
-                setEditedData({ ...editedData, Student: e.target.value })
-              }
+              onChange={handleInputChange}
               placeholder="Student Name"
             />
-            <Input name="ID" value={editedData.ID || ''} placeholder="ID" />
+            <Input
+              name="ID"
+              onChange={handleInputChange}
+              value={editedData.ID || ''}
+              placeholder="Student ID"
+            />
+            <Input
+              name="Program"
+              value={editedData.Program || ''}
+              onChange={handleInputChange}
+              placeholder="Program"
+            />
             <Input
               name="Book"
-              value={editedData.Book || ''}
-              onChange={(e) =>
-                setEditedData({ ...editedData, Book: e.target.value })
-              }
+              value={editedData.BookTitle || ''}
+              onChange={handleInputChange}
               placeholder="Book Title"
             />
-            <DatePicker
-              onChange={(date, dateString: any) =>
-                handleDateChange(date, dateString, 'BorrowDate')
-              }
-              value={dayjs(editedData.BorrowDate)}
+            <Input
+              name="Borrow_Date"
+              value={editedData.BorrowDate || ''}
+              onChange={handleInputChange}
               placeholder="Borrow Date"
-              className="w-full"
             />
-            <DatePicker
-              onChange={(date, dateString: any) =>
-                handleDateChange(date, dateString, 'ReturnDate')
-              }
-              value={dayjs(editedData.ReturnDate)}
+            <Input
+              name="Return_Date"
+              value={editedData.ReturnDate || ''}
+              onChange={handleInputChange}
               placeholder="Return Date"
-              className="w-full"
             />
             <Input
               name="Status"
               value={editedData.Status || ''}
-              onChange={(e) =>
-                setEditedData({ ...editedData, Status: e.target.value })
-              }
+              onChange={handleInputChange}
               placeholder="Status"
             />
           </div>
@@ -218,6 +291,31 @@ const BorrowedBooks = () => {
               onClick={saveEditedData}
             >
               Save Changes
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      {/* Delete Modal */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="max-sm:w-3/4 rounded-sm max-[360px]:w-[80%]">
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to delete this row? This action cannot be
+            undone.
+          </DialogDescription>
+          <div className="flex max-[400px]:flex-col justify-end gap-2 mt-4">
+            <Button
+              variant="outline"
+              className="border-[1px] transition-colors duration-300"
+              onClick={() => setIsDeleteDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="bg-red-500 hover:bg-red-600 border-[1px] transition-colors duration-300"
+              onClick={confirmDelete}
+            >
+              Confirm Delete
             </Button>
           </div>
         </DialogContent>

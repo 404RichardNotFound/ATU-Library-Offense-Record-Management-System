@@ -1,4 +1,3 @@
-// React Data Grid Component
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
@@ -12,7 +11,7 @@ import {
 import { db } from '../../../Firebase/firebase-config';
 import { Tag } from 'antd';
 import { useState, useEffect, useRef } from 'react';
-import { Pencil, Trash2 } from 'lucide-react'; // Import icons
+import { Pencil, Trash2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,

@@ -72,6 +72,7 @@ function AdminLogin() {
         sessionStorage.setItem(
           'admin',
           JSON.stringify({
+            id: adminDoc.id,
             adminID: adminData.ID,
             gender: adminData.Gender,
             name: adminData.Name,
