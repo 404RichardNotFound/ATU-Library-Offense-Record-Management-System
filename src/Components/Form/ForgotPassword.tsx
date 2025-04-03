@@ -1,20 +1,26 @@
 import forgotPasswordIcon from '../../assets/forgot-password.png';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import { z } from 'zod';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { db } from '../../Firebase/firebase-config'; // Import Firebase config
+import {
+  collection,
+  getDocs,
+  doc,
+  updateDoc,
+  query,
+  where,
+} from 'firebase/firestore'; // Firebase Firestore methods
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import atuLogo from '/ATU-LOGO.png';
 import { motion } from 'motion/react';
-import axios from 'axios';
-import { Spinner } from '@radix-ui/themes';
-import { useMutation } from '@tanstack/react-query';
 
 // Define the schema for form validation using Zod
 const schema = z
   .object({
-    ID: z.string().min(9, 'Must be 9 characters!'),
+    userID: z.string().min(9, 'Must be 9 characters!'),
     newPassword: z
       .string()
       .min(8, 'Password must be at least 8 characters long!')
@@ -26,7 +32,7 @@ const schema = z
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     message: 'Passwords do not match!',
-    path: ['confirmPassword'],
+    path: ['confirmNewPassword'],
   });
 
 // Infer the type of the schema
@@ -41,7 +47,6 @@ function ForgotPassword() {
   const [successMessage, setSuccessMessage] = useState<string | null>('');
   const navigate = useNavigate();
 
-  // Destructure the useForm hook
   const {
     register,
     handleSubmit,
@@ -52,50 +57,84 @@ function ForgotPassword() {
     mode: 'onChange', // Enable real-time validation feedback
   });
 
-  // Mutation for Posting Sign-Up Data
-  const resetMutation = useMutation({
-    mutationFn: async (userData: ResetPasswordSchema) => {
-      const response = await axios.post(
-        'http://localhost/Backend/registration.php',
-        userData
-      );
-      return response.data;
-    },
-    onError: () => {
-      setErrorMessage('Reset Error, Try again.');
-      setSuccessMessage(null);
-    },
-    onSuccess: () => {
-      reset(); // Reset form after successful registration
-      setSuccessMessage('Reset Successful!');
-      setErrorMessage(null);
-    },
-  });
+  const resetPassword = async (userID: string, confirmNewPassword: string) => {
+    try {
+      // First, check if the user exists in the Admin collection
+      const adminRef = collection(db, 'Admin');
+      const adminQuery = query(adminRef, where('ID', '==', userID)); // Use 'query' with 'where'
+      const adminSnapshot = await getDocs(adminQuery);
 
-  const onSubmit = async (userData: ResetPasswordSchema) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    // Submit form data to the server
-    resetMutation.mutate(userData);
-    console.log(userData);
-    reset();
+      // If the user exists in the Admin collection
+      if (!adminSnapshot.empty) {
+        const adminDoc = adminSnapshot.docs[0];
+        const adminDocRef = doc(db, 'Admin', adminDoc.id); // Get the document reference using its ID
+        await updateDoc(adminDocRef, {
+          Password: confirmNewPassword, // Update the password field
+        });
+        console.log('Password reset for Admin: ', adminDoc.id); // Clear session storage and navigate to Admin login page
+        sessionStorage.clear();
+
+        setSuccessMessage('Reset successful! Redirecting to Login Page ...');
+        reset();
+        setTimeout(() => navigate('/AdminLogin'), 1000);
+        return;
+      }
+
+      // If the user doesn't exist in Admin, check the Students collection
+      const studentRef = collection(db, 'Students');
+      const studentQuery = query(studentRef, where('Student_ID', '==', userID)); // Use 'query' with 'where'
+      const studentSnapshot = await getDocs(studentQuery);
+
+      // If the user exists in the Students collection
+      if (!studentSnapshot.empty) {
+        const studentDoc = studentSnapshot.docs[0]; // Get the first matching document
+        const studentDocRef = doc(db, 'Students', studentDoc.id); // Get the document reference using its ID
+        await updateDoc(studentDocRef, {
+          Student_Password: confirmNewPassword, // Update the password field
+        });
+        console.log('Password reset for Student: ', studentDoc.id);
+        // Clear session storage and navigate to Student login page
+        sessionStorage.clear();
+        setSuccessMessage(
+          'Password reset successful! Redirecting to Student login...'
+        );
+        reset();
+        setTimeout(() => navigate('/student-login'), 1000);
+        return;
+      }
+
+      // If user not found
+      setErrorMessage('User not found in Admin or Students');
+    } catch (error) {
+      console.error('Error resetting password:', error);
+      setErrorMessage('Error resetting password, please try again later.');
+    }
   };
 
-  // ✅ Automatically clear error after 5 seconds
+  const onSubmit = async (data: ResetPasswordSchema) => {
+    const { userID, confirmNewPassword } = data;
+
+    // Call the resetPassword function
+    await resetPassword(userID, confirmNewPassword);
+
+    // The success and error messages are now set inside resetPassword itself
+  };
+
   useEffect(() => {
-    if (errorMessage) {
-      const timer = setTimeout(() => setErrorMessage(null), 5000);
-      return () => clearTimeout(timer);
-    } else if (successMessage) {
-      const timer = setTimeout(() => setSuccessMessage(null), 5000);
-      return () => clearTimeout(timer);
-    }
+    // Clear messages after 5 seconds
+    const timer = setTimeout(() => {
+      setErrorMessage(null);
+      setSuccessMessage(null);
+    }, 1000);
+
+    return () => clearTimeout(timer); // Cleanup on unmount
   }, [errorMessage, successMessage]);
 
   return (
     <motion.div
-      initial={{ y: -50, opacity: 0 }} // Start above screen and invisible
-      animate={{ y: 0, opacity: 1 }} // Slide down to normal position
-      transition={{ duration: 0.6, ease: 'easeOut' }} // Smooth transition
+      initial={{ y: -50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
       className="w-vh pb-10 md:lg:justify-center lg:h-vh max-2xl:pt-16 2xl:pt-16 flex flex-col gap-8 justify-center items-center"
     >
       <div className="flex max-sm:7/12 max-md:w-11/12 max-xl:w-8/12 max-2xl:w-5/7 max-lg:w-10/12 max-md:pl-3 justify-evenly gap-3 items-start ">
@@ -124,25 +163,27 @@ function ForgotPassword() {
           <div className="flex w-full flex-col gap-2">
             <label htmlFor="ID">Enter ID</label>
             <input
-              {...register('ID')}
-              id="adminID"
-              name="adminID"
+              {...register('userID')}
+              id="userID"
+              name="userID"
               className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
               type="text"
               placeholder="ID"
             />
-            {errors.ID && <p className="text-red-500">{errors.ID.message}</p>}
+            {errors.userID && (
+              <p className="text-red-500">{errors.userID.message}</p>
+            )}
           </div>
         </div>
         <div className="w-full flex flex-col gap-3">
           <div className="flex flex-col gap-2">
-            <label htmlFor="password">New Password</label>
+            <label htmlFor="newPassword">New Password</label>
             <input
               {...register('newPassword')}
-              id="password"
+              id="newPassword"
               className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
               type="password"
-              name="password"
+              name="newPassword"
               placeholder="New Password"
             />
             {errors.newPassword && (
@@ -151,25 +192,51 @@ function ForgotPassword() {
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="password">Confirm New Password</label>
+          <label htmlFor="confirmNewPassword">Confirm New Password</label>
           <input
             {...register('confirmNewPassword')}
             id="confirmPassword"
             className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
             type="password"
+            name="confirmNewPassword"
             placeholder="Confirm New Password"
           />
           {errors.confirmNewPassword && (
             <p className="text-red-500">{errors.confirmNewPassword.message}</p>
           )}
         </div>
-        <div className="flex gap-2 justify-start">
+        {/* Submit Button with Loading Spinner */}
+        <div className="flex gap-2 mt-1 justify-start">
           <button
             type="submit"
-            className="border-2 items-center flex gap-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
+            className="border-2 transition-colors duration-300 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
+            disabled={isSubmitting} // Disable button while submitting
           >
-            {isSubmitting && <Spinner />}
-            {isSubmitting ? 'Please wait..' : 'Reset Password'}
+            {/* Show spinner when submitting */}
+            {isSubmitting && (
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+              </svg>
+            )}
+            {/* Change button text when submitting */}
+            {isSubmitting ? 'Please wait...' : 'Add Student'}
           </button>
         </div>
         {/* Show Success Message */}

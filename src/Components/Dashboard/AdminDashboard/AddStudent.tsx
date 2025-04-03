@@ -2,8 +2,8 @@ import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../../Firebase/firebase-config';
-import { DatePicker } from 'antd'; // Import Ant Design DatePicker
-import dayjs from 'dayjs'; // Import dayjs for date handling
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
 
 const AddStudent = () => {
   // State to manage form data

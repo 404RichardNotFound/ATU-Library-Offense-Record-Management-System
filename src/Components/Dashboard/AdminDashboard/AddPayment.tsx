@@ -1,66 +1,75 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { DatePicker } from 'antd'; // Import Ant Design DatePicker
-import dayjs from 'dayjs'; // Import dayjs for date handling
-import toast, { Toaster } from 'react-hot-toast'; // Import React Hot Toast
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../../Firebase/firebase-config';
+import toast, { Toaster } from 'react-hot-toast';
 
 const AddPayment = () => {
   // State for form fields
   const [formData, setFormData] = useState({
-    studentName: '',
-    studentID: '',
-    program: '',
-    amount: '',
-    reason: '',
-    paymentDate: null as string | null, // ✅ Allow null or string
-    status: '',
+    Payment_ID: '',
+    Student_Name: '',
+    Student_ID: '',
+    Student_Program: '',
+    Amount: '',
+    Reason: '',
+    Status: '',
+    Payment_Date: '',
   });
 
-  // ✅ New state for submission loading
+  // State for loading status
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // ✅ Handle input change
+  // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  // Function to generate a unique PaymentID
+  const generatePaymentID = () => {
+    return `PAY-${Date.now()}`; // Unique ID based on the current timestamp
   };
 
-  // ✅ Handle Date Change
-  const handleDateChange = (
-    _date: dayjs.Dayjs | null,
-    dateString: string | string[]
-  ) => {
-    const formattedDate = Array.isArray(dateString)
-      ? dateString[0]
-      : dateString;
-    setFormData((prev) => ({ ...prev, paymentDate: formattedDate }));
-  };
-
-  // ✅ Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true); // ✅ Disable button
+    setIsSubmitting(true);
 
-    // 📢 Simulate an API request (replace with actual API call)
-    setTimeout(() => {
-      toast.success('Payment has been recorded!', {
-        duration: 3000,
-        position: 'top-center',
-      });
+    // Ensure Payment_ID is generated before submission
+    const newPaymentID = generatePaymentID();
 
-      // Reset form fields
+    const paymentData = {
+      ...formData,
+      Payment_ID: newPaymentID, // Set Payment_ID here
+      Payment_Date: formData.Payment_Date
+        ? dayjs(formData.Payment_Date).format('DD/MM/YYYY')
+        : '',
+    };
+
+    try {
+      // Add payment to Firestore (PaymentList collection)
+      await addDoc(collection(db, 'PaymentList'), paymentData);
+
+      toast.success('Payment added successfully!');
+
+      // Reset form
       setFormData({
-        studentName: '',
-        studentID: '',
-        program: '',
-        amount: '',
-        reason: '',
-        paymentDate: null,
-        status: '',
+        Payment_ID: generatePaymentID(),
+        Student_Name: '',
+        Student_ID: '',
+        Student_Program: '',
+        Amount: '',
+        Reason: '',
+        Status: '',
+        Payment_Date: '',
       });
-
-      setIsSubmitting(false); // ✅ Re-enable button after submission
-    }, 2000);
+    } catch (error) {
+      toast.error('Error adding payment. Please try again.');
+      console.error('Firebase Error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -77,39 +86,39 @@ const AddPayment = () => {
         {/* Student Information */}
         <div className="flex flex-col w-full gap-4">
           <div className="text-base w-full flex gap-2 flex-col">
-            <label>Name:</label>
+            <label htmlFor="Student Name">Name:</label>
             <input
               className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="text"
-              name="studentName"
+              name="Student_Name"
               placeholder="Name"
-              value={formData.studentName}
+              value={formData.Student_Name}
               onChange={handleChange}
               required
             />
           </div>
 
           <div className="text-base flex gap-2 w-full flex-col">
-            <label>Student ID:</label>
+            <label htmlFor="Student ID">Student ID:</label>
             <input
               className="rounded-sm px-2 w-full bg-slate-50 border-[1px] py-1 hover:border-dotted"
               type="text"
               placeholder="Student ID"
-              name="studentID"
-              value={formData.studentID}
+              name="Student_ID"
+              value={formData.Student_ID}
               onChange={handleChange}
               required
             />
           </div>
 
           <div className="text-base flex gap-2 w-full flex-col">
-            <label>Program:</label>
+            <label htmlFor="Student Program">Program:</label>
             <input
               className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="text"
               placeholder="Program"
-              name="program"
-              value={formData.program}
+              name="Student_Program"
+              value={formData.Student_Program}
               onChange={handleChange}
               required
             />
@@ -119,37 +128,46 @@ const AddPayment = () => {
         {/* Payment Details */}
         <div className="flex flex-col gap-4 w-full">
           <div className="text-base flex gap-2 w-full flex-col">
-            <label>Amount:</label>
+            <label htmlFor="Amount">Amount:</label>
             <input
               className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="text"
-              name="amount"
+              name="Amount"
               placeholder="Amount"
-              value={formData.amount}
+              value={formData.Amount}
               onChange={handleChange}
               required
             />
           </div>
 
           <div className="text-base flex gap-2 w-full flex-col">
-            <label>Reason:</label>
+            <label htmlFor="Reasons">Reason:</label>
             <input
               className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="text"
-              name="reason"
+              name="Reason"
               placeholder="Reason"
-              value={formData.reason}
+              value={formData.Reason}
               onChange={handleChange}
               required
             />
           </div>
 
           <div className="text-base flex gap-2 w-full flex-col">
-            <label>Payment Date:</label>
+            <label htmlFor="Payment Date">Payment Date:</label>
             <DatePicker
               className="rounded-sm bg-slate-50 hover:border-zinc-200 border-[1px] px-2 w-full py-1 hover:border-dotted"
-              value={formData.paymentDate ? dayjs(formData.paymentDate) : null}
-              onChange={handleDateChange}
+              value={
+                formData.Payment_Date ? dayjs(formData.Payment_Date) : null
+              }
+              onChange={(_date, dateString) =>
+                setFormData({
+                  ...formData,
+                  Payment_Date: Array.isArray(dateString)
+                    ? dateString[0]
+                    : dateString,
+                })
+              }
               required
             />
           </div>
@@ -157,13 +175,13 @@ const AddPayment = () => {
 
         {/* Status */}
         <div className="text-base flex w-full gap-4 flex-col">
-          <label>Status:</label>
+          <label htmlFor="Status">Status:</label>
           <input
             className="rounded-sm bg-slate-50 border-[1px] px-2 py-1 hover:border-dotted"
             type="text"
-            name="status"
+            name="Status"
             placeholder="Status"
-            value={formData.status}
+            value={formData.Status}
             onChange={handleChange}
             required
           />
@@ -200,7 +218,7 @@ const AddPayment = () => {
               </svg>
             )}
             {/* Change button text when submitting */}
-            {isSubmitting ? 'Please wait...' : 'Add Payment'}
+            {isSubmitting ? 'Adding Payment...' : 'Add Payment'}
           </button>
         </div>
       </form>

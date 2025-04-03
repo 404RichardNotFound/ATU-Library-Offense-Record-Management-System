@@ -82,7 +82,7 @@ const AddToList = () => {
           {/* Student Information */}
           <div className="flex flex-col w-full gap-4">
             <div className="text-base w-full flex gap-2 flex-col">
-              <label>Student Name:</label>
+              <label htmlFor="Student Name">Student Name:</label>
               <input
                 onChange={handleChange}
                 className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
@@ -94,7 +94,7 @@ const AddToList = () => {
               />
             </div>
             <div className="text-base flex gap-2 w-auto flex-col">
-              <label>Student ID:</label>
+              <label htmlFor="Student ID">Student ID:</label>
               <input
                 onChange={handleChange}
                 className="rounded-sm px-2 w-full bg-slate-50 border-[1px] py-1 hover:border-dotted"
@@ -106,7 +106,7 @@ const AddToList = () => {
               />
             </div>
             <div className="text-base flex gap-2 w-auto flex-col">
-              <label>Program:</label>
+              <label htmlFor="Program">Program:</label>
               <input
                 onChange={handleChange}
                 className="rounded-sm px-2 w-full bg-slate-50 border-[1px] py-1 hover:border-dotted"
@@ -118,7 +118,7 @@ const AddToList = () => {
               />
             </div>
             <div className="text-base flex gap-2 w-full flex-col">
-              <label>Book:</label>
+              <label htmlFor="Book_Title">Book:</label>
               <input
                 onChange={handleChange}
                 className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
@@ -134,7 +134,7 @@ const AddToList = () => {
           {/* Borrow & Return Dates */}
           <div className="flex flex-col gap-4 w-full">
             <div className="text-base flex gap-2 w-full flex-col">
-              <label>Borrow Date:</label>
+              <label htmlFor="Borrow Date">Borrow Date:</label>
               <DatePicker
                 className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted hover:border-zinc-200"
                 value={
@@ -152,7 +152,7 @@ const AddToList = () => {
               />
             </div>
             <div className="text-base w-full flex gap-2 flex-col">
-              <label>Return Date:</label>
+              <label htmlFor="Return Date">Return Date:</label>
               <DatePicker
                 className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted hover:border-zinc-200"
                 value={
@@ -174,7 +174,7 @@ const AddToList = () => {
 
         {/* Status */}
         <div className="text-base flex w-full gap-4 flex-col">
-          <label>Status:</label>
+          <label htmlFor="Status">Status:</label>
           <input
             onChange={handleChange}
             className="rounded-sm bg-slate-50 border-[1px] px-2 py-1 hover:border-dotted"
