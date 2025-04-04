@@ -138,6 +138,41 @@ const BorrowedBooks = () => {
     setIsDialogOpen(false);
   };
 
+  // Export table to CSV (Fixed)
+  const exportToCSV = () => {
+    if (gridRef.current) {
+      gridRef.current.api.exportDataAsCsv({
+        processCellCallback: (params) => {
+          // Exclude the "Actions" column
+          if (params.column.getColId() === 'Actions') {
+            return null;
+          }
+
+          // Handle the "Joined" column
+          if (params.column.getColId() === 'BorrowDate') {
+            // Check if the value is present, if not return 'N/A'
+            return params.value || 'N/A';
+          } // Handle the "Joined" column
+          if (params.column.getColId() === 'ReturnDate') {
+            // Check if the value is present, if not return 'N/A'
+            return params.value || 'N/A';
+          }
+
+          // Return the value for other columns
+          return params.value;
+        },
+        columnKeys: [
+          'Student',
+          'ID',
+          'Program',
+          'BookTitle',
+          'BorrowDate',
+          'ReturnDate',
+        ], // Only export these columns
+      });
+    }
+  };
+
   // Column Definitions
   const [colDefs] = useState<ColDef[]>([
     { field: 'Student', headerName: 'Name' },
@@ -209,7 +244,7 @@ const BorrowedBooks = () => {
       {/* Header Buttons */}
       <div className="flex justify-end items-center py-1 mb-2 px-0">
         <Button
-          onClick={() => gridRef.current?.api.exportDataAsCsv()}
+          onClick={exportToCSV}
           className="bg-blue-500 hover:bg-blue-600 border-[1px] transition-colors duration-300"
         >
           Export To CSV
@@ -231,7 +266,7 @@ const BorrowedBooks = () => {
       </div>
       {/* Edit Modal */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-sm:w-3/4 rounded-sm">
+        <DialogContent className="max-sm:w-3/4 max-[360px]:w-[85%] rounded-sm">
           <DialogTitle>Edit Borrowed Book</DialogTitle>
           <DialogDescription>Modify the details below.</DialogDescription>
           <div className="flex flex-col gap-4">

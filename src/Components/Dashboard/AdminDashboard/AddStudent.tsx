@@ -27,7 +27,6 @@ const AddStudent = () => {
   };
 
   // Handle form submission
-
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setIsSubmitting(true);

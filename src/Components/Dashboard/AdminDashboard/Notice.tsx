@@ -1,63 +1,119 @@
 import * as React from 'react';
-import { useState } from 'react';
-import { MessageSquare, Trash2 } from 'lucide-react'; // Import icons
-import { Empty } from 'antd'; // Ant Design Empty component
-import toast, { Toaster } from 'react-hot-toast'; // Toast notifications
+import { useState, useEffect } from 'react';
+import { MessageSquare, Trash2 } from 'lucide-react';
+import { Empty } from 'antd';
+import toast, { Toaster } from 'react-hot-toast';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/Components/ui/dialog';
+import {
+  collection,
+  addDoc,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  query,
+  orderBy,
+} from 'firebase/firestore';
+import { db } from '../../../Firebase/firebase-config';
 
 // Define the structure of a notice
 interface Notice {
-  id: number;
+  id: string;
   notice: string;
   time: string;
 }
 
 const Notice = () => {
-  // State to manage the input text for a new notice
   const [noticeText, setNoticeText] = useState<string>('');
-
-  // State to store all notices
   const [noticeArray, setNoticeArray] = useState<Notice[]>([]);
-
-  // Loading state to handle the submission button
   const [loading, setLoading] = useState<boolean>(false);
+  const [showAllNotices, setShowAllNotices] = useState<boolean>(true);
 
-  // State to toggle between last 3 notices or view all
-  const [showAllNotices, setShowAllNotices] = useState<boolean>(false);
+  // State to control the confirmation modal visibility
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-  // Function to handle adding a new notice
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // State to control the delete confirmation modal visibility
+  const [noticeToDelete, setNoticeToDelete] = useState<string | null>(null);
+
+  // Fetch notices from Firestore
+  useEffect(() => {
+    const q = query(collection(db, 'Notice'), orderBy('time', 'desc'));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const notices: Notice[] = snapshot.docs.map((doc) => {
+        const data = doc.data();
+
+        return {
+          id: doc.id, // Firestore document ID
+          notice: data.notice, // The notice message
+          time: data.time, // Time is already a string, so no conversion is needed
+        };
+      });
+
+      console.log('Notices:', notices); // Log the fetched notices
+      setNoticeArray(notices); // Update state with the fetched notices
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!noticeText.trim()) return; // Prevent adding empty notices
+    if (!noticeText.trim()) return;
 
-    setLoading(true); // Show loading state
+    setLoading(true);
 
-    setTimeout(() => {
-      const newNotice: Notice = {
-        id: noticeArray.length + 1,
+    try {
+      // Add new notice to Firestore
+      await addDoc(collection(db, 'Notice'), {
         notice: noticeText,
-        time: new Date().toLocaleString(), // Add current timestamp
-      };
-
-      setNoticeArray([...noticeArray, newNotice]); // Update notice list
-      setNoticeText(''); // Clear input field
+        time: new Date().toLocaleString(),
+      });
+      setNoticeText('');
+      setShowAllNotices(false);
+      toast.success('New notice added!');
+    } catch (error) {
+      console.error('Error adding notice:', error);
+      toast.error('Failed to add notice.');
+    } finally {
       setLoading(false);
-      setShowAllNotices(false); // Reset view to last 3 notices
-
-      // Show success toast
-      toast.success('New notice added!', { position: 'top-center' });
-    }, 500);
+    }
   };
 
-  // Function to delete a notice
-  const handleDelete = (id: number) => {
-    setNoticeArray(noticeArray.filter((notice) => notice.id !== id)); // Remove notice by ID
-
-    // Show error toast
-    toast.error('Notice deleted!', { position: 'top-center' });
+  const handleDelete = async () => {
+    if (noticeToDelete) {
+      try {
+        await deleteDoc(doc(db, 'Notice', noticeToDelete));
+        toast.success('Notice deleted!');
+        setNoticeToDelete(null); // Clear the notice to delete
+      } catch (error) {
+        console.error('Error deleting notice:', error);
+        toast.error('Failed to delete notice.');
+      }
+    }
+    setIsModalVisible(false); // Close modal after deletion
   };
 
-  // Decide whether to show the last 3 notices or all
-  const displayedNotices = showAllNotices ? noticeArray : noticeArray.slice(-3);
+  const showDeleteConfirm = (id: string) => {
+    setNoticeToDelete(id);
+    setIsModalVisible(true); // Show the confirmation modal
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false); // Close modal without deleting
+    setNoticeToDelete(null); // Clear the notice to delete
+  };
+
+  const displayedNotices = showAllNotices
+    ? noticeArray
+    : noticeArray.slice(0, 3);
 
   return (
     <div className="bg-white rounded-md p-3 h-full border-[1px]">
@@ -75,13 +131,40 @@ const Notice = () => {
             rows={5}
             placeholder="Type a notice .."
           ></textarea>
-          <button
-            type="submit"
-            className="mt-4 bg-blue-500 border-2 flex items-center justify-center gap-2 cursor-pointer w-32 font-semibold hover:bg-blue-600 text-white p-1.5 rounded-md disabled:opacity-50 transition-colors duration-300"
-            disabled={loading}
-          >
-            {loading ? 'Updating...' : 'Add Notice'}
-          </button>
+          {/* Submit Button with Loading Spinner */}
+          <div className="flex gap-2 mt-1 justify-start">
+            <button
+              type="submit"
+              className="border-2 transition-colors duration-300 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
+              disabled={loading} // Disable button while submitting
+            >
+              {/* Show spinner when submitting */}
+              {loading && (
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4z"
+                  ></path>
+                </svg>
+              )}
+              {/* Change button text when submitting */}
+              {loading ? 'Please wait...' : 'Add Notice'}
+            </button>
+          </div>
         </form>
       </div>
       {/* Separator Line */}
@@ -126,7 +209,7 @@ const Notice = () => {
                 {/* Delete Icon - Click to Remove Notice */}
                 <Trash2
                   className="text-red-500 w-5 h-5 cursor-pointer hover:text-red-600"
-                  onClick={() => handleDelete(item.id)}
+                  onClick={() => showDeleteConfirm(item.id)}
                 />
               </div>
             ))}
@@ -145,6 +228,32 @@ const Notice = () => {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Dialog open={isModalVisible} onOpenChange={setIsModalVisible}>
+        <DialogContent className="max-sm:w-3/4 rounded-sm max-[360px]:w-[80%]">
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this notice?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex max-[400px]:flex-col justify-end gap-2 mt-4">
+            <DialogClose
+              onClick={handleCancel}
+              className="border-[1px] border-zinc-300 shadow-sm transition-colors duration-300 px-3 py-2 rounded-md hover:bg-zinc-100"
+            >
+              Cancel
+            </DialogClose>
+            <button
+              onClick={handleDelete}
+              className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600 border-[1px] transition-colors duration-300"
+            >
+              Confirm Delete
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

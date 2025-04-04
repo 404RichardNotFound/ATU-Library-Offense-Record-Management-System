@@ -1,147 +1,200 @@
 import { useState } from 'react';
-import { DatePicker } from 'antd'; // Import Ant Design DatePicker
-import dayjs from 'dayjs'; // Import dayjs for date handling
-import toast, { Toaster } from 'react-hot-toast'; // Import React Hot Toast
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../../../Firebase/firebase-config';
+import toast, { Toaster } from 'react-hot-toast';
 
 const AddOffense = () => {
-  // State for offense date
-  const [offenseDate, setOffenseDate] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false); // Loading state
+  // State to manage form data
+  const [formData, setFormData] = useState({
+    Student_Name: '',
+    Student_ID: '',
+    Student_Email: '',
+    Student_Program: '',
+    Offense_Type: '',
+    Offense_Description: '',
+    offenseDate: '',
+    Penalty: '',
+    Status: '',
+  });
 
-  //Handle form submission
-  const handleSubmit = (e: any) => {
-    e.preventDefault(); // Prevent page reload
-    setIsSubmitting(true); // Start loading
+  // State to manage loading spinner during form submission
+  const [isSubmitting, setIsSubmitting] = useState<boolean | undefined>(false);
 
-    setTimeout(() => {
-      //Show success toast
-      toast.success('Offense has been recorded!', {
-        duration: 3000,
-        position: 'top-center',
+  // Handle form field changes
+  const handleChange = (e: any) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      // Format JoinDate to "DD/MM/YYYY"
+      const formattedDate = formData.offenseDate
+        ? dayjs(formData.offenseDate).format('DD/MM/YYYY')
+        : '';
+
+      const offenseData = {
+        ...formData,
+        offenseDate: formattedDate, // Store only the formatted date
+      };
+
+      await addDoc(collection(db, 'OffenseList'), offenseData);
+
+      toast.success('Offense added successfully!');
+      setFormData({
+        Student_Name: '',
+        Student_ID: '',
+        Student_Email: '',
+        Student_Program: '',
+        Offense_Type: '',
+        Offense_Description: '',
+        offenseDate: '',
+        Penalty: '',
+        Status: '',
       });
-
-      // Reset form fields
-      e.target.reset();
-      setOffenseDate(null);
-      setIsSubmitting(false); // Stop loading after success
-    }, 2000); // Simulate network delay
+    } catch (error) {
+      toast.error('Error adding offense. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="w-full bg-zinc-100 h-full flex justify-center">
       {/* Toast Container */}
       <Toaster />
-
       <form
         onSubmit={handleSubmit}
         className="rounded-md border-[1px] border-zinc-200 bg-white h-[915px] w-full max-sm:w-full p-6 flex flex-col gap-3"
       >
         <h1 className="text-center font-medium text-lg">Add Offense</h1>
-
         {/* Student Information */}
         <div className="flex flex-col w-full gap-4">
           <div className="text-base w-full flex gap-2 flex-col">
-            <label>Name:</label>
+            <label htmlFor="Name">Name:</label>
             <input
               className="rounded-sm py-1 bg-slate-50 border-[1px] px-2 w-full hover:border-dotted"
               type="text"
-              name="studentName"
+              name="Student_Name"
               placeholder="Name"
+              value={formData.Student_Name}
+              onChange={handleChange}
               required
             />
           </div>
-
+          {/* Student ID */}
           <div className="text-base flex gap-2 w-full flex-col">
-            <label>Student ID:</label>
+            <label htmlFor="ID">Student ID:</label>
             <input
               className="rounded-sm py-1 px-2 w-full bg-slate-50 hover:border-dotted border-[1px]"
               type="text"
-              name="studentID"
+              name="Student_ID"
+              value={formData.Student_ID}
+              onChange={handleChange}
               placeholder="Student ID"
               required
             />
           </div>
-
+          {/* Email Input */}
           <div className="text-base flex gap-2 w-full flex-col">
-            <label>Email:</label>
+            <label htmlFor="Email">Email:</label>
             <input
               className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="email"
-              name="email"
+              name="Student_Email"
               placeholder="Email"
+              value={formData.Student_Email}
+              onChange={handleChange}
               required
             />
           </div>
-
+          {/* Program Input */}
           <div className="text-base flex gap-2 w-full flex-col">
-            <label>Program:</label>
+            <label htmlFor="Program">Program:</label>
             <input
               className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="text"
-              name="program"
+              name="Student_Program"
+              value={formData.Student_Program}
+              onChange={handleChange}
               placeholder="Program"
               required
             />
           </div>
         </div>
-
         {/* Offense Details */}
         <div className="flex flex-col gap-4 w-full">
           <div className="text-base flex gap-2 w-full flex-col">
-            <label>Offense Type:</label>
+            <label className="Offense Type">Offense Type:</label>
             <input
               className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted"
               type="text"
               placeholder="Offense Type"
-              name="offenseType"
+              name="Offense_Type"
+              value={formData.Offense_Type}
+              onChange={handleChange}
               required
             />
           </div>
-
           <div className="text-base flex gap-2 w-full flex-col">
-            <label>Offense Description:</label>
+            <label htmlFor="Offense Description">Offense Description:</label>
             <textarea
               className="rounded-sm bg-slate-50 border-[1px] px-2 w-full h-20 py-1 hover:border-dotted"
-              name="description"
+              value={formData.Offense_Description}
+              onChange={handleChange}
+              name="Offense_Description"
               placeholder="Offense Description .."
               required
             />
           </div>
-
+          {/* Offense Date Picker */}
           <div className="text-base flex gap-2 w-full flex-col">
-            <label>Offense Date:</label>
+            <label htmlFor="Offense Date">Offense Date:</label>
             <DatePicker
               className="rounded-sm bg-slate-50 border-[1px] px-2 w-full py-1 hover:border-dotted hover:border-zinc-200"
-              value={offenseDate ? dayjs(offenseDate) : null}
-              onChange={(_date, dateString: any) => setOffenseDate(dateString)}
+              value={formData.offenseDate ? dayjs(formData.offenseDate) : null}
+              onChange={(_date, dateString) =>
+                setFormData({
+                  ...formData,
+                  offenseDate: Array.isArray(dateString)
+                    ? dateString[0]
+                    : dateString,
+                })
+              }
               required
             />
           </div>
         </div>
-
         {/* Penalty & Status */}
         <div className="text-base flex w-full gap-4 flex-col">
-          <label>Penalty:</label>
+          <label htmlFor="Penalty">Penalty:</label>
           <input
             className="rounded-sm bg-slate-50 border-[1px] px-2 py-1 hover:border-dotted"
             type="text"
             placeholder="Penalty"
-            name="penalty"
+            name="Penalty"
+            value={formData.Penalty}
+            onChange={handleChange}
             required
           />
         </div>
-
         <div className="text-base flex w-full gap-4 flex-col">
-          <label>Status:</label>
+          <label htmlFor="Status">Status:</label>
           <input
             className="rounded-sm bg-slate-50 border-[1px] px-2 py-1 hover:border-dotted"
             type="text"
             placeholder="Status"
-            name="status"
+            value={formData.Status}
+            onChange={handleChange}
+            name="Status"
             required
           />
         </div>
-
         {/* Submit Button with Loading Spinner */}
         <div className="flex gap-2 mt-1 justify-start">
           <button

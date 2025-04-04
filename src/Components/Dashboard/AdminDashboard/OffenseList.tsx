@@ -1,7 +1,15 @@
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import {
+  collection,
+  getDocs,
+  updateDoc,
+  doc,
+  deleteDoc,
+} from 'firebase/firestore';
+import { db } from '../../../Firebase/firebase-config';
 import { Tag } from 'antd';
 import { Pencil, Trash2 } from 'lucide-react'; // Import icons
 
@@ -17,30 +25,53 @@ import { Input } from '@/Components/ui/input';
 // Register all Community features for AG Grid
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-const date = new Date();
-
 const OffenseList = () => {
   // Row Data for the Table
-  const [rowData, setRowData] = useState([
-    {
-      Student: 'Richard Okoro',
-      ID: '01222631D',
-      Email: 'richard@gmail.com',
-      Program: 'Computer Science',
-      OffenseType: 'Late Return',
-      Description: 'Did not return book on time',
-      OffenseDate: date.toISOString().split('T')[0],
-      Penalty: '100 GHS Fine',
-      Status: 'Resolved',
-    },
-  ]);
-
-  const gridRef = useRef<AgGridReact>(null);
+  const [rowData, setRowData] = useState<{ id: string; [key: string]: any }[]>(
+    []
+  );
 
   // State for edit modal
   const [selectedRow, setSelectedRow] = useState<any>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editedData, setEditedData] = useState<any>({});
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  const gridRef = useRef<AgGridReact>(null);
+
+  useEffect(() => {
+    const fetchOffense = async () => {
+      try {
+        const offenseCollection = collection(db, 'OffenseList');
+        const offenseSnapshot = await getDocs(offenseCollection);
+        const offenseList = offenseSnapshot.docs.map((doc) => {
+          const data = doc.data();
+          // Only return the fields you want (omit the document id)
+
+          return {
+            id: doc.id, // Include the document ID
+            Student: data.Student_Name || 'N/A',
+            ID: data.Student_ID || 'N/A',
+            Email: data.Student_Email || 'N/A',
+            Program: data.Student_Program || 'N/A',
+            OffenseType: data.Offense_Type || 'N/A',
+            OffenseDescription: data.Offense_Description || 'N/A',
+            OffenseDate: data.offenseDate || 'N/A',
+            Penalty: data.Penalty || 'N/A',
+            Status: data.Status || 'N/A',
+          };
+        });
+
+        console.log('Final Processed Data:', offenseList); // Ensure data is mapped correctly
+        setRowData(offenseList); // Set rowData without the document ID
+      } catch (error) {
+        console.error('Error fetching students:', error);
+      }
+    };
+
+    fetchOffense();
+  }, []);
 
   // Default Column Definitions
   const defaultColDef: ColDef = {
@@ -59,34 +90,77 @@ const OffenseList = () => {
     setIsDialogOpen(true);
   };
 
+  // Open delete modal
+  const openDeleteModal = (id: string) => {
+    setDeleteId(id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  // Confirms delete action
+  const confirmDelete = async () => {
+    if (deleteId) {
+      try {
+        await deleteDoc(doc(db, 'OffenseList', deleteId));
+        setRowData((prev) => prev.filter((row) => row.id !== deleteId));
+        console.log(`Deleted offense with ID: ${deleteId}`);
+      } catch (error) {
+        console.error('Error deleting offense:', error);
+      }
+    }
+    setIsDeleteDialogOpen(false);
+  };
+
   // Handle input changes in modal
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditedData({ ...editedData, [e.target.name]: e.target.value });
   };
 
-  // Save edited data
-  const saveEditedData = () => {
-    setRowData((prevData) =>
-      prevData.map((row) =>
-        row.ID === selectedRow.ID ? { ...row, ...editedData } : row
-      )
-    );
+  //Saves edited data to database
+  const saveEditedData = async () => {
+    if (selectedRow) {
+      const offenseRef = doc(db, 'OffenseList', selectedRow.id);
+      try {
+        await updateDoc(offenseRef, {
+          Student_Name: editedData.Student,
+          Student_ID: editedData.ID,
+          Student_Email: editedData.Email,
+          Student_Program: editedData.Program,
+          Offense_Type: editedData.OffenseType,
+          Offense_Description: editedData.OffenseDescription,
+          offenseDate: editedData.OffenseDate,
+          Penalty: editedData.Penalty,
+          Status: editedData.Status,
+        });
+        setRowData((prev) =>
+          prev.map((row) =>
+            row.id === selectedRow.id ? { ...row, ...editedData } : row
+          )
+        );
+        console.log(`Updated offense with ID: ${selectedRow.id}`);
+      } catch (error) {
+        console.error('Error updating offense:', error);
+      }
+    }
     setIsDialogOpen(false);
   };
 
-  // Delete row
-  const deleteRow = (id: string) => {
-    setRowData((prevData) => prevData.filter((row) => row.ID !== id));
-  };
-
-  // Export table to CSV
+  // Export table to CSV (Fixed)
   const exportToCSV = () => {
     if (gridRef.current) {
       gridRef.current.api.exportDataAsCsv({
         processCellCallback: (params) => {
+          // Exclude the "Actions" column
           if (params.column.getColId() === 'Actions') {
             return null;
           }
+
+          // Handle the "Joined" column
+          if (params.column.getColId() === 'OffenseDate') {
+            // Check if the value is present, if not return 'N/A'
+            return params.value || 'N/A';
+          }
+
+          // Return the value for other columns
           return params.value;
         },
         columnKeys: [
@@ -95,11 +169,11 @@ const OffenseList = () => {
           'Email',
           'Program',
           'OffenseType',
-          'Description',
+          'OffenseDescription',
           'OffenseDate',
           'Penalty',
           'Status',
-        ],
+        ], // Only export these columns
       });
     }
   };
@@ -111,11 +185,13 @@ const OffenseList = () => {
     { field: 'Email', headerName: 'Email' },
     { field: 'Program', headerName: 'Program' },
     { field: 'OffenseType', headerName: 'Offense Type' },
-    { field: 'Description', headerName: 'Description' },
+    { field: 'OffenseDescription', headerName: 'Description' },
     {
       field: 'OffenseDate',
       headerName: 'Offense Date',
-      valueFormatter: (params) => params.value.split('T')[0],
+      valueFormatter: (params) => {
+        return params.value || 'N/A'; // Display the string directly
+      },
     },
     { field: 'Penalty', headerName: 'Penalty' },
     {
@@ -154,7 +230,7 @@ const OffenseList = () => {
           </button>
           {/* Delete Icon */}
           <button
-            onClick={() => deleteRow(params.data.ID)}
+            onClick={() => openDeleteModal(params.data.id)}
             className="text-red-500 hover:text-red-700"
           >
             <Trash2 size={20} />
@@ -194,22 +270,67 @@ const OffenseList = () => {
 
       {/* Edit Modal */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-sm:w-3/4 rounded-sm">
+        <DialogContent className="max-sm:w-3/4 max-[360px]:w-[85%] rounded-sm">
           <DialogTitle>Edit Offense</DialogTitle>
           <DialogDescription>
             Modify the offense details below.
           </DialogDescription>
 
           <div className="flex flex-col gap-4">
-            {Object.keys(editedData).map((key) => (
-              <Input
-                key={key}
-                name={key}
-                value={editedData[key] || ''}
-                onChange={handleInputChange}
-                placeholder={key.replace(/([A-Z])/g, ' $1').trim()} // Convert camelCase to words
-              />
-            ))}
+            <Input
+              name="Student"
+              value={editedData.Student || ''}
+              onChange={handleInputChange}
+              placeholder="Student Name"
+            />
+            <Input
+              name="ID"
+              value={editedData.ID || ''}
+              onChange={handleInputChange}
+              placeholder="ID"
+            />
+            <Input
+              name="Email"
+              value={editedData.Email || ''}
+              onChange={handleInputChange}
+              placeholder="Email"
+            />
+            <Input
+              name="Program"
+              value={editedData.Program || ''}
+              onChange={handleInputChange}
+              placeholder="Program"
+            />
+            <Input
+              name="OffenseType"
+              value={editedData.OffenseType || ''}
+              onChange={handleInputChange}
+              placeholder="Offense Type"
+            />
+            <Input
+              name="OffenseDescription"
+              value={editedData.OffenseDescription || ''}
+              onChange={handleInputChange}
+              placeholder="Offense Description"
+            />
+            <Input
+              name="OffenseDate"
+              value={editedData.OffenseDate || ''}
+              onChange={handleInputChange}
+              placeholder="Offense Date"
+            />
+            <Input
+              name="Penalty"
+              value={editedData.Penalty || ''}
+              onChange={handleInputChange}
+              placeholder="Penalty"
+            />
+            <Input
+              name="Status"
+              value={editedData.Status || ''}
+              onChange={handleInputChange}
+              placeholder="Status"
+            />
           </div>
 
           <div className="flex justify-end gap-2 mt-4">
@@ -225,6 +346,31 @@ const OffenseList = () => {
               onClick={saveEditedData}
             >
               Save Changes
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      {/* Delete Modal */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="max-sm:w-3/4 rounded-sm max-[360px]:w-[80%]">
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to delete this student? This action cannot be
+            undone.
+          </DialogDescription>
+          <div className="flex max-[400px]:flex-col justify-end gap-2 mt-4">
+            <Button
+              variant="outline"
+              className="border-[1px] transition-colors duration-300"
+              onClick={() => setIsDeleteDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="bg-red-500 hover:bg-red-600 border-[1px] transition-colors duration-300"
+              onClick={confirmDelete}
+            >
+              Confirm Delete
             </Button>
           </div>
         </DialogContent>

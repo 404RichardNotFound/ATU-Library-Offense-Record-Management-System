@@ -77,6 +77,12 @@ const AdminDashboard = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  const handleLogout = () => {
+    sessionStorage.removeItem('admin'); // Clear session
+    sessionStorage.clear(); // Optional: Clear everything from session storage
+    navigate('/AdminLogin'); // Redirect to login page
+  };
+
   useEffect(() => {
     const storedAdmin = sessionStorage.getItem('admin');
 
@@ -120,10 +126,7 @@ const AdminDashboard = () => {
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item
-        onClick={() => {
-          sessionStorage.removeItem('admin'); // Clear session on logout
-          navigate('/AdminLogin');
-        }}
+        onClick={handleLogout}
         key="logout"
         icon={<LogoutOutlined />}
         danger
@@ -212,7 +215,11 @@ const AdminDashboard = () => {
             </SubMenu>
             {/* Submenu for Authentication */}
             <SubMenu key="7" icon={<LockOutlined />} title="Authentication">
-              <Menu.Item key="Logout" icon={<LogoutOutlined />}>
+              <Menu.Item
+                key="Logout"
+                onClick={handleLogout}
+                icon={<LogoutOutlined />}
+              >
                 <Link to="/AdminLogin">Logout</Link>
               </Menu.Item>
               <Menu.Item key="404 Page" icon={<WarningOutlined />}>

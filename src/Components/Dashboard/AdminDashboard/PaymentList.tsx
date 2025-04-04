@@ -164,7 +164,15 @@ const PaymentList = () => {
     { field: 'Student_Name', headerName: 'Name' },
     { field: 'Student_ID', headerName: 'ID' },
     { field: 'Student_Program', headerName: 'Program' },
-    { field: 'Amount', headerName: 'Amount' },
+    {
+      field: 'Amount',
+      headerName: 'Amount',
+      valueFormatter: (params) => {
+        const amount = parseFloat(params.value);
+        if (isNaN(amount)) return 'GHS0.00';
+        return `GHS${amount.toFixed(2)}`;
+      },
+    },
     { field: 'Reason', headerName: 'Reason' },
     {
       field: 'Payment_Date',
@@ -245,7 +253,7 @@ const PaymentList = () => {
       </div>
       {/* Edit Modal */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-sm:w-3/4 rounded-sm">
+        <DialogContent className="max-sm:w-3/4 max-[360px]:w-[85%] rounded-sm">
           <DialogTitle>Edit Payment</DialogTitle>
           <DialogDescription>
             Modify the payment details below.
