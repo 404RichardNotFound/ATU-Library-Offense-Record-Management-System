@@ -83,7 +83,7 @@ function AdminLogin() {
         );
 
         setSuccessMessage('Login successful! Redirecting...');
-        setTimeout(() => navigate('/AdminDashboard'), 2000);
+        setTimeout(() => navigate('/AdminDashboard'), 1000);
       } else {
         setErrorMessage('Incorrect password');
       }
@@ -96,10 +96,10 @@ function AdminLogin() {
   // Automatically clear error after 5 seconds
   useEffect(() => {
     if (errorMessage) {
-      const timer = setTimeout(() => setErrorMessage(null), 5000);
+      const timer = setTimeout(() => setErrorMessage(null), 3000);
       return () => clearTimeout(timer);
     } else if (successMessage) {
-      const timer = setTimeout(() => setSuccessMessage(null), 5000);
+      const timer = setTimeout(() => setSuccessMessage(null), 3000);
       return () => clearTimeout(timer);
     }
   }, [errorMessage, successMessage]);
