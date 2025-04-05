@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useAutoLogout } from '../../Hooks/useAutoLogout';
 import {
   MenuFoldOutlined,
   UnorderedListOutlined,
@@ -58,6 +59,7 @@ const breadcrumbNameMap: any = {
 
 const { SubMenu } = Menu;
 const AdminDashboard = () => {
+  useAutoLogout(); // Custom hook for auto logout
   const navigate = useNavigate();
   const [admin, setAdmin] = useState<any>('');
   const [collapsed, setCollapsed] = useState(true);
