@@ -266,7 +266,7 @@ const BorrowedBooks = () => {
       </div>
       {/* Edit Modal */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-sm:w-3/4 max-[360px]:w-[85%] rounded-sm">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[500px] w-[90vw] rounded-sm">
           <DialogTitle>Edit Borrowed Book</DialogTitle>
           <DialogDescription>Modify the details below.</DialogDescription>
           <div className="flex flex-col gap-4">

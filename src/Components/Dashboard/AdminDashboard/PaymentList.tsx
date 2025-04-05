@@ -253,7 +253,7 @@ const PaymentList = () => {
       </div>
       {/* Edit Modal */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-sm:w-3/4 max-[360px]:w-[85%] rounded-sm">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[500px] w-[90vw] rounded-sm">
           <DialogTitle>Edit Payment</DialogTitle>
           <DialogDescription>
             Modify the payment details below.
@@ -265,7 +265,7 @@ const PaymentList = () => {
               value={editedData.Payment_ID || ''}
               disabled
               placeholder="Payment ID"
-              className="bg-gray-100 cursor-not-allowed"
+              className="bg-gray-100 cursor-not-allowed "
             />
             <Input
               name="Student"
@@ -301,7 +301,6 @@ const PaymentList = () => {
               value={editedData.Payment_Date || ''}
               onChange={handleInputChange}
               placeholder="Payment Date"
-              className="w-full"
             />
 
             <Input
@@ -312,7 +311,7 @@ const PaymentList = () => {
             />
           </div>
 
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-end gap-2 lg:mt-4 max-md:-mt-1">
             <Button
               variant="outline"
               className="border-[1px] transition-colors duration-300"

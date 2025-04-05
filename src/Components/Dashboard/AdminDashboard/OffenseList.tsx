@@ -270,7 +270,7 @@ const OffenseList = () => {
 
       {/* Edit Modal */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-sm:w-3/4 max-[360px]:w-[85%] rounded-sm">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[500px] w-[90vw] rounded-sm">
           <DialogTitle>Edit Offense</DialogTitle>
           <DialogDescription>
             Modify the offense details below.
