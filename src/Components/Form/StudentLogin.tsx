@@ -1,19 +1,19 @@
 import authenticationIcon from '../../assets/authentication.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { z } from 'zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { getDocs, query, where, collection } from 'firebase/firestore';
+import { db } from '../../Firebase/firebase-config';
 import atuLogo from '/ATU-LOGO.png';
 import { motion } from 'motion/react';
-import axios from 'axios';
 import { Spinner } from '@radix-ui/themes';
-import { useMutation } from '@tanstack/react-query';
 
 // Define the schema for form validation using Zod
 const schema = z.object({
-  studentID: z.string().min(9, 'Must be 9 characters!'),
+  Student_ID: z.string().min(9, 'Must be 9 characters!'),
   password: z
     .string()
     .min(8, 'Password must be at least 8 characters long!')
@@ -33,53 +33,78 @@ function StudentLogin() {
   // State for error and success messages
   const [errorMessage, setErrorMessage] = useState<string | null>('');
   const [successMessage, setSuccessMessage] = useState<string | null>('');
+  const navigate = useNavigate();
 
   // Destructure the useForm hook
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<StudentLoginSchema>({
     resolver: StudentLoginSchemaResolver,
     mode: 'onChange', // Enable real-time validation feedback
   });
 
-  // Mutation for Posting Sign-Up Data
-  const loginMutation = useMutation({
-    mutationFn: async (studentLoginData: StudentLoginSchema) => {
-      const response = await axios.post(
-        'http://localhost/Backend/registration.php',
-        studentLoginData
-      );
-      return response.data;
-    },
-    onError: () => {
-      setErrorMessage('Login Error, Try again.');
-      setSuccessMessage(null);
-    },
-    onSuccess: () => {
-      reset(); // Reset form after successful registration
-      setSuccessMessage('Login Successful!');
-      setErrorMessage(null);
-    },
-  });
+  const onSubmit = async (studentLogins: StudentLoginSchema) => {
+    setErrorMessage('');
+    setSuccessMessage('');
+    const data: StudentLoginSchema = studentLogins;
 
-  const onSubmit = async (data: StudentLoginSchema) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    // Submit form data to the server
-    loginMutation.mutate(data);
     console.log(data);
-    reset();
+
+    try {
+      // Query Firestore to find the student with the entered Student_ID
+      const q: any = query(
+        collection(db, 'Students'),
+        where('Student_ID', '==', data.Student_ID)
+      );
+
+      const querySnapshot = await getDocs(q);
+      if (querySnapshot.empty) {
+        setErrorMessage('Student ID not found');
+        return;
+      }
+
+      const studentDoc = querySnapshot.docs[0]; // Get the first matching document
+      const studentData: any = studentDoc.data();
+
+      if (studentData.Student_Password === data.password) {
+        // Store student data in session storage
+        const studentKey = `student_${studentDoc.id}`;
+        sessionStorage.setItem(
+          studentKey,
+          JSON.stringify({
+            id: studentDoc.id,
+            ID: studentData.Student_ID,
+            Gender: studentData.Student_Gender,
+            Program: studentData.Student_Program,
+            Name: studentData.Student_Name,
+            Email: studentData.Student_Email,
+            Role: 'Student',
+            JoinDate: studentData.JoinDate,
+            PhoneNumber: studentData.Student_PhoneNumber,
+          })
+        );
+        sessionStorage.setItem('activeStudentId', studentDoc.id);
+
+        setSuccessMessage('Login successful! Redirecting...');
+        setTimeout(() => navigate('/StudentDashboard'), 1000);
+      } else {
+        setErrorMessage('Incorrect password');
+      }
+    } catch (error) {
+      setErrorMessage('Error logging in. Try again.');
+      console.error('Login Error:', error);
+    }
   };
 
   // Automatically clear error after 5 seconds
   useEffect(() => {
     if (errorMessage) {
-      const timer = setTimeout(() => setErrorMessage(null), 5000);
+      const timer = setTimeout(() => setErrorMessage(null), 3000);
       return () => clearTimeout(timer);
     } else if (successMessage) {
-      const timer = setTimeout(() => setSuccessMessage(null), 5000);
+      const timer = setTimeout(() => setSuccessMessage(null), 3000);
       return () => clearTimeout(timer);
     }
   }, [errorMessage, successMessage]);
@@ -115,17 +140,17 @@ function StudentLogin() {
         </div>
         <div className="w-full flex flex-col gap-3">
           <div className="flex w-full flex-col gap-2">
-            <label htmlFor="studentID">Student ID</label>
+            <label htmlFor="Student ID">Student ID</label>
             <input
-              {...register('studentID')}
-              id="studentID"
-              name="studentID"
+              {...register('Student_ID')}
+              id="Student_ID"
+              name="Student_ID"
               className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
               type="text"
               placeholder="ID"
             />
-            {errors.studentID && (
-              <p className="text-red-500">{errors.studentID.message}</p>
+            {errors.Student_ID && (
+              <p className="text-red-500">{errors.Student_ID.message}</p>
             )}
           </div>
         </div>

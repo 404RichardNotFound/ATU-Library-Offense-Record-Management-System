@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 
 const AUTO_LOGOUT_TIME = 60 * 60 * 1000; // 1 hour (in ms)
 
-export const useAutoLogout = () => {
+export const useStudentAutoLogout = () => {
   const navigate = useNavigate();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const logout = () => {
     sessionStorage.clear();
-    navigate('/AdminLogin');
+    navigate('/StudentLogin');
   };
 
   const resetTimer = () => {

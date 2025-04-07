@@ -1,0 +1,17 @@
+import { Calendar } from 'antd';
+import type { CalendarProps } from 'antd';
+import type { Dayjs } from 'dayjs';
+
+const StudentCalender = () => {
+  const onPanelChange = (value: Dayjs, mode: CalendarProps<Dayjs>['mode']) => {
+    console.log(value.format('YYYY-MM-DD'), mode);
+  };
+
+  return (
+    <div className="p-3 border-[1px] rounded-md">
+      <Calendar onPanelChange={onPanelChange} />
+    </div>
+  );
+};
+
+export default StudentCalender;

@@ -54,6 +54,36 @@ const LandingPage = lazy(
 const EditAdminProfile = lazy(
   () => import('@/Components/Dashboard/AdminDashboard/EditAdminProfile.tsx')
 );
+const StudentDashboard = lazy(
+  () => import('@/Components/Dashboard/StudentDashboard/StudentDashboard.tsx')
+);
+const StudentDashboardOverview = lazy(
+  () =>
+    import(
+      '@/Components/Dashboard/StudentDashboard/StudentDashboardOverview.tsx'
+    )
+);
+const StudentProfile = lazy(
+  () => import('@/Components/Dashboard/StudentDashboard/StudentProfile.tsx')
+);
+const StudentCalender = lazy(
+  () => import('@/Components/Dashboard/StudentDashboard/StudentCalender.tsx')
+);
+const PaymentHistory = lazy(
+  () => import('@/Components/Dashboard/StudentDashboard/PaymentHistory.tsx')
+);
+const Notices = lazy(
+  () => import('@/Components/Dashboard/StudentDashboard/Notices.tsx')
+);
+const Offenses = lazy(
+  () => import('@/Components/Dashboard/StudentDashboard/Offenses.tsx')
+);
+const StudentBorrowedBooks = lazy(
+  () => import('@/Components/Dashboard/StudentDashboard/BorrowedBooks.tsx')
+);
+const EditStudentProfile = lazy(
+  () => import('@/Components/Dashboard/StudentDashboard/EditStudentProfile.tsx')
+);
 
 // Import Fallback normally (DO NOT lazy-load)
 import Fallback from '@/Components/FallbackUI/Fallback.tsx';
@@ -87,6 +117,21 @@ export default function AppRoute() {
           <Route path="AddToList" element={<AddToList />} />
         </Route>
 
+        {/* Student Dashboard with nested routes */}
+        <Route path="/StudentDashboard" element={<StudentDashboard />}>
+          <Route index element={<StudentDashboardOverview />} />
+          <Route
+            path="StudentDashboardOverview"
+            element={<StudentDashboardOverview />}
+          />
+          <Route path="StudentProfile" element={<StudentProfile />} />
+          <Route path="BorrowedBooks" element={<StudentBorrowedBooks />} />
+          <Route path="StudentCalender" element={<StudentCalender />} />
+          <Route path="PaymentHistory" element={<PaymentHistory />} />
+          <Route path="Notices" element={<Notices />} />
+          <Route path="Offenses" element={<Offenses />} />
+          <Route path="EditStudentProfile" element={<EditStudentProfile />} />
+        </Route>
         {/* 404 Page */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

@@ -1,25 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useAdminAutoLogout } from '../../Hooks/useAdminAutoLogout';
+import { useStudentAutoLogout } from '../../Hooks/useStudentAutoLogout';
 import {
   MenuFoldOutlined,
-  UnorderedListOutlined,
   QuestionCircleOutlined,
   MenuUnfoldOutlined,
-  PlusSquareOutlined,
-  TeamOutlined,
   WarningOutlined,
   EditOutlined,
-  HomeOutlined,
-  LogoutOutlined,
   MoneyCollectOutlined,
   BookOutlined,
+  HomeOutlined,
+  LogoutOutlined,
   LockOutlined,
   BellOutlined,
   UserOutlined,
   ProfileOutlined,
   DashboardOutlined,
-  ExclamationCircleOutlined,
   CalendarOutlined,
 } from '@ant-design/icons';
 import { motion } from 'motion/react';
@@ -41,27 +37,24 @@ const { Header, Content, Footer, Sider } = Layout;
 
 // Defining breadcrumbs links
 const breadcrumbNameMap: any = {
-  '/AdminDashboard/DashboardOverview': 'Dashboard',
-  '/AdminDashboard/StudentsList': 'Students List',
-  '/AdminDashboard/AddStudent': 'Add Student',
-  '/AdminDashboard/BorrowedBooks': 'Borrowed Books',
-  '/AdminDashboard/AddToList': 'Add to List',
-  '/AdminDashboard/OffenseList': 'Offense List',
-  '/AdminDashboard/AddOffense': 'Add Offense',
-  '/AdminDashboard/PaymentList': 'Payment List',
-  '/AdminDashboard/AddPayment': 'Add Payment',
-  '/AdminDashboard/MyProfile': 'My Profile',
-  '/AdminDashboard/EditAdminProfile': 'Edit Profile',
-  '/AdminDashboard/Settings': 'Settings',
-  '/AdminDashboard/Calender': 'Calendar',
-  '/AdminDashboard/Notice': 'Notice',
+  '/StudentDashboard/StudentDashboardOverview': 'Dashboard',
+  '/StudentDashboard/StudentEditProfile': 'Edit Profile',
+  '/StudentDashboard/StudentProfile': 'My Profile',
+  '/StudentDashboard/BorrowedBooks': 'Borrowed Books',
+  '/StudentDashboard/PaymentHistory': 'Payment History',
+  '/StudentDashboard/Offenses': 'Offenses',
+  '/StudentDashboard/StudentCalender': 'Calendar',
+  '/StudentDashboard/Notices': 'Notices',
+  '/StudentDashboard/MyProfile': 'My Profile',
+  '/StudentDashboard/EditStudentProfile': 'Edit Profile',
 };
 
 const { SubMenu } = Menu;
-const AdminDashboard = () => {
-  useAdminAutoLogout(); // Custom hook for auto logout
+const StudentDashboard = () => {
+  // Auto logout hook
+  useStudentAutoLogout();
   const navigate = useNavigate();
-  const [admin, setAdmin] = useState<any>('');
+  const [student, setStudent] = useState<any>('');
   const [collapsed, setCollapsed] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -80,29 +73,39 @@ const AdminDashboard = () => {
   } = theme.useToken();
 
   const handleLogout = () => {
-    sessionStorage.removeItem('admin'); // Clear session
-    sessionStorage.clear(); // Optional: Clear everything from session storage
-    navigate('/AdminLogin'); // Redirect to login page
+    const id = sessionStorage.getItem('activeStudentId');
+
+    if (id) {
+      sessionStorage.removeItem(`student_${id}`);
+      sessionStorage.removeItem('activeStudentId');
+    }
+
+    navigate('/StudentLogin');
   };
 
   useEffect(() => {
-    const storedAdmin = sessionStorage.getItem('admin');
+    const id = sessionStorage.getItem('activeStudentId');
 
-    if (!storedAdmin) {
-      navigate('/AdminLogin'); // Redirect to login if no admin data
+    if (!id) {
+      navigate('/StudentLogin');
+      return;
+    }
+
+    const stored = sessionStorage.getItem(`student_${id}`);
+    if (!stored) {
+      navigate('/StudentLogin');
       return;
     }
 
     try {
-      const adminData = JSON.parse(storedAdmin);
-      setAdmin(adminData);
-    } catch (error) {
-      console.error('Error parsing admin data:', error);
-      sessionStorage.removeItem('admin'); // Clear invalid data
-      navigate('/AdminLogin'); // Redirect to login
+      const student = JSON.parse(stored);
+      setStudent(student);
+    } catch (err) {
+      sessionStorage.removeItem(`student_${id}`);
+      navigate('/StudentLogin');
     }
 
-    // Fetch admin data from session storage
+    // Fetch student data from session storage
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -110,8 +113,8 @@ const AdminDashboard = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [navigate]);
 
-  //Display Spinner component while fetching admin data
-  if (!admin)
+  //Display Spinner component while fetching student data
+  if (!student)
     return (
       <div>
         <Spinner />
@@ -120,11 +123,11 @@ const AdminDashboard = () => {
   // Dropdown menu for avatar
   const menu = (
     <Menu>
-      <Menu.Item key="profile" icon={<ProfileOutlined />}>
-        <Link to="MyProfile"> Profile</Link>
+      <Menu.Item key="StudentProfile" icon={<ProfileOutlined />}>
+        <Link to="StudentProfile"> Profile</Link>
       </Menu.Item>
-      <Menu.Item key="EditProfile" icon={<EditOutlined />}>
-        <Link to="EditAdminProfile">Edit Profile</Link>
+      <Menu.Item key="EditStudentProfile" icon={<EditOutlined />}>
+        <Link to="EditStudentProfile">Edit Profile</Link>
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item
@@ -153,7 +156,7 @@ const AdminDashboard = () => {
           collapsed={collapsed}
           collapsedWidth={isMobile ? 0 : 80} // Fully hide on mobile
         >
-          <Link to="DashboardOverview">
+          <Link to="StudentDashboardOverview">
             <div className="flex items-center justify-center space-x-3 py-3 ">
               <img src={atuLogo} className="w-11 h-11" alt="ATU's Logo" />
               {!collapsed && (
@@ -173,56 +176,25 @@ const AdminDashboard = () => {
           <div className="demo-logo-vertical mt-2" />
           <Menu mode="inline" defaultSelectedKeys={['1']}>
             <Menu.Item key="1" icon={<DashboardOutlined />}>
-              <Link to="DashboardOverview">Dashboard</Link>
+              <Link to="StudentDashboardOverview">Dashboard</Link>
             </Menu.Item>
-            {/* Submenu for Students */}
-            <SubMenu key="2" icon={<TeamOutlined />} title="Students">
-              <Menu.Item key="Students List" icon={<TeamOutlined />}>
-                <Link to="StudentsList">Students List</Link>
-              </Menu.Item>
-              <Menu.Item key="Add A Student" icon={<PlusSquareOutlined />}>
-                <Link to="AddStudent">Add Student</Link>
-              </Menu.Item>
-            </SubMenu>
-            {/* Submenu for Borrowed Books */}
-            <SubMenu key="3" icon={<BookOutlined />} title="Borrowed Books">
-              <Menu.Item key="Borrowed Books" icon={<UnorderedListOutlined />}>
-                <Link to="BorrowedBooks">Borrowed Books</Link>
-              </Menu.Item>
-              <Menu.Item key="Add To List" icon={<PlusSquareOutlined />}>
-                <Link to="AddToList">Add To List</Link>
-              </Menu.Item>
-            </SubMenu>
-            {/* Submenu for Offenses */}
-            <SubMenu
-              key="4"
-              icon={<ExclamationCircleOutlined />}
-              title="Offenses"
-            >
-              <Menu.Item key="Offense List" icon={<UnorderedListOutlined />}>
-                <Link to="OffenseList">Offense List</Link>
-              </Menu.Item>
-              <Menu.Item key="Add Offense" icon={<PlusSquareOutlined />}>
-                <Link to="AddOffense">Add Offense</Link>
-              </Menu.Item>
-            </SubMenu>
-            {/* Submenu for Payments*/}
-            <SubMenu key="5" icon={<MoneyCollectOutlined />} title="Payments">
-              <Menu.Item key="Payment List" icon={<UnorderedListOutlined />}>
-                <Link to="PaymentList">Payment List</Link>
-              </Menu.Item>
-              <Menu.Item key="Add Payment" icon={<PlusSquareOutlined />}>
-                <Link to="AddPayment">Add Payment</Link>
-              </Menu.Item>
-            </SubMenu>
+            <Menu.Item key="2" icon={<BookOutlined />}>
+              <Link to="BorrowedBooks">Borrowed Books</Link>
+            </Menu.Item>
+            <Menu.Item key="3" icon={<WarningOutlined />}>
+              <Link to="Offenses">Offenses</Link>
+            </Menu.Item>
+            <Menu.Item key="4" icon={<MoneyCollectOutlined />}>
+              <Link to="PaymentHistory">Payment History</Link>
+            </Menu.Item>
             {/* Submenu for Authentication */}
-            <SubMenu key="7" icon={<LockOutlined />} title="Authentication">
+            <SubMenu key="5" icon={<LockOutlined />} title="Authentication">
               <Menu.Item
                 key="Logout"
                 onClick={handleLogout}
                 icon={<LogoutOutlined />}
               >
-                <Link to="/AdminLogin">Logout</Link>
+                <Link to="/StudentLogin">Logout</Link>
               </Menu.Item>
               <Menu.Item key="404 Page" icon={<WarningOutlined />}>
                 <Link to="*">404 Page</Link>
@@ -234,24 +206,24 @@ const AdminDashboard = () => {
                 <Link to="/ForgotPassword">Forgot Password</Link>
               </Menu.Item>
             </SubMenu>
-            <Menu.Item key="8" icon={<CalendarOutlined />}>
-              <Link to="Calender">Calender</Link>
+            <Menu.Item key="6" icon={<CalendarOutlined />}>
+              <Link to="StudentCalender">Calender</Link>
             </Menu.Item>
-            <Menu.Item key="9" icon={<BellOutlined />}>
-              <Link to="Notice">Notice</Link>
+            <Menu.Item key="7" icon={<BellOutlined />}>
+              <Link to="Notices">Notices</Link>
             </Menu.Item>
             {/* Submenu for Profile */}
             <SubMenu
-              key="11"
+              key="8"
               className="max-md:mb-4"
               icon={<LockOutlined />}
               title="Profile"
             >
-              <Menu.Item key="MyProfile" icon={<ProfileOutlined />}>
-                <Link to="MyProfile">My Profile</Link>
+              <Menu.Item key="StudentProfile" icon={<ProfileOutlined />}>
+                <Link to="StudentProfile">My Profile</Link>
               </Menu.Item>
-              <Menu.Item key="EditProfile" icon={<EditOutlined />}>
-                <Link to="EditAdminProfile">Edit Profile</Link>
+              <Menu.Item key="EditStudentProfile" icon={<EditOutlined />}>
+                <Link to="EditStudentProfile">Edit Profile</Link>
               </Menu.Item>
             </SubMenu>
           </Menu>
@@ -302,7 +274,7 @@ const AdminDashboard = () => {
                       size="default"
                       icon={<UserOutlined />}
                     />
-                    <p className="text-black text-[14px]">{admin.name}</p>
+                    <p className="text-black text-[14px]">{student.Name}</p>
                   </button>
                 </Dropdown>
               </div>
@@ -310,12 +282,12 @@ const AdminDashboard = () => {
           </Header>
           <div className="flex px-5 pt-4 justify-between items-center">
             <p className="text-base text-black max-md:hidden">
-              {'Welcome Admin'}
+              {`Welcome Student`}
             </p>
             <Breadcrumb
               items={[
                 {
-                  href: '/AdminDashboard/DashboardOverview',
+                  href: '/StudentDashboard/StudentDashboardOverview',
                   title: <HomeOutlined />,
                 }, // Home link
                 ...breadcrumbItems, // Dynamically generated breadcrumbs
@@ -342,4 +314,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default StudentDashboard;

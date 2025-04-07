@@ -190,7 +190,7 @@ const Notice = () => {
             {displayedNotices.map((item) => (
               <div
                 key={item.id}
-                className="flex justify-between items-center border-2 shadow-sm gap-3 bg-zinc-100 rounded-md p-3 w-full"
+                className="flex justify-between items-center border-[1px] border-zinc-300 shadow-sm gap-3 bg-zinc-50 rounded-md p-3 w-full"
               >
                 {/* Notice Content */}
                 <div className="w-full overflow-hidden space-y-2">
