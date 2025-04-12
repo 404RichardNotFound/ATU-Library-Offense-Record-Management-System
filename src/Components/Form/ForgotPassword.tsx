@@ -137,7 +137,7 @@ function ForgotPassword() {
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className="w-vh pb-10 md:lg:justify-center lg:h-vh max-2xl:pt-16 2xl:pt-16 flex flex-col gap-8 justify-center items-center"
     >
-      <div className="flex max-sm:7/12 max-md:w-11/12 max-xl:w-8/12 max-2xl:w-5/7 max-lg:w-10/12 max-md:pl-3 justify-evenly gap-3 items-start ">
+      <div className="flex max-sm:7/12 max-md:w-11/12 max-xl:w-8/12 max-2xl:w-5/7 max-lg:w-10/12 max-md:pl-8 max-xl:pl-4 max-sm:pl-5 justify-evenly gap-3 items-start ">
         <img src={atuLogo} alt="ATU's Logo" className="max-w-20 max-h-20" />
         <div className="flex flex-col">
           <h1 className="text-2xl text-wrap font-bold">
@@ -149,7 +149,8 @@ function ForgotPassword() {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white border-2 gap-7 max-2xl:w-7/12E  max-xl:w-8/12 max-lg:w-10/12 w-2/5 shadow-sm border-neutral-200 rounded-lg p-8 h-auto flex flex-col justify-center"
+        className='bg-white border-[1px] max-sm:ml-4 max-sm:w-[80%] gap-5 max-2xl:w-5/12  max-xl:w-7/12 max-md:w-9/12 w-[35%] shadow-sm border-neutral-300 rounded-lg p-8 h-auto flex flex-col justify-center"
+      '
       >
         <div className="flex gap-3">
           <h2 className="text-2xl font-semibold text-start">Forgot Password</h2>
@@ -166,7 +167,7 @@ function ForgotPassword() {
               {...register('userID')}
               id="userID"
               name="userID"
-              className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
+              className="border-[1px] border-neutral-300 bg-slate-50 hover:border-dotted px-2 py-1 rounded-md "
               type="text"
               placeholder="ID"
             />
@@ -181,7 +182,7 @@ function ForgotPassword() {
             <input
               {...register('newPassword')}
               id="newPassword"
-              className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
+              className="border-[1px] border-neutral-300 bg-slate-50 hover:border-dotted px-2 py-1 rounded-md "
               type="password"
               name="newPassword"
               placeholder="New Password"
@@ -196,7 +197,7 @@ function ForgotPassword() {
           <input
             {...register('confirmNewPassword')}
             id="confirmPassword"
-            className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
+            className="border-[1px] border-neutral-300 bg-slate-50 hover:border-dotted px-2 py-1 rounded-md "
             type="password"
             name="confirmNewPassword"
             placeholder="Confirm New Password"
@@ -209,7 +210,7 @@ function ForgotPassword() {
         <div className="flex gap-2 mt-1 justify-start">
           <button
             type="submit"
-            className="border-2 transition-colors duration-300 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
+            className=" transition-colors duration-300 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-[6px] px-5 rounded-md"
             disabled={isSubmitting} // Disable button while submitting
           >
             {/* Show spinner when submitting */}

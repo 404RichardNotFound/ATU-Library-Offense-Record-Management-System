@@ -112,7 +112,7 @@ function AdminLogin() {
       transition={{ duration: 0.6, ease: 'easeOut' }} // Smooth transition
       className="w-vh pb-10 md:lg:justify-center lg:h-vh max-2xl:pt-16 2xl:pt-16 flex flex-col gap-8 justify-center items-center"
     >
-      <div className="flex max-sm:7/12 max-md:w-11/12 max-xl:w-8/12 max-2xl:w-5/7 max-lg:w-10/12 max-md:pl-3 justify-evenly gap-3 items-start ">
+      <div className="flex max-sm:7/12 max-md:w-11/12 max-xl:w-8/12 max-2xl:w-5/7 max-lg:w-10/12 max-md:pl-8 max-xl:pl-4 max-sm:pl-5 justify-evenly gap-3 items-start">
         <img src={atuLogo} alt="ATU's Logo" className="max-w-24 max-h-24" />
         <div className="flex flex-col">
           <h1 className="text-2xl text-wrap font-bold">
@@ -124,7 +124,7 @@ function AdminLogin() {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white border-[1px] gap-5 max-2xl:w-5/12  max-xl:w-7/12 max-md:w-9/12 w-[35%] shadow-sm border-neutral-300 rounded-lg p-8 h-auto flex flex-col justify-center"
+        className="bg-white border-[1px] max-sm:ml-4 gap-5 max-2xl:w-5/12  max-xl:w-7/12 max-sm:w-[85%] max-md:w-9/12 w-[35%] shadow-sm border-neutral-300 rounded-lg p-8 h-auto flex flex-col justify-center"
       >
         <div className="flex gap-3">
           <h2 className="text-2xl font-semibold text-start">Admin Login</h2>
@@ -169,7 +169,7 @@ function AdminLogin() {
         <div className="flex gap-2 justify-start">
           <button
             type="submit"
-            className="border-2 items-center flex gap-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-[5px] px-5 rounded-md"
+            className="items-center flex gap-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-[5px] px-5 rounded-md"
           >
             {isSubmitting && <Spinner />}
             {isSubmitting ? 'Please wait..' : 'Login'}
