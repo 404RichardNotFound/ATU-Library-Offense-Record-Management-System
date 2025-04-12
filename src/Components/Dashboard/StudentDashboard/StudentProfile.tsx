@@ -43,9 +43,9 @@ const StudentProfile = () => {
   return (
     <div className="flex flex-col max-lg:flex-col p-1 bg-zinc-100 h-full w-full gap-4">
       {/* Student Profile */}
-      <div className="flex max-sm:flex-col max-sm:items-center overflow-hidden border-[1px] max-lg:w-full px-3 py-4 gap-5 w-full bg-white rounded-md">
+      <div className="flex max-sm:flex-col border-neutral-300 max-sm:items-center overflow-hidden border-[1px] max-lg:w-full px-3 py-4 gap-5 w-full bg-white rounded-md">
         <img
-          src={userPhoto}
+          src={student.profileImage}
           className="w-24 h-24 border-2 rounded-full object-cover"
           alt="User Icon"
         />
@@ -60,7 +60,7 @@ const StudentProfile = () => {
         </div>
       </div>
       {/* Personal Information */}
-      <div className="flex flex-col gap-2 py-3 bg-white rounded-md border-[1px]">
+      <div className="flex flex-col gap-2 py-3 bg-white rounded-md border-[1px] border-neutral-300">
         <div className="flex justify-between items-center py-1 px-4">
           <h1 className="text-[16px] truncate">Personal Information</h1>
           <Link to="/StudentDashboard/EditStudentProfile">

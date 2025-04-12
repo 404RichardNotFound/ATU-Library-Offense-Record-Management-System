@@ -8,7 +8,7 @@ const Calender = () => {
   };
 
   return (
-    <div className="p-3 border-[1px] rounded-md">
+    <div className="p-3 border-[1px] rounded-md border-neutral-300">
       <Calendar onPanelChange={onPanelChange} />
     </div>
   );

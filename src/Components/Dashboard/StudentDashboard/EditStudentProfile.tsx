@@ -1,13 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { updateDoc, doc } from 'firebase/firestore';
 import { db } from '../../../Firebase/firebase-config';
 
 const EditStudentProfile = () => {
+  // State for error message
+  const [errorMessage, setErrorMessage] = useState<string | null>('');
+  // State for loading spinner
+  const [isSubmitting, setIsSubmitting] = useState(false);
   // Get student data from session storage
   const id = sessionStorage.getItem('activeStudentId');
   const stored = sessionStorage.getItem(`student_${id}`);
   const studentData = stored ? JSON.parse(stored) : null;
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const studentId = id; // Firestore document ID
 
   const [formData, setFormData] = useState({
@@ -19,28 +24,95 @@ const EditStudentProfile = () => {
     Role: studentData?.Role || 'Student',
     JoinDate: studentData?.JoinDate || '',
     Program: studentData?.Program || '',
+    profileImage: studentData?.profileImage || '', // existing image if any
   });
+  // Helper function to resize/compress image using a canvas
+  const resizeImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      const img = new Image();
 
-  const [isSubmitting, setIsSubmitting] = useState<boolean | undefined>(false);
+      reader.onload = (e) => {
+        if (!e.target?.result) {
+          return reject('Error reading file');
+        }
+        img.src = e.target.result as string;
+      };
 
-  // Handle form field changes
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 300; // Adjust maximum width as needed
+        const scaleSize = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleSize;
+
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          // Quality set to 0.6 (60%); adjust for further compression if needed
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+          resolve(compressedDataUrl);
+        } else {
+          reject('Could not get canvas context');
+        }
+      };
+
+      img.onerror = (err) => reject(err);
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Handle change for text input fields
   const handleChange = (e: any) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  //Update Firestore student Data
+  // Handle file selection with size validation
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setSelectedFile(null);
+      return;
+    }
+    // Change the max allowed size if needed (currently set to 500KB)
+    if (file.size > 5 * 1000 * 1024) {
+      setErrorMessage('Image is too large. Max allowed is 500KB.');
+      setSelectedFile(null);
+      return;
+    }
+    setErrorMessage(null);
+    setSelectedFile(file);
+  };
+
+  // Update Firestore student data (including optionally the profile image)
   const handleSubmit = async (e: any) => {
-    e.preventDefault(); // Prevents URL issue
+    e.preventDefault();
     if (!studentId) {
       toast.error('Student ID not found!');
-      console.log(studentId);
       return;
     }
 
     setIsSubmitting(true);
     try {
-      const studentRef = doc(db, 'Students', studentId); // Get the student document
-      await updateDoc(studentRef, {
+      let updatedProfileImage = formData.profileImage; // use existing image URL if no new file
+
+      if (selectedFile) {
+        // Resize/compress the new image
+        updatedProfileImage = await resizeImage(selectedFile);
+
+        // Optionally, check the size after conversion:
+        const imageSize = new Blob([updatedProfileImage]).size;
+        if (imageSize > 900 * 1024) {
+          setErrorMessage(
+            'Image too large even after compression. Please choose a smaller one.'
+          );
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      // Build the updated data object for Firestore:
+      const updatedData = {
         Student_Name: formData.Name,
         Student_ID: formData.ID,
         Student_Email: formData.Email,
@@ -48,25 +120,32 @@ const EditStudentProfile = () => {
         Student_Gender: formData.Gender,
         JoinDate: formData.JoinDate,
         Student_Program: formData.Program,
-      });
-      // Update session storage with new student data
-      const studentKey = `student_${studentId}`;
-      sessionStorage.setItem(
-        studentKey,
-        JSON.stringify({
-          id: studentId,
-          ID: formData.ID,
-          Gender: formData.Gender,
-          Program: formData.Program,
-          Name: formData.Name,
-          Email: formData.Email,
-          Role: 'Student',
-          JoinDate: formData.JoinDate,
-          PhoneNumber: formData.Phone_Number,
-        })
-      );
+        profileImage: updatedProfileImage,
+      };
 
+      const studentRef = doc(db, 'Students', studentId);
+      await updateDoc(studentRef, updatedData);
+      // Build a new object from the updated form data to store in session storage:
+      const updatedCleanData = {
+        id: studentId,
+        ID: formData.ID,
+        Gender: formData.Gender,
+        Program: formData.Program,
+        Name: formData.Name,
+        Email: formData.Email,
+        JoinDate: formData.JoinDate,
+        PhoneNumber: formData.Phone_Number,
+        profileImage: updatedProfileImage,
+        Role: formData.Role,
+      };
+
+      // Update session storage with new student data
+
+      const studentKey = `student_${studentId}`;
+      sessionStorage.setItem(studentKey, JSON.stringify(updatedCleanData));
       sessionStorage.setItem('activeStudentId', studentId);
+      console.log(updatedCleanData);
+
       toast.success('Profile updated successfully!');
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -75,6 +154,13 @@ const EditStudentProfile = () => {
       setIsSubmitting(false);
     }
   };
+  // Automatically clear error after 5 seconds
+  useEffect(() => {
+    if (errorMessage) {
+      const timer = setTimeout(() => setErrorMessage(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [errorMessage]);
 
   return (
     <div className="w-full bg-zinc-100 h-full flex justify-center">
@@ -83,7 +169,7 @@ const EditStudentProfile = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-md border-[1px] border-zinc-200 bg-white h-[750px] w-full max-sm:w-full p-6 flex flex-col gap-3"
+        className="rounded-md border-[1px] border-zinc-200 bg-white h-[840px] w-full max-sm:w-full p-6 flex flex-col gap-3"
       >
         <h1 className="text-center font-medium text-lg">Edit Profile</h1>
 
@@ -198,6 +284,15 @@ const EditStudentProfile = () => {
             required
           />
         </div>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="profileImage">Profile Image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="bg-slate-50 border-[1px] p-2 rounded-md cursor-pointer"
+          />
+        </div>
         {/* Program Field */}
         <div className="text-base flex gap-2 w-full flex-col">
           <label htmlFor="Program">Program:</label>
@@ -246,6 +341,12 @@ const EditStudentProfile = () => {
             {isSubmitting ? 'Updating...' : 'Edit Profile'}
           </button>
         </div>
+        {/* Display error message if any */}
+        {errorMessage && (
+          <p className="text-red-500 bg-red-100 p-2 rounded absolute top-96 transition-all duration-300">
+            {errorMessage}
+          </p>
+        )}
       </form>
     </div>
   );

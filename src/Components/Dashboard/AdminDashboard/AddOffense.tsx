@@ -70,7 +70,7 @@ const AddOffense = () => {
       <Toaster />
       <form
         onSubmit={handleSubmit}
-        className="rounded-md border-[1px] border-zinc-200 bg-white h-[915px] w-full max-sm:w-full p-6 flex flex-col gap-3"
+        className="rounded-md border-[1px] border-neutral-300 bg-white h-[915px] w-full max-sm:w-full p-6 flex flex-col gap-3"
       >
         <h1 className="text-center font-medium text-lg">Add Offense</h1>
         {/* Student Information */}
@@ -199,7 +199,7 @@ const AddOffense = () => {
         <div className="flex gap-2 mt-1 justify-start">
           <button
             type="submit"
-            className="border-2 transition-colors duration-300 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
+            className="transition-colors duration-300 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
             disabled={isSubmitting} // Disable button while submitting
           >
             {/* Show spinner when submitting */}

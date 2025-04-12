@@ -38,9 +38,9 @@ const MyProfile = () => {
   return (
     <div className="flex flex-col max-lg:flex-col p-1 bg-zinc-100 h-full w-full gap-4">
       {/* Admin Profile */}
-      <div className="flex max-sm:flex-col max-sm:items-center overflow-hidden border-[1px] max-lg:w-full px-3 py-4 gap-5 w-full bg-white rounded-md">
+      <div className="flex max-sm:flex-col max-sm:items-center border-neutral-300 overflow-hidden border-[1px] max-lg:w-full px-3 py-4 gap-5 w-full bg-white rounded-md">
         <img
-          src={userPhoto}
+          src={admin.profileImage || userPhoto}
           className="w-24 h-24 border-2 rounded-full object-cover"
           alt="User Icon"
         />
@@ -55,11 +55,11 @@ const MyProfile = () => {
         </div>
       </div>
       {/* Personal Information */}
-      <div className="flex flex-col gap-2 py-3 bg-white rounded-md border-[1px]">
+      <div className="flex flex-col gap-2 py-3 bg-white border-neutral-300 rounded-md border-[1px]">
         <div className="flex justify-between items-center py-1 px-4">
           <h1 className="text-[16px] truncate">Personal Information</h1>
           <Link to="/AdminDashboard/EditAdminProfile">
-            <button className="text-[14px] transition-colors duration-300 items-center gap-1 flex hover:bg-blue-600 font-semibold bg-blue-500 text-white px-4 py-1 border-2 rounded-sm">
+            <button className="text-[14px] transition-colors duration-300 items-center gap-1 flex hover:bg-blue-600 font-semibold bg-blue-500 text-white px-4 py-1 rounded-sm">
               Edit
               <EditIcon className="w-4 h-4 mt-[1px]" />
             </button>

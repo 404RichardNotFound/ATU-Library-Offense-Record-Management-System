@@ -40,7 +40,7 @@ const Notices = () => {
   }, []);
 
   return (
-    <div className="bg-white rounded-md p-3 h-full border-[1px]">
+    <div className="bg-white rounded-md p-3 h-full border-[1px] border-neutral-300">
       {/* Notice Display Section */}
       <div>
         {/* Header with Message Icon */}

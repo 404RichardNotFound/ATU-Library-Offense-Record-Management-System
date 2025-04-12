@@ -28,7 +28,6 @@ import {
   Dropdown,
   Breadcrumb,
 } from 'antd';
-import userPhoto from '../../../assets/profile-picture.png';
 
 import atuLogo from '/ATU-LOGO.png';
 import { Spinner } from '@radix-ui/themes';
@@ -149,7 +148,7 @@ const StudentDashboard = () => {
         }}
       >
         <Sider
-          className={`bg-white max-md:h-full fixed border-r-[1px] border-zinc-200 ${collapsed ? 'w-0' : 'w-64'} 
+          className={`bg-white max-md:h-full fixed border-r-[1px] border-neutral-300 ${collapsed ? 'w-0' : 'w-64'} 
     ${isMobile ? 'z-50 overflow-auto' : 'relative'} transition-all duration-300`}
           trigger={null}
           collapsible
@@ -242,7 +241,7 @@ const StudentDashboard = () => {
             style={{
               padding: 0,
               background: colorBgContainer,
-              boxShadow: '0 0px 0.6px 0px',
+              boxShadow: '0 0px 0.7px 0px',
             }}
           >
             <div className="flex justify-between w-full h-full">
@@ -269,7 +268,7 @@ const StudentDashboard = () => {
                 >
                   <button className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition duration-200 border-none bg-transparent">
                     <Avatar
-                      src={userPhoto}
+                      src={student.profileImage}
                       alt="User Icon"
                       size="default"
                       icon={<UserOutlined />}

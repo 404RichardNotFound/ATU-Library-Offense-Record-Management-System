@@ -116,7 +116,7 @@ const Notice = () => {
     : noticeArray.slice(0, 3);
 
   return (
-    <div className="bg-white rounded-md p-3 h-full border-[1px]">
+    <div className="bg-white rounded-md p-3 border-neutral-300 h-full border-[1px]">
       {/* Toast Notification - Positioned at the Top Center */}
       <Toaster position="top-center" reverseOrder={false} />
 
@@ -125,7 +125,7 @@ const Notice = () => {
         <h1 className="text-base">Write Notice</h1>
         <form onSubmit={handleSubmit}>
           <textarea
-            className="bg-zinc-100 p-2 w-full shadow-sm border-[1px] hover:border-dotted"
+            className="bg-zinc-100 p-2 w-full border-neutral-300 shadow-sm border-[1px] hover:border-dotted"
             onChange={(e) => setNoticeText(e.target.value)}
             value={noticeText}
             rows={5}
@@ -135,7 +135,7 @@ const Notice = () => {
           <div className="flex gap-2 mt-1 justify-start">
             <button
               type="submit"
-              className="border-2 transition-colors duration-300 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
+              className="transition-colors mt-1 duration-300 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
               disabled={loading} // Disable button while submitting
             >
               {/* Show spinner when submitting */}

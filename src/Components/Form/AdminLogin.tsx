@@ -79,6 +79,7 @@ function AdminLogin() {
             email: adminData.Email,
             role: adminData.Role,
             phoneNumber: adminData.Phone_Number,
+            profileImage: adminData.profileImage,
           })
         );
 
@@ -123,7 +124,7 @@ function AdminLogin() {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white border-2 gap-7 max-2xl:w-7/12E  max-xl:w-8/12 max-lg:w-10/12 w-2/5 shadow-sm border-neutral-200 rounded-lg p-8 h-auto flex flex-col justify-center"
+        className="bg-white border-[1px] gap-5 max-2xl:w-5/12  max-xl:w-7/12 max-md:w-9/12 w-[35%] shadow-sm border-neutral-300 rounded-lg p-8 h-auto flex flex-col justify-center"
       >
         <div className="flex gap-3">
           <h2 className="text-2xl font-semibold text-start">Admin Login</h2>
@@ -140,7 +141,7 @@ function AdminLogin() {
               {...register('adminID')}
               id="adminID"
               name="adminID"
-              className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
+              className="border-[1px] bg-slate-50 px-2 py-1 border-neutral-300 hover:border-dotted p-2 rounded-md "
               type="text"
               placeholder="ID"
             />
@@ -155,7 +156,7 @@ function AdminLogin() {
             <input
               {...register('password')}
               id="password"
-              className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
+              className="border-[1px] bg-slate-50 hover:border-dotted  px-2 py-1 border-neutral-300 rounded-md "
               type="password"
               name="password"
               placeholder="Password"

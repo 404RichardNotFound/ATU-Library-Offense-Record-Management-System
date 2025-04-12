@@ -83,6 +83,7 @@ function StudentLogin() {
             Role: 'Student',
             JoinDate: studentData.JoinDate,
             PhoneNumber: studentData.Student_PhoneNumber,
+            profileImage: studentData.profileImage,
           })
         );
         sessionStorage.setItem('activeStudentId', studentDoc.id);
@@ -128,7 +129,7 @@ function StudentLogin() {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white border-2 gap-7 max-2xl:w-7/12E  max-xl:w-8/12 max-lg:w-10/12 w-2/5 shadow-sm border-neutral-200 rounded-lg p-8 h-auto flex flex-col justify-center"
+        className="bg-white border-[1px] gap-5 max-2xl:w-5/12  max-xl:w-7/12 max-md:w-9/12 w-[35%] shadow-sm border-neutral-300 rounded-lg p-8 h-auto flex flex-col justify-center"
       >
         <div className="flex gap-3">
           <h2 className="text-2xl font-semibold text-start">Students Login</h2>
@@ -145,7 +146,7 @@ function StudentLogin() {
               {...register('Student_ID')}
               id="Student_ID"
               name="Student_ID"
-              className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
+              className="border-[1px] bg-slate-50 hover:border-dotted  px-2 py-1 border-neutral-300 rounded-md"
               type="text"
               placeholder="ID"
             />
@@ -160,7 +161,7 @@ function StudentLogin() {
             <input
               {...register('password')}
               id="password"
-              className="border-2 bg-slate-50 hover:border-dotted p-2 rounded-md "
+              className="border-[1px] bg-slate-50 hover:border-dotted  px-2 py-1 border-neutral-300 rounded-md "
               type="password"
               name="password"
               placeholder="Password"
@@ -173,7 +174,7 @@ function StudentLogin() {
         <div className="flex gap-2 justify-start">
           <button
             type="submit"
-            className="border-2 items-center flex gap-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
+            className="border-2 items-center flex gap-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-5 rounded-md"
           >
             {isSubmitting && <Spinner />}
             {isSubmitting ? 'Please wait..' : 'Login'}

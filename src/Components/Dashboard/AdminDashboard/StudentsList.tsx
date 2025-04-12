@@ -243,7 +243,7 @@ const StudentsList = () => {
         {/* Export Button */}
         <Button
           onClick={exportToCSV}
-          className="bg-blue-500 hover:bg-blue-600 border-[1px] transition-colors duration-300"
+          className="bg-blue-500 hover:bg-blue-600 transition-colors duration-300"
         >
           Export To CSV
         </Button>
