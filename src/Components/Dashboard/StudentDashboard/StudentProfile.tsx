@@ -45,7 +45,7 @@ const StudentProfile = () => {
       {/* Student Profile */}
       <div className="flex max-sm:flex-col border-neutral-300 max-sm:items-center overflow-hidden border-[1px] max-lg:w-full px-3 py-4 gap-5 w-full bg-white rounded-md">
         <img
-          src={student.profileImage}
+          src={student.profileImage || userPhoto}
           className="w-24 h-24 border-2 rounded-full object-cover"
           alt="User Icon"
         />
