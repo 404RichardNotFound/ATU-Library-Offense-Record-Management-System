@@ -232,7 +232,7 @@ const Registration = () => {
                     <input
                       {...register('Student_Gender')}
                       id="Male"
-                      type="checkbox"
+                      type="radio"
                       name="Student_Gender"
                       value="Male"
                       checked={gender === 'Male'}
@@ -247,7 +247,7 @@ const Registration = () => {
                     <input
                       {...register('Student_Gender')}
                       id="Female"
-                      type="checkbox"
+                      type="radio"
                       name="Student_Gender"
                       value="Female"
                       checked={gender === 'Female'}
@@ -316,7 +316,7 @@ const Registration = () => {
           <div className="flex gap-2 justify-start">
             <button
               type="submit"
-              className="border-2 items-center flex gap-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md"
+              className="border-2 items-center flex gap-4 bg-blue-500 hover:bg-blue-700 mt-1 text-white font-bold py-[5px] px-6 rounded-md"
             >
               {isSubmitting && <Spinner />}
               {isSubmitting ? 'Please wait..' : 'Register'}

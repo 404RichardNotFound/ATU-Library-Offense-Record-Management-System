@@ -174,7 +174,7 @@ function StudentLogin() {
         <div className="flex gap-2 justify-start">
           <button
             type="submit"
-            className="border-2 items-center flex gap-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-5 rounded-md"
+            className="border-2 items-center flex gap-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-[5px] px-5 rounded-md"
           >
             {isSubmitting && <Spinner />}
             {isSubmitting ? 'Please wait..' : 'Login'}

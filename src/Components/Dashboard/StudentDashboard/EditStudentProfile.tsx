@@ -238,7 +238,7 @@ const EditStudentProfile = () => {
                 className="cursor-pointer"
                 checked={formData.Gender === 'Male'}
                 onChange={handleChange}
-                type="checkbox"
+                type="radio"
                 name="Gender"
                 value="Male"
               />
@@ -249,7 +249,7 @@ const EditStudentProfile = () => {
                 className="cursor-pointer"
                 checked={formData.Gender === 'Female'}
                 onChange={handleChange}
-                type="checkbox"
+                type="radio"
                 name="Gender"
                 value="Female"
               />

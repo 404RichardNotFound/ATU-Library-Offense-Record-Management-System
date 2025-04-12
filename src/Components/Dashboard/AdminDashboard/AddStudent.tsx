@@ -138,7 +138,7 @@ const AddStudent = () => {
             <label htmlFor="Male" className="flex items-center gap-2">
               <input
                 className="cursor-pointer"
-                type="checkbox"
+                type="radio"
                 name="Student_Gender"
                 value="Male"
                 checked={formData.Student_Gender === 'Male'}
@@ -148,7 +148,7 @@ const AddStudent = () => {
             </label>
             <label htmlFor="Female" className="flex items-center gap-2">
               <input
-                type="checkbox"
+                type="radio"
                 className="cursor-pointer"
                 name="Student_Gender"
                 value="Female"
