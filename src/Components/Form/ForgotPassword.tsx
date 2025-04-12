@@ -149,7 +149,7 @@ function ForgotPassword() {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className='bg-white border-[1px] max-sm:ml-4 max-sm:w-[80%] gap-5 max-2xl:w-5/12  max-xl:w-7/12 max-md:w-9/12 w-[35%] shadow-sm border-neutral-300 rounded-lg p-8 h-auto flex flex-col justify-center"
+        className='bg-white border-[1px] max-sm:w-[80%] gap-5 max-2xl:w-5/12  max-xl:w-7/12 max-md:w-9/12 w-[35%] shadow-sm border-neutral-300 rounded-lg p-8 h-auto flex flex-col justify-center"
       '
       >
         <div className="flex gap-3">
