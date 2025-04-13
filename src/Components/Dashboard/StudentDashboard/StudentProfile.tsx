@@ -64,7 +64,7 @@ const StudentProfile = () => {
         <div className="flex justify-between items-center py-1 px-4">
           <h1 className="text-[16px] truncate">Personal Information</h1>
           <Link to="/StudentDashboard/EditStudentProfile">
-            <button className="text-[14px] transition-colors duration-300 items-center gap-1 flex hover:bg-blue-600 font-semibold bg-blue-500 text-white px-4 py-1 border-2 rounded-sm">
+            <button className="text-[14px] transition-colors duration-300 items-center gap-1 flex hover:bg-blue-600 font-semibold bg-blue-500 text-white px-4 py-1 rounded-sm">
               Edit
               <EditIcon className="w-4 h-4 mt-[1px]" />
             </button>
